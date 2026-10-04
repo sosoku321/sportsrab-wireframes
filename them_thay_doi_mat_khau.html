@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SportsRAB CMS - 마이페이지 (비밀번호 변경)</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  body{font-family:'Pretendard','Noto Sans KR',system-ui,sans-serif}
+  .scroll{scrollbar-width:thin;scrollbar-color:#cbd5e1 transparent}
+  .lbl{display:block;font-size:12px;font-weight:600;color:#334155;margin-bottom:4px}
+  .req::after{content:' *';color:#ef4444}
+  .inp{width:100%;height:36px;padding:0 12px;border:1px solid #cbd5e1;border-radius:8px;font-size:14px;background:#fff;outline:none}
+  .inp:focus{box-shadow:0 0 0 2px #1F5FBA;border-color:#1F5FBA}
+  .inp.err{border-color:#ef4444}
+  .ro{font-size:14px;color:#475569;font-weight:500;height:36px;display:flex;align-items:center}
+  .ttl{color:#1F5FBA;font-size:14px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+</style>
+</head>
+<body class="bg-slate-200 min-h-screen">
+
+<div id="toast" class="hidden fixed top-4 left-1/2 -translate-x-1/2 z-[60] bg-slate-900/90 text-white px-6 py-3 rounded-full shadow-lg text-sm font-medium"></div>
+
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[95vh] flex flex-col overflow-hidden">
+
+    <!-- Header -->
+    <div class="px-6 py-4 border-b border-slate-200 flex justify-between items-center bg-white">
+      <h2 class="text-base font-bold text-slate-800">마이페이지</h2>
+      <button class="text-slate-500 hover:text-slate-900 text-xl leading-none" aria-label="닫기">✕</button>
+    </div>
+
+    <!-- Avatar + Role -->
+    <div class="flex flex-col items-center pt-4 pb-3 bg-slate-50/50">
+      <div class="relative">
+        <div class="w-20 h-20 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-white text-3xl font-bold">M</div>
+        <button class="absolute bottom-0 right-0 w-7 h-7 bg-white border border-slate-300 rounded-full text-xs shadow-sm hover:bg-slate-50" aria-label="아바타 수정">✎</button>
+      </div>
+      <p class="mt-2 text-sm font-bold text-slate-800">Superadmin</p>
+      <button id="pwbtn" class="mt-3 px-4 py-1.5 text-xs font-medium text-white bg-[#1F5FBA] rounded-lg hover:bg-[#184d98]">비밀번호 변경</button>
+    </div>
+
+    <!-- Scrollable body -->
+    <div class="scroll max-h-[80vh] overflow-y-auto p-6 space-y-4 bg-slate-50">
+
+      <!-- 개인 정보 -->
+      <section class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+        <h3 class="ttl">개인 정보</h3>
+        <div class="grid grid-cols-2 gap-4">
+          <div><label class="lbl req">이름</label><input class="inp" value="Hwang Minji"></div>
+          <div><label class="lbl">이메일</label><div class="ro">minji@naver.com</div></div>
+          <div><label class="lbl">연락처</label><input class="inp" value="010-2345-6789"></div>
+          <div><label class="lbl">생성일</label><div class="ro">2027.07.26</div></div>
+        </div>
+      </section>
+
+      <!-- 기업 정보 -->
+      <section class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+        <h3 class="ttl">기업 정보</h3>
+        <div class="grid grid-cols-2 gap-4">
+          <div><label class="lbl req">기업명</label><input class="inp" value="(주)로지스틱스 코리아"></div>
+          <div><label class="lbl req">이메일</label><input class="inp" value="contact@logisticskorea.com"></div>
+          <div><label class="lbl req">연락처</label><input class="inp" value="02-1234-5678"></div>
+          <div><label class="lbl req">대표자</label><input class="inp" value="Jimmy"></div>
+          <div><label class="lbl req">사업자등록번호</label><input class="inp" value="123-81-45678"></div>
+          <div><label class="lbl req">주소</label><input class="inp" value="서울특별시 강남구 테헤란로 123, 4층"></div>
+          <div class="col-span-2">
+            <label class="lbl req">로고</label>
+            <div class="flex items-center gap-3">
+              <button class="w-16 h-16 rounded-lg bg-[#0f3d63] text-white text-xl flex items-center justify-center border border-slate-300 hover:opacity-90">✎</button>
+              <span class="text-xs text-slate-400">PNG, JPG (최대 2MB)</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 부서 정보 -->
+      <section class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+        <h3 class="ttl">부서 정보</h3>
+        <div class="grid grid-cols-2 gap-4">
+          <div><label class="lbl req">부서</label>
+            <select class="inp"><option>디자인 부서</option><option>개발 부서</option><option>운영 부서</option></select></div>
+          <div><label class="lbl req">직책</label>
+            <select class="inp"><option>디자이너</option><option>매니저</option><option>팀장</option></select></div>
+        </div>
+      </section>
+
+      <!-- 은행 정보 -->
+      <section class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+        <div class="flex justify-between items-center mb-3">
+          <h3 class="ttl mb-0">은행 정보</h3>
+          <button class="text-xs font-medium text-[#1F5FBA] hover:underline">+ 계좌 추가</button>
+        </div>
+        <div class="space-y-3" id="banks">
+          <!-- Bank item -->
+          <div class="bank flex items-center gap-3">
+            <div class="flex-1 border border-slate-200 rounded-xl p-3 flex gap-4">
+              <div class="flex-1 grid grid-cols-2 gap-3">
+                <div><label class="lbl req">은행명</label><input class="inp" value="KB국민은행"></div>
+                <div><label class="lbl req">예금주</label><input class="inp" value="(주)로지스틱스 코리아"></div>
+                <div><label class="lbl req">계좌번호</label><input class="inp" value="3333-01-2345678-90"></div>
+                <div><label class="lbl req">지점</label><input class="inp" value="서울역금융센터지점"></div>
+              </div>
+              <div class="flex flex-col items-center justify-between gap-2">
+                <button class="w-24 h-24 rounded-lg border border-slate-300 bg-slate-100 text-slate-500 text-sm flex flex-col items-center justify-center hover:bg-slate-200">▦<span class="text-[11px] mt-1">QR 수정 ✎</span></button>
+                <label class="flex items-center gap-2 text-xs text-slate-700">기본 설정
+                  <button type="button" class="tg w-11 h-6 bg-blue-600 rounded-full relative transition"><span class="absolute right-0.5 top-0.5 w-5 h-5 bg-white rounded-full transition-all"></span></button></label>
+              </div>
+            </div>
+            <button class="text-red-500 text-2xl hover:text-red-600" aria-label="삭제">ⓧ</button>
+          </div>
+          <!-- Bank item -->
+          <div class="bank flex items-center gap-3">
+            <div class="flex-1 border border-slate-200 rounded-xl p-3 flex gap-4">
+              <div class="flex-1 grid grid-cols-2 gap-3">
+                <div><label class="lbl req">은행명</label><input class="inp" value="Shinhan"></div>
+                <div><label class="lbl req">예금주</label><input class="inp" value="(주)로지스틱스 코리아"></div>
+                <div><label class="lbl req">계좌번호</label><input class="inp" value="123456-04-789012"></div>
+                <div><label class="lbl req">지점</label><input class="inp" value="강남역지점"></div>
+              </div>
+              <div class="flex flex-col items-center justify-between gap-2">
+                <button class="w-24 h-24 rounded-lg border border-slate-300 bg-slate-100 text-slate-500 text-sm flex flex-col items-center justify-center hover:bg-slate-200">▦<span class="text-[11px] mt-1">QR 수정 ✎</span></button>
+                <label class="flex items-center gap-2 text-xs text-slate-700">기본 설정
+                  <button type="button" class="tg w-11 h-6 bg-slate-300 rounded-full relative transition"><span class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full transition-all"></span></button></label>
+              </div>
+            </div>
+            <button class="text-red-500 text-2xl hover:text-red-600" aria-label="삭제">ⓧ</button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Footer (fixed) -->
+    <div class="px-6 py-4 bg-white border-t border-slate-200 flex justify-end gap-3">
+      <button class="px-6 py-2 border border-slate-300 bg-white text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50">뒤로</button>
+      <button class="px-6 py-2 bg-[#1F5FBA] text-white rounded-lg text-sm font-medium hover:bg-[#184d98] shadow-sm">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- Password Change Popup Modal -->
+<div id="pwModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col">
+    <!-- Header -->
+    <div class="px-6 py-4 border-b border-slate-200 flex justify-between items-center bg-white">
+      <h3 class="text-base font-bold text-slate-800">비밀번호 변경</h3>
+      <button id="pwClose" class="text-slate-500 hover:text-slate-900 text-xl leading-none">✕</button>
+    </div>
+    <!-- Body -->
+    <div class="px-6 py-6 space-y-4">
+      <div>
+        <label class="lbl req">현재 비밀번호</label>
+        <input id="pw0" type="password" class="inp" placeholder="현재 비밀번호 입력">
+        <p id="e0" class="hidden text-xs text-red-500 mt-1"></p>
+      </div>
+      <div>
+        <label class="lbl req">새 비밀번호</label>
+        <input id="pw1" type="password" class="inp" placeholder="새 비밀번호 입력">
+        <p id="e1" class="hidden text-xs text-red-500 mt-1"></p>
+      </div>
+      <div>
+        <label class="lbl req">새 비밀번호 확인</label>
+        <input id="pw2" type="password" class="inp" placeholder="새 비밀번호 재입력">
+        <p id="e2" class="hidden text-xs text-red-500 mt-1"></p>
+      </div>
+      <p class="text-xs text-slate-400 pt-2">비밀번호는 8자 이상이어야 합니다.</p>
+    </div>
+    <!-- Footer -->
+    <div class="px-6 py-4 bg-slate-50 border-t border-slate-200 flex justify-end gap-3">
+      <button id="pwCancel" class="px-6 py-2 border border-slate-300 bg-white text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-100">취소</button>
+      <button id="pwOk" class="px-6 py-2 bg-[#1F5FBA] text-white rounded-lg text-sm font-medium hover:bg-[#184d98]">확인</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const $ = id => document.getElementById(id);
+  function setErr(i,m){const n=$('pw'+i),e=$('e'+i);n.classList.toggle('err',!!m);e.textContent=m||'';e.classList.toggle('hidden',!m);}
+  function toast(t){const el=$('toast');el.textContent=t;el.classList.remove('hidden');setTimeout(()=>el.classList.add('hidden'),2500);}
+  function openPwModal(){$('pwModal').classList.remove('hidden');}
+  function closePwModal(){
+    $('pwModal').classList.add('hidden');
+    $('pw0').value='';$('pw1').value='';$('pw2').value='';
+    [0,1,2].forEach(i=>setErr(i,''));
+  }
+  $('pwbtn').onclick=openPwModal;
+  $('pwClose').onclick=closePwModal;
+  $('pwCancel').onclick=closePwModal;
+  $('pwOk').onclick=()=>{
+    const [a,b,c]=[$('pw0').value,$('pw1').value,$('pw2').value];
+    [0,1,2].forEach(i=>setErr(i,''));
+    let ok=true;
+    if(!a){setErr(0,'필수 항목을 입력해주세요.');ok=false;}
+    if(!b){setErr(1,'필수 항목을 입력해주세요.');ok=false;}else if(b.length<8){setErr(1,'8자 이상 입력해주세요.');ok=false;}
+    if(!c){setErr(2,'필수 항목을 입력해주세요.');ok=false;}else if(b!==c){setErr(2,'새 비밀번호가 일치하지 않습니다.');ok=false;}
+    if(ok){toast('비밀번호가 변경되었습니다.');closePwModal();}
+  };
+  // Default-bank toggle: only one ON at a time
+  document.querySelectorAll('.tg').forEach(t=>t.onclick=()=>{
+    document.querySelectorAll('.tg').forEach(o=>{
+      const on=o===t;
+      o.classList.toggle('bg-blue-600',on);o.classList.toggle('bg-slate-300',!on);
+      const k=o.firstElementChild;k.classList.toggle('right-0.5',on);k.classList.toggle('left-0.5',!on);
+    });
+  });
+</script>
+</body>
+</html>
