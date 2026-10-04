@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SportsRAB CMS - Wireframe Portal</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Pretendard / Noto Sans KR -->
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+    <style>
+        body { font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen p-8 text-slate-800">
+
+    <div class="max-w-5xl mx-auto space-y-6">
+        
+        <!-- Header Portal -->
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex justify-between items-center">
+            <div>
+                <div class="flex items-center gap-3">
+                    <span class="w-3 h-3 rounded-full bg-[#1F5FBA]"></span>
+                    <h1 class="text-2xl font-bold text-slate-900">SportsRAB CMS Wireframe Portal</h1>
+                </div>
+                <p class="text-sm text-slate-500 mt-1">Danh sách các màn hình Prototype & Wireframe tương tác (Cập nhật liên tục)</p>
+            </div>
+            <div class="text-right text-xs text-slate-400">
+                <span>Dự án: <strong>SportsRAB Admin</strong></span><br>
+                <span>BA: <strong>Nguyễn Châu Phúc Huy</strong></span>
+            </div>
+        </div>
+
+        <!-- Bảng danh sách màn hình -->
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <div class="p-4 bg-slate-100/70 border-b border-slate-200 flex justify-between items-center">
+                <h2 class="font-semibold text-slate-700">Màn hình Wireframe</h2>
+                <span class="text-xs font-medium px-2.5 py-1 rounded-full bg-blue-50 text-[#1F5FBA]">Tất cả màn hình</span>
+            </div>
+
+            <table class="w-full text-left text-sm">
+                <thead class="bg-slate-50 text-slate-500 uppercase text-xs border-b border-slate-200">
+                    <tr>
+                        <th class="py-3 px-4">STT</th>
+                        <th class="py-3 px-4">Tên màn hình (Tiếng Hàn)</th>
+                        <th class="py-3 px-4">Mô tả / Tên Tiếng Việt</th>
+                        <th class="py-3 px-4">Trạng thái</th>
+                        <th class="py-3 px-4 text-right">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    
+                    <!-- Màn hình 1 -->
+                    <tr class="hover:bg-slate-50/80 transition">
+                        <td class="py-3.5 px-4 font-mono text-slate-400">01</td>
+                        <td class="py-3.5 px-4 font-semibold text-slate-900">마이페이지 (Edit Mode)</td>
+                        <td class="py-3.5 px-4 text-slate-600">Trang cá nhân + Modal đổi mật khẩu</td>
+                        <td class="py-3.5 px-4">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Đã chốt
+                            </span>
+                        </td>
+                        <td class="py-3.5 px-4 text-right">
+                            <a href="./change-password-modal.html" target="_blank" class="inline-flex items-center gap-1 px-3 py-1.5 bg-[#1F5FBA] text-white rounded-lg text-xs font-medium hover:bg-blue-700 transition">
+                                Mở Xem ↗
+                            </a>
+                        </td>
+                    </tr>
+
+                    <!-- Màn hình 2 -->
+                    <tr class="hover:bg-slate-50/80 transition">
+                        <td class="py-3.5 px-4 font-mono text-slate-400">02</td>
+                        <td class="py-3.5 px-4 font-semibold text-slate-900">쿠폰 관리</td>
+                        <td class="py-3.5 px-4 text-slate-600">Quản lý danh sách & Tạo Coupon mới</td>
+                        <td class="py-3.5 px-4">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200">
+                                <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Đang Review
+                            </span>
+                        </td>
+                        <td class="py-3.5 px-4 text-right">
+                            <a href="./coupon-list.html" target="_blank" class="inline-flex items-center gap-1 px-3 py-1.5 bg-[#1F5FBA] text-white rounded-lg text-xs font-medium hover:bg-blue-700 transition">
+                                Mở Xem ↗
+                            </a>
+                        </td>
+                    </tr>
+
+                    <!-- Màn hình 3 -->
+                    <tr class="hover:bg-slate-50/80 transition">
+                        <td class="py-3.5 px-4 font-mono text-slate-400">03</td>
+                        <td class="py-3.5 px-4 font-semibold text-slate-900">배너 관리</td>
+                        <td class="py-3.5 px-4 text-slate-600">Quản lý Banner quảng cáo</td>
+                        <td class="py-3.5 px-4">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-600 border border-slate-200">
+                                <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span> Mới tạo
+                            </span>
+                        </td>
+                        <td class="py-3.5 px-4 text-right">
+                            <a href="./banner-management.html" target="_blank" class="inline-flex items-center gap-1 px-3 py-1.5 bg-[#1F5FBA] text-white rounded-lg text-xs font-medium hover:bg-blue-700 transition">
+                                Mở Xem ↗
+                            </a>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center text-xs text-slate-400 pt-4">
+            SportsRAB CMS Prototyping System • Powered by GitHub Pages
+        </div>
+
+    </div>
+
+</body>
+</html>
