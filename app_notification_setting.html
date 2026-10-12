@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SportsRAB - 시스템 알림</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Font: Pretendard / Noto Sans KR -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    /* Ẩn thanh cuộn tabs ngang */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="bg-slate-200 min-h-screen flex flex-col items-center justify-start p-0 md:p-6">
+
+  <!-- Khung điện thoại thoại di động mô phỏng -->
+  <div class="w-full max-w-md bg-white min-h-screen md:min-h-[844px] md:rounded-3xl md:shadow-2xl flex flex-col overflow-hidden relative border border-slate-200">
+    
+    <!-- 1. Thanh trạng thái Android / iOS Status Bar giả lập -->
+    <div class="h-8 w-full bg-white flex items-center justify-between px-6 pt-2 select-none text-slate-800 text-xs font-semibold">
+      <span>4:41</span>
+      <div class="flex items-center space-x-1.5 text-slate-700">
+        <!-- Icon App thông báo nhỏ -->
+        <span class="text-[10px] bg-slate-700 text-white rounded px-1 font-bold">A</span>
+        <!-- WiFi / Sóng / Pin -->
+        <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L12 22l7.03-4.39C20.26 16.07 21 14.12 21 12c0-4.97-4.03-9-9-9z"/></svg>
+        <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 4c-4.8 0-8.8 3.2-10 7.6.9 3.2 3.8 5.6 7.2 6.2v2.2h5.6v-2.2c3.4-.6 6.3-3 7.2-6.2C20.8 7.2 16.8 4 12 4z"/></svg>
+        <span class="text-[11px] font-bold">94%</span>
+      </div>
+    </div>
+
+    <!-- 2. Header (Top Navigation Bar) -->
+    <header class="h-14 px-4 flex items-center justify-between border-b border-slate-100 bg-white sticky top-0 z-10">
+      <!-- Nút Back -->
+      <button class="p-2 -ml-2 text-slate-800 hover:text-slate-600 transition" aria-label="뒤로가기">
+        <svg class="w-6 h-6 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+        </svg>
+      </button>
+
+      <!-- Tiêu đề màn hình -->
+      <h1 class="text-[17px] font-bold text-slate-900 tracking-tight">알림</h1>
+
+      <!-- Đánh dấu đã đọc tất cả (Icon check kép ✔✔) -->
+      <button id="btn-mark-all-read" onclick="markAllAsRead()" class="p-2 -mr-2 text-slate-800 hover:text-blue-600 active:scale-95 transition" title="모두 읽음 표시">
+        <svg class="w-6 h-6 stroke-[2.2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l4.5 4.5 9-9" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75l2.25 2.25 6.75-6.75" />
+        </svg>
+      </button>
+    </header>
+
+    <!-- 3. Category Tab Bar (Thanh Tabs phân loại) -->
+    <div class="px-3 py-2.5 overflow-x-auto no-scrollbar flex items-center space-x-2 border-b border-slate-100 bg-white">
+      <button class="whitespace-nowrap px-3.5 py-1.5 rounded-full text-[13px] font-medium border border-slate-300 text-slate-600 hover:bg-slate-50 transition">
+        전체 (42)
+      </button>
+      <button class="whitespace-nowrap px-3.5 py-1.5 rounded-full text-[13px] font-medium border border-slate-300 text-slate-600 hover:bg-slate-50 transition">
+        주문 관리 (37)
+      </button>
+      <button class="whitespace-nowrap px-3.5 py-1.5 rounded-full text-[13px] font-medium border border-slate-300 text-slate-600 hover:bg-slate-50 transition">
+        결제 관리 (5)
+      </button>
+      <!-- Active Tab: 시스템 -->
+      <button id="tab-system-btn" class="whitespace-nowrap px-4 py-1.5 rounded-full text-[13px] font-semibold bg-[#1D4ED8] text-white shadow-sm transition">
+        시스템 (<span id="system-unread-count">2</span>)
+      </button>
+    </div>
+
+    <!-- Khung điều khiển phụ (Dùng để test demo) -->
+    <div class="bg-slate-50 px-4 py-1.5 text-xs text-slate-500 flex justify-between items-center border-b border-slate-200">
+      <span>Giao diện prototype: Tab 시스템</span>
+      <button onclick="toggleEmptyState()" class="text-blue-700 underline font-medium hover:text-blue-900">
+        Chuyển đổi Trạng thái Rỗng
+      </button>
+    </div>
+
+    <!-- 4. Danh sách thông báo (Notification List) -->
+    <div id="notification-container" class="flex-1 overflow-y-auto divide-y divide-slate-100 bg-white">
+      <!-- Render động từ mock data qua JS -->
+    </div>
+
+    <!-- 5. Trạng thái rỗng (Empty State) -->
+    <div id="empty-state" class="hidden flex-1 flex items-center justify-center bg-white p-6">
+      <p class="text-slate-400 text-[15px] font-medium">알림이 없습니다.</p>
+    </div>
+
+  </div>
+
+  <!-- 6. POP-UP MODAL XEM CHI TIẾT (Detail Popup Modal) -->
+  <div id="detail-modal" class="fixed inset-0 z-50 flex items-center justify-center p-5 bg-black/50 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-200">
+    <div class="bg-white w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden transform scale-95 transition-transform duration-200" id="modal-box">
+      <!-- Modal Header -->
+      <div class="p-5 pb-3">
+        <div class="flex items-center justify-between mb-2">
+          <span id="modal-badge" class="px-2.5 py-0.5 rounded-full text-xs font-semibold"></span>
+          <span id="modal-date" class="text-xs text-slate-400"></span>
+        </div>
+        <h3 id="modal-title" class="text-[16px] font-bold text-slate-900 leading-snug"></h3>
+      </div>
+
+      <div class="h-px bg-slate-100 w-full"></div>
+
+      <!-- Modal Body -->
+      <div class="p-5 max-h-[50vh] overflow-y-auto">
+        <p id="modal-content" class="text-[13.5px] text-slate-700 leading-relaxed whitespace-pre-line"></p>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="p-4 pt-2">
+        <button onclick="closeModal()" class="w-full py-3 bg-[#1D4ED8] hover:bg-blue-800 active:bg-blue-900 text-white rounded-xl font-semibold text-sm transition">
+          확인
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPT LOGIC VÀ DỮ LIỆU -->
+  <script>
+    // Dữ liệu mẫu JSON chuẩn theo tài liệu đặc tả
+    const mockNotifications = [
+      {
+        id: "NOT-2026-004",
+        category: "시스템",
+        type: "긴급",
+        typeName: "긴급 패치",
+        isUrgent: true,
+        title: "긴급 서버 긴급 패치 작업 안내",
+        subContext: "시스템 공지 | 긴급 패치 안내",
+        previewText: "안정적인 서비스 제공을 위해 긴급 패치 작업이 진행될 예정입니다.",
+        fullContent: "안정적인 서비스 제공을 위해 긴급 패치 작업이 진행될 예정입니다.\n작업 시간 동안 일시적인 접속 지연이 발생할 수 있으니 양해 부탁드립니다.\n\n■ 작업 시간: 2026년 10월 12일 16:00 ~ 16:30 (30분간)\n■ 영향 범위: 유니폼 주문 조회 및 결제 기능",
+        timeAgo: "42분 전",
+        fullDate: "2026.10.12 16:00",
+        isRead: false
+      },
+      {
+        id: "NOT-2026-003",
+        category: "시스템",
+        type: "점검",
+        typeName: "정기 점검",
+        isUrgent: false,
+        title: "정기 시스템 정밀 점검 사전 안내",
+        subContext: "시스템 공지 | 정기 점검 안내",
+        previewText: "시스템 성능 향상 및 보안 업데이트를 위한 정기 점검이 아래와 같이 진행됩니다.",
+        fullContent: "안녕하세요. SportsRAB 운영팀입니다.\n\n시스템 성능 향상 및 보안 업데이트를 위한 정기 점검이 아래와 같이 진행됩니다.\n점검 시간 동안에는 서비스 이용이 일시 중단되오니 참고하시기 바랍니다.\n\n1. 점검 일시: 2026년 10월 15일(목) 02:00 ~ 06:00\n2. 점검 대상: 모바일 앱 전체 서비스\n3. 작업 내용: 서버 인프라 안정화",
+        timeAgo: "1시간 전",
+        fullDate: "2026.10.12 15:00",
+        isRead: false
+      },
+      {
+        id: "NOT-2026-002",
+        category: "시스템",
+        type: "휴무",
+        typeName: "휴무 공지",
+        isUrgent: false,
+        title: "추석 연휴 고객센터 휴무 및 제작 일정 안내",
+        subContext: "시스템 공지 | 휴무 안내",
+        previewText: "추석 연휴 기간 동안의 본사 휴무 일정 및 유니폼 제작 마감 일정을 안내해 드립니다.",
+        fullContent: "추석 연휴 기간 동안 본사 고객센터 휴무 및 유니폼 배송 일정을 안내해 드립니다.\n\n- 연휴 기간: 2026.10.15 ~ 2026.10.18\n- 연휴 기간 동안 접수된 주문 건은 10월 19일부터 순차적으로 제작 및 출고 진행됩니다.",
+        timeAgo: "5시간 전",
+        fullDate: "2026.10.12 11:00",
+        isRead: true
+      },
+      {
+        id: "NOT-2026-001",
+        category: "시스템",
+        type: "일반",
+        typeName: "일반 공지",
+        isUrgent: false,
+        title: "가을 시즌 유니폼 신규 카탈로그 업데이트",
+        subContext: "시스템 공지 | 일반 공지",
+        previewText: "새로운 2026 가을 시즌 기능성 유니폼 및 패딩 조끼 샘플이 시스템에 업데이트되었습니다.",
+        fullContent: "새로운 2026 가을 시즌 기능성 유니폼 및 패딩 조끼 샘플이 시스템에 업데이트되었습니다.\n앱 내 상품 목록에서 새로운 라인업을 바로 확인해 보세요!",
+        timeAgo: "1일 전",
+        fullDate: "2026.10.11 09:30",
+        isRead: true
+      }
+    ];
+
+    let notifications = [...mockNotifications];
+    let isForcedEmpty = false;
+
+    // Helper tạo class màu cho Badge theo phân loại
+    function getBadgeStyle(type) {
+      switch (type) {
+        case "긴급":
+          return "bg-[#FEE2E2] text-[#B91C1C]"; // Đỏ nhạt
+        case "점검":
+          return "bg-[#FFEDD5] text-[#C2410C]"; // Cam nhạt
+        case "휴무":
+          return "bg-[#DCFCE7] text-[#15803D]"; // Xanh lá nhạt
+        case "일반":
+        default:
+          return "bg-[#E0E7FF] text-[#3730A3]"; // Xanh pastel
+      }
+    }
+
+    // Helper: Chỉ lấy ngày tháng năm (bỏ giờ)
+    function getDateOnly(fullDate) {
+      // fullDate có dạng "2026.10.12 16:00" -> lấy "2026.10.12"
+      return fullDate.split(" ")[0];
+    }
+
+    // Render danh sách thông báo
+    function renderNotifications() {
+      const container = document.getElementById("notification-container");
+      const emptyState = document.getElementById("empty-state");
+      const unreadCountSpan = document.getElementById("system-unread-count");
+
+      // Đếm số lượng chưa đọc
+      const unreadCount = notifications.filter(item => !item.isRead).length;
+      unreadCountSpan.textContent = unreadCount;
+
+      if (isForcedEmpty || notifications.length === 0) {
+        container.classList.add("hidden");
+        emptyState.classList.remove("hidden");
+        return;
+      }
+
+      container.classList.remove("hidden");
+      emptyState.classList.add("hidden");
+      container.innerHTML = "";
+
+      notifications.forEach(item => {
+        const itemDiv = document.createElement("div");
+        itemDiv.className = "flex items-start px-4 py-3.5 hover:bg-slate-50/80 active:bg-slate-100 transition cursor-pointer select-none";
+        itemDiv.onclick = () => openModal(item.id);
+
+        // Màu tiêu đề: 긴급 thì cam đậm (#EA580C), còn lại là slate-900 (#0F172A)
+        const titleColorClass = item.isUrgent ? "text-[#EA580C] font-bold" : "text-slate-900 font-semibold";
+
+        // Tách subContext: phần sau "시스템 공지 | " sẽ có màu đen
+        const subContextParts = item.subContext.split(" | ");
+        const subContextMain = subContextParts[0] || "";
+        const subContextSub = subContextParts[1] || "";
+
+        itemDiv.innerHTML = `
+          <!-- Cột trái: Icon Megaphone viền xanh nét chuẩn 24x24 trong khung 36px -->
+          <div class="flex-shrink-0 mr-3 mt-0.5 w-9 h-9 flex items-center justify-center">
+            <svg class="w-6 h-6 text-[#1D4ED8]" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M10.34 15.84c-.688-.06-1.38-.09-2.08-.09H7.5a4.5 4.5 0 110-9h.76c.7 0 1.392-.03 2.08-.09M10.34 15.84a44.404 44.404 0 008.17 1.05v-10.8a44.4 44.4 0 00-8.17 1.05m0 8.7V6.09m4.94 13.91l-2.82-4.24" />
+            </svg>
+          </div>
+
+          <!-- Cột phải: Khối nội dung 3 dòng -->
+          <div class="flex-1 min-w-0">
+            <!-- Dòng 1: Tiêu đề + Thời gian + Chấm xanh chưa đọc -->
+            <div class="flex items-center justify-between gap-2">
+              <h2 class="text-[14px] ${titleColorClass} truncate flex-1 leading-snug">
+                ${item.title}
+              </h2>
+              <div class="flex items-center flex-shrink-0 space-x-1.5">
+                <span class="text-[12px] text-slate-400 font-normal">${item.timeAgo}</span>
+                ${!item.isRead ? '<span class="w-1.5 h-1.5 rounded-full bg-[#1D4ED8]"></span>' : '<span class="w-1.5 h-1.5"></span>'}
+              </div>
+            </div>
+
+            <!-- Dòng 2: Ngữ cảnh phân hệ - phần sau "시스템 공지 |" có màu đen -->
+            <div class="mt-0.5">
+              <p class="text-[12px] font-medium">
+                <span class="text-[#1D4ED8]">${subContextMain}</span>
+                ${subContextSub ? `<span class="text-slate-900"> | ${subContextSub}</span>` : ''}
+              </p>
+            </div>
+
+            <!-- Dòng 3: Đoạn trích nội dung (không có badge) -->
+            <div class="mt-1">
+              <p class="text-[12.5px] text-slate-500 truncate">
+                ${item.previewText}
+              </p>
+            </div>
+          </div>
+        `;
+        container.appendChild(itemDiv);
+      });
+    }
+
+    // Modal logic
+    function openModal(id) {
+      const item = notifications.find(n => n.id === id);
+      if (!item) return;
+
+      // Đánh dấu đã đọc
+      item.isRead = true;
+      renderNotifications();
+
+      // Cập nhật nội dung modal
+      const modal = document.getElementById("detail-modal");
+      const modalBox = document.getElementById("modal-box");
+      const modalBadge = document.getElementById("modal-badge");
+      
+      // Chỉ hiển thị [긴급], [점검], ... không thêm typeName
+      modalBadge.className = `px-2.5 py-0.5 rounded-full text-xs font-semibold ${getBadgeStyle(item.type)}`;
+      modalBadge.textContent = `[${item.type}]`;
+      
+      // Chỉ hiển thị ngày tháng năm, không hiển thị giờ
+      document.getElementById("modal-date").textContent = getDateOnly(item.fullDate);
+      document.getElementById("modal-title").textContent = item.title;
+      document.getElementById("modal-content").textContent = item.fullContent;
+
+      // Hiển thị modal với animation
+      modal.classList.remove("opacity-0", "pointer-events-none");
+      modalBox.classList.remove("scale-95");
+      modalBox.classList.add("scale-100");
+    }
+
+    function closeModal() {
+      const modal = document.getElementById("detail-modal");
+      const modalBox = document.getElementById("modal-box");
+      modal.classList.add("opacity-0", "pointer-events-none");
+      modalBox.classList.remove("scale-100");
+      modalBox.classList.add("scale-95");
+    }
+
+    // Đánh dấu tất cả đã đọc
+    function markAllAsRead() {
+      notifications.forEach(n => n.isRead = true);
+      renderNotifications();
+    }
+
+    // Demo chuyển đổi giữa có dữ liệu và Trạng thái rỗng
+    function toggleEmptyState() {
+      isForcedEmpty = !isForcedEmpty;
+      renderNotifications();
+    }
+
+    // Đóng modal khi bấm ra vùng backdrop ngoài
+    document.getElementById("detail-modal").addEventListener("click", function (e) {
+      if (e.target === this) closeModal();
+    });
+
+    // Khởi chạy
+    renderNotifications();
+  </script>
+</body>
+</html>
