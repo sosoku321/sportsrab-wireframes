@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>SportsRab - Team Uniform Hub</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts: Pretendard & Inter -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" />
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    body {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    /* Custom subtle scrollbar */
+    ::-webkit-scrollbar {
+      width: 4px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background-color: #cbd5e1;
+      border-radius: 9999px;
+    }
+
+    /* Kakao Yellow Brand color */
+    .bg-kakao {
+      background-color: #FEE500;
+    }
+    .text-kakao-label {
+      color: #191919;
+    }
+    
+    /* Realistic shadow effects */
+    .shadow-soft {
+      box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.03);
+    }
+    .shadow-banner {
+      box-shadow: 0 12px 28px -6px rgba(30, 64, 175, 0.35);
+    }
+    .shadow-kakao {
+      box-shadow: 0 2px 8px -1px rgba(254, 229, 0, 0.4);
+    }
+  </style>
+</head>
+<body class="bg-zinc-100 text-neutral-800 antialiased min-h-screen flex justify-center items-start selection:bg-blue-100">
+
+  <!-- Mobile Phone Outer Frame Wrapper -->
+  <div class="w-full max-w-[430px] min-h-screen bg-[#F8FAFC] relative flex flex-col shadow-2xl border-x border-slate-200 overflow-x-hidden">
+
+    <!-- 1. iOS Status Bar -->
+    <header class="pt-3 px-7 pb-2 flex justify-between items-center text-black text-xs font-semibold select-none tracking-tight">
+      <span class="text-sm font-semibold tracking-normal">9:41</span>
+      <div class="flex items-center space-x-2 text-neutral-900">
+        <!-- Cellular signal -->
+        <svg class="w-4 h-3.5 fill-current" viewBox="0 0 17 12">
+          <rect x="0" y="8" width="3" height="4" rx="0.8" />
+          <rect x="4.5" y="5.5" width="3" height="6.5" rx="0.8" />
+          <rect x="9" y="3" width="3" height="9" rx="0.8" />
+          <rect x="13.5" y="0" width="3" height="12" rx="0.8" />
+        </svg>
+        <!-- Wifi icon -->
+        <svg class="w-4 h-3.5 fill-current" viewBox="0 0 16 12">
+          <path d="M8 2.8c2.9 0 5.6 1.1 7.6 2.9.3.3.3.8 0 1.1-.3.3-.8.3-1.1 0C12.8 5.2 10.5 4.3 8 4.3c-2.5 0-4.8.9-6.5 2.5-.3.3-.8.3-1.1 0-.3-.3-.3-.8 0-1.1C2.4 3.9 5.1 2.8 8 2.8zm0 3.7c1.9 0 3.6.7 4.9 2 .3.3.3.8 0 1.1-.3.3-.8.3-1.1 0-1-1-2.4-1.6-3.8-1.6s-2.8.6-3.8 1.6c-.3.3-.8.3-1.1 0-.3-.3-.3-.8 0-1.1C4.4 7.2 6.1 6.5 8 6.5zm0 3.6c.9 0 1.7.4 2.3 1 .3.3.3.8 0 1.1-.3.3-.8.3-1.1 0-.3-.3-.7-.5-1.2-.5s-.9.2-1.2.5c-.3.3-.8.3-1.1 0-.3-.3-.3-.8 0-1.1.6-.6 1.4-1 2.3-1z"/>
+        </svg>
+        <!-- Battery Icon -->
+        <div class="w-6 h-3 border border-neutral-900 rounded-[4px] p-0.5 flex items-center">
+          <div class="h-full w-full bg-neutral-900 rounded-[2px]"></div>
+        </div>
+      </div>
+    </header>
+
+    <!-- 2. App Top Header (Brand, Alerts, Hamburger) -->
+    <div class="px-5 py-2.5 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <!-- Logo Emblem -->
+        <div class="w-8 h-8 rounded-lg bg-neutral-950 flex flex-col items-center justify-center text-white shadow-sm">
+          <span class="text-[13px] font-black tracking-tighter leading-tight italic">R</span>
+          <span class="text-[6px] tracking-widest font-bold -mt-0.5 opacity-90">SPORTS</span>
+        </div>
+        <span class="font-extrabold text-xl tracking-tight text-neutral-900">SportsRab</span>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <!-- Notification Bell with Alert Dot -->
+        <button class="relative p-1.5 text-neutral-700 hover:text-black transition" aria-label="Notifications" onclick="showToast('새 알림이 없습니다')">
+          <i data-lucide="bell" class="w-6 h-6 stroke-[1.8]"></i>
+          <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-amber-400 rounded-full border border-white"></span>
+        </button>
+        <!-- Menu Bar -->
+        <button class="p-1.5 text-neutral-700 hover:text-black transition" aria-label="Menu" onclick="showToast('메뉴를 준비 중입니다')">
+          <i data-lucide="menu" class="w-6 h-6 stroke-[2]"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Scrollable Main Content -->
+    <main class="flex-1 px-5 pt-3 pb-32 space-y-5">
+
+      <!-- 3. Coach Profile Greeting -->
+      <section class="flex items-center gap-3.5">
+        <div class="relative">
+          <img 
+            src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=160&h=160&q=80" 
+            alt="Profile Avatar"
+            class="w-13 h-13 rounded-full object-cover ring-2 ring-amber-400 shadow-sm"
+            style="width: 52px; height: 52px;"
+            onerror="this.src='https://placehold.co/120x120/f59e0b/ffffff?text=Coach'"
+          />
+        </div>
+        <div>
+          <h2 class="text-base font-bold text-neutral-950 leading-tight">ABC team</h2>
+          <p class="text-sm text-neutral-600 font-medium">
+            안녕하세요, <span class="text-blue-600 font-semibold cursor-pointer">Coach!</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 4. Hero Blue Promo Banner -->
+      <section class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#1E56DE] via-[#1b4cc4] to-[#143da3] text-white p-5 shadow-banner">
+        <!-- Diagonal geometric light accents -->
+        <div class="absolute -top-10 -right-10 w-44 h-44 rounded-full bg-blue-400/20 blur-2xl pointer-events-none"></div>
+        <div class="absolute bottom-0 right-1/4 w-32 h-32 rounded-full bg-indigo-500/20 blur-xl pointer-events-none"></div>
+
+        <div class="relative z-10 flex justify-between items-center">
+          <!-- Text Content -->
+          <div class="max-w-[62%] space-y-2">
+            <!-- Badge -->
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/95 text-blue-700 text-xs font-bold shadow-sm backdrop-blur-sm">
+              <i data-lucide="thumbs-up" class="w-3.5 h-3.5 stroke-[2.2]"></i>
+              <span>특별 발주 혜택</span>
+            </div>
+
+            <!-- Title -->
+            <h3 class="text-lg font-bold leading-snug tracking-tight text-white drop-shadow-sm">
+              당신의 퍼포먼스, 우리의 열정
+            </h3>
+
+            <!-- Subtitle -->
+            <p class="text-xs text-blue-100 font-medium tracking-tight opacity-95">
+              오늘 주문 시 내일 오전 7시 도착
+            </p>
+          </div>
+
+          <!-- Hero Jersey Representation Graphic -->
+          <div class="w-[36%] flex justify-end items-center relative select-none">
+            <svg viewBox="0 0 160 180" class="w-full h-auto drop-shadow-xl transform hover:scale-105 transition-transform duration-300">
+              <defs>
+                <linearGradient id="jerseyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#3B82F6" />
+                  <stop offset="50%" stop-color="#1D4ED8" />
+                  <stop offset="100%" stop-color="#1E40AF" />
+                </linearGradient>
+                <linearGradient id="stripeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#FACC15" />
+                  <stop offset="100%" stop-color="#EAB308" />
+                </linearGradient>
+              </defs>
+              
+              <!-- Left Sleeve -->
+              <path d="M 45 42 L 12 72 C 10 74 12 85 18 86 L 38 68 L 45 42 Z" fill="#2563EB" />
+              <!-- Left sleeve cuff -->
+              <path d="M 12 72 L 18 86 L 22 83 L 15 70 Z" fill="#FACC15" />
+
+              <!-- Right Sleeve -->
+              <path d="M 115 42 L 148 72 C 150 74 148 85 142 86 L 122 68 L 115 42 Z" fill="#2563EB" />
+              <!-- Right sleeve cuff -->
+              <path d="M 148 72 L 142 86 L 138 83 L 145 70 Z" fill="#FACC15" />
+
+              <!-- Main Jersey Torso -->
+              <path d="M 45 42 C 55 45 70 52 80 52 C 90 52 105 45 115 42 L 125 145 C 125 152 118 155 105 155 L 55 155 C 42 155 35 152 35 145 Z" fill="url(#jerseyGrad)" />
+              
+              <!-- Yellow Diagonal Stripes -->
+              <g clip-path="url(#torsoClip)">
+                <clipPath id="torsoClip">
+                  <path d="M 45 42 C 55 45 70 52 80 52 C 90 52 105 45 115 42 L 125 145 C 125 152 118 155 105 155 L 55 155 C 42 155 35 152 35 145 Z" />
+                </clipPath>
+                <!-- Diagonal stripes -->
+                <polygon points="98,35 125,35 78,160 55,160" fill="url(#stripeGrad)" opacity="0.9" />
+                <polygon points="120,35 138,35 98,160 82,160" fill="url(#stripeGrad)" opacity="0.9" />
+                <polygon points="135,50 148,50 115,160 104,160" fill="url(#stripeGrad)" opacity="0.9" />
+              </g>
+
+              <!-- Collar (V-neck) -->
+              <path d="M 68 40 C 72 48 78 54 80 54 C 82 54 88 48 92 40 C 85 36 75 36 68 40 Z" fill="#1E293B" />
+              <path d="M 70 41 L 80 53 L 90 41" stroke="#FACC15" stroke-width="3" fill="none" stroke-linejoin="round" />
+
+              <!-- Front Number "7" -->
+              <text x="80" y="98" font-size="34" font-weight="900" fill="#FACC15" text-anchor="middle" font-family="sans-serif" letter-spacing="-1">7</text>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. Section Heading: 확정된 시안 -->
+      <section class="space-y-3.5 pt-1">
+        <h3 class="text-[17px] font-bold text-neutral-900 tracking-tight">확정된 시안</h3>
+
+        <!-- Uniform Item Card 1 -->
+        <div class="bg-white rounded-2xl p-4 shadow-soft border border-slate-100 flex items-center gap-4 transition hover:shadow-md">
+          <!-- Thumbnail preview container -->
+          <div class="w-[84px] h-[84px] bg-[#EEF2F6] rounded-xl flex items-center justify-center p-1.5 flex-shrink-0">
+            <!-- Mini Kit graphic SVG -->
+            <svg viewBox="0 0 80 96" class="w-full h-full">
+              <!-- Jersey -->
+              <path d="M22 18 L10 32 L15 37 L22 28 L22 55 L58 55 L58 28 L65 37 L70 32 L58 18 C52 23 44 23 38 18 Z" fill="#2563EB" />
+              <text x="40" y="34" font-size="7" font-weight="bold" fill="#fff" text-anchor="middle">OLYMPUS</text>
+              <text x="40" y="47" font-size="12" font-weight="900" fill="#fff" text-anchor="middle">7</text>
+              <!-- Shorts -->
+              <path d="M24 58 L24 82 L38 82 L40 68 L42 82 L56 82 L56 58 Z" fill="#1D4ED8" />
+              <text x="50" y="78" font-size="6" font-weight="bold" fill="#fff" text-anchor="middle">7</text>
+            </svg>
+          </div>
+
+          <!-- Info & Action -->
+          <div class="flex-1 min-w-0 space-y-1.5">
+            <span class="text-[11px] font-medium text-neutral-400 block tracking-tight">2026.09.01</span>
+            <h4 class="text-sm font-bold text-blue-900 truncate">하계 축구 유니폼</h4>
+            
+            <button 
+              type="button"
+              onclick="copyShareLink('하계 축구 유니폼')"
+              class="w-full py-2 px-3 rounded-lg border border-blue-500 hover:bg-blue-50 active:scale-[0.98] text-blue-600 font-semibold text-xs flex items-center justify-center gap-1.5 transition-all shadow-sm">
+              <i data-lucide="share-2" class="w-3.5 h-3.5"></i>
+              <span>마킹 정보 입력 링크 공유</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Uniform Item Card 2 -->
+        <div class="bg-white rounded-2xl p-4 shadow-soft border border-slate-100 flex items-center gap-4 transition hover:shadow-md">
+          <div class="w-[84px] h-[84px] bg-[#EEF2F6] rounded-xl flex items-center justify-center p-1.5 flex-shrink-0">
+            <svg viewBox="0 0 80 96" class="w-full h-full">
+              <path d="M22 18 L10 32 L15 37 L22 28 L22 55 L58 55 L58 28 L65 37 L70 32 L58 18 C52 23 44 23 38 18 Z" fill="#2563EB" />
+              <text x="40" y="34" font-size="7" font-weight="bold" fill="#fff" text-anchor="middle">OLYMPUS</text>
+              <text x="40" y="47" font-size="12" font-weight="900" fill="#fff" text-anchor="middle">7</text>
+              <path d="M24 58 L24 82 L38 82 L40 68 L42 82 L56 82 L56 58 Z" fill="#1D4ED8" />
+              <text x="50" y="78" font-size="6" font-weight="bold" fill="#fff" text-anchor="middle">7</text>
+            </svg>
+          </div>
+
+          <div class="flex-1 min-w-0 space-y-1.5">
+            <span class="text-[11px] font-medium text-neutral-400 block tracking-tight">2026.09.01</span>
+            <h4 class="text-sm font-bold text-blue-900 truncate">트레이닝 바람막이</h4>
+            
+            <button 
+              type="button"
+              onclick="copyShareLink('트레이닝 바람막이')"
+              class="w-full py-2 px-3 rounded-lg border border-blue-500 hover:bg-blue-50 active:scale-[0.98] text-blue-600 font-semibold text-xs flex items-center justify-center gap-1.5 transition-all shadow-sm">
+              <i data-lucide="share-2" class="w-3.5 h-3.5"></i>
+              <span>마킹 정보 입력 링크 공유</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Uniform Item Card 3 -->
+        <div class="bg-white rounded-2xl p-4 shadow-soft border border-slate-100 flex items-center gap-4 transition hover:shadow-md">
+          <div class="w-[84px] h-[84px] bg-[#EEF2F6] rounded-xl flex items-center justify-center p-1.5 flex-shrink-0">
+            <svg viewBox="0 0 80 96" class="w-full h-full">
+              <path d="M22 18 L10 32 L15 37 L22 28 L22 55 L58 55 L58 28 L65 37 L70 32 L58 18 C52 23 44 23 38 18 Z" fill="#2563EB" />
+              <text x="40" y="34" font-size="7" font-weight="bold" fill="#fff" text-anchor="middle">OLYMPUS</text>
+              <text x="40" y="47" font-size="12" font-weight="900" fill="#fff" text-anchor="middle">7</text>
+              <path d="M24 58 L24 82 L38 82 L40 68 L42 82 L56 82 L56 58 Z" fill="#1D4ED8" />
+              <text x="50" y="78" font-size="6" font-weight="bold" fill="#fff" text-anchor="middle">7</text>
+            </svg>
+          </div>
+
+          <div class="flex-1 min-w-0 space-y-1.5">
+            <span class="text-[11px] font-medium text-neutral-400 block tracking-tight">2026.09.01</span>
+            <h4 class="text-sm font-bold text-blue-900 truncate">트레이닝 바람막이</h4>
+            
+            <button 
+              type="button"
+              onclick="copyShareLink('트레이닝 바람막이')"
+              class="w-full py-2 px-3 rounded-lg border border-blue-500 hover:bg-blue-50 active:scale-[0.98] text-blue-600 font-semibold text-xs flex items-center justify-center gap-1.5 transition-all shadow-sm">
+              <i data-lucide="share-2" class="w-3.5 h-3.5"></i>
+              <span>마킹 정보 입력 링크 공유</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Extra Hidden Design Cards for "더보기" toggle -->
+        <div id="extraCards" class="hidden space-y-3.5 transition-all duration-300">
+          <div class="bg-white rounded-2xl p-4 shadow-soft border border-slate-100 flex items-center gap-4">
+            <div class="w-[84px] h-[84px] bg-[#EEF2F6] rounded-xl flex items-center justify-center p-1.5 flex-shrink-0">
+              <svg viewBox="0 0 80 96" class="w-full h-full">
+                <path d="M22 18 L10 32 L15 37 L22 28 L22 55 L58 55 L58 28 L65 37 L70 32 L58 18 C52 23 44 23 38 18 Z" fill="#047857" />
+                <text x="40" y="34" font-size="7" font-weight="bold" fill="#fff" text-anchor="middle">GOALKEEPER</text>
+                <text x="40" y="47" font-size="12" font-weight="900" fill="#fff" text-anchor="middle">1</text>
+                <path d="M24 58 L24 82 L38 82 L40 68 L42 82 L56 82 L56 58 Z" fill="#065F46" />
+              </svg>
+            </div>
+            <div class="flex-1 min-w-0 space-y-1.5">
+              <span class="text-[11px] font-medium text-neutral-400 block">2026.09.01</span>
+              <h4 class="text-sm font-bold text-emerald-900 truncate">골키퍼 전용 유니폼 셋트</h4>
+              <button onclick="copyShareLink('골키퍼 유니폼')" class="w-full py-2 px-3 rounded-lg border border-emerald-600 hover:bg-emerald-50 text-emerald-700 font-semibold text-xs flex items-center justify-center gap-1.5">
+                <i data-lucide="share-2" class="w-3.5 h-3.5"></i>
+                <span>마킹 정보 입력 링크 공유</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- View More Button (더보기) -->
+        <div class="text-center pt-1">
+          <button 
+            id="moreBtn"
+            type="button" 
+            onclick="toggleViewMore()" 
+            class="inline-flex items-center gap-1.5 text-xs text-neutral-600 font-medium hover:text-black py-1.5 px-3 rounded-full hover:bg-slate-200/60 transition">
+            <span id="moreText">더보기</span>
+            <i id="moreIcon" data-lucide="chevron-down" class="w-4 h-4 transition-transform duration-300"></i>
+          </button>
+        </div>
+      </section>
+
+      <!-- ============================================================== -->
+      <!-- [YÊU CẦU 1 & 2] KAKAOTALK CHAT BANNER / BUTTON (Compact Redesign) -->
+      <!-- ============================================================== -->
+      <section>
+        <button 
+          id="kakaoChannelBtn"
+          type="button"
+          onclick="openKakaoChannel()"
+          class="w-full bg-kakao hover:bg-[#FDD800] active:scale-[0.99] text-kakao-label rounded-xl py-2.5 px-3.5 flex items-center justify-between shadow-kakao transition-all duration-150 border border-amber-300/50 group"
+        >
+          <div class="flex items-center gap-2.5 min-w-0">
+            <!-- Official Kakao bubble icon (Compact 28px) -->
+            <div class="w-7 h-7 rounded-full bg-[#191919] flex items-center justify-center text-kakao flex-shrink-0 shadow-xs group-hover:scale-105 transition-transform">
+              <svg viewBox="0 0 24 24" class="w-4 h-4 fill-[#FEE500]">
+                <!-- KakaoTalk speech bubble silhouette -->
+                <path d="M12 3C6.477 3 2 6.477 2 10.772c0 2.766 1.848 5.184 4.628 6.551-.186.723-.74 2.87-.852 3.33-.14.577.21.57.441.417.18-.12 2.827-1.92 3.99-2.709.58.077 1.176.12 1.793.12 5.523 0 10-3.477 10-7.772S17.523 3 12 3z"/>
+              </svg>
+            </div>
+            
+            <!-- Compact Single-line CTA -->
+            <div class="flex items-center gap-1.5 min-w-0">
+              <span class="font-bold text-[13px] tracking-tight text-neutral-950">카카오톡 상담하기</span>
+              <span class="bg-[#191919] text-[#FEE500] text-[9.5px] font-bold px-1.5 py-0.5 rounded-full flex-shrink-0 leading-none">실시간</span>
+            </div>
+          </div>
+
+          <!-- Arrow Action Icon -->
+          <div class="flex items-center gap-0.5 text-neutral-800 group-hover:translate-x-0.5 transition-transform flex-shrink-0">
+            <span class="text-[11px] font-semibold text-neutral-800">문의하기</span>
+            <i data-lucide="chevron-right" class="w-3.5 h-3.5 stroke-[2.4]"></i>
+          </div>
+        </button>
+      </section>
+
+      <!-- 6. SportsRab Company Info Footer Block -->
+      <section class="bg-[#FFF8E7] rounded-2xl p-4 shadow-soft border border-amber-100 flex items-center justify-between relative overflow-hidden">
+        <!-- Text details -->
+        <div class="space-y-1 text-xs text-neutral-700 tracking-tight z-10">
+          <p><span class="text-neutral-500 font-normal">상호:</span> <span class="font-bold text-neutral-900">주식회사 스포츠랩</span></p>
+          <p>
+            <span class="text-neutral-500 font-normal">이메일:</span> 
+            <a href="mailto:sportsrab@naver.com" class="font-medium text-neutral-800 hover:underline">sportsrab@naver.com</a>
+          </p>
+          <p>
+            <span class="text-neutral-500 font-normal">전화번호:</span> 
+            <a href="tel:010-3727-6548" class="font-medium text-neutral-800 hover:underline">010-3727-6548</a>
+          </p>
+        </div>
+
+        <!-- 3D Cute Isometric Letter Graphic -->
+        <div class="w-20 h-20 relative flex-shrink-0 flex items-center justify-center select-none">
+          <svg viewBox="0 0 120 120" class="w-full h-full filter drop-shadow-md">
+            <defs>
+              <linearGradient id="envelopeBody" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#FFFFFF" />
+                <stop offset="100%" stop-color="#D9E6FC" />
+              </linearGradient>
+              <linearGradient id="envelopeFlap" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#60A5FA" />
+                <stop offset="100%" stop-color="#2563EB" />
+              </linearGradient>
+              <linearGradient id="envelopeShadow" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#C7D2FE" />
+                <stop offset="100%" stop-color="#93C5FD" />
+              </linearGradient>
+            </defs>
+
+            <!-- Envelope Backing / 3D base tilted -->
+            <path d="M15 45 L95 25 L108 85 L28 102 Z" fill="#E2E8F0" opacity="0.6"/>
+            
+            <!-- Envelope Body -->
+            <polygon points="12,50 92,26 108,82 28,102" fill="url(#envelopeBody)" />
+
+            <!-- Envelope Inset Flap Bottom Fold -->
+            <polygon points="28,102 108,82 62,64" fill="url(#envelopeShadow)" opacity="0.8"/>
+            <polygon points="12,50 62,64 28,102" fill="#CFFAFE" opacity="0.5"/>
+            <polygon points="92,26 108,82 62,64" fill="#BFDBFE" opacity="0.7"/>
+
+            <!-- Flap (Open / Highlight in rich Blue) -->
+            <path d="M 12 50 L 92 26 L 56 68 Z" fill="url(#envelopeFlap)" stroke="#1D4ED8" stroke-width="1.5" stroke-linejoin="round"/>
+
+            <!-- Soft Stamp / Notification Pill -->
+            <circle cx="95" cy="30" r="10" fill="#F43F5E" opacity="0.9" />
+            <path d="M92 30 L95 33 L100 27" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/>
+          </svg>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- 7. Fixed Bottom Navigation Bar -->
+    <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] bg-white/95 backdrop-blur-md border-t border-slate-200/80 px-4 pt-2.5 pb-2 z-50 shadow-lg">
+      <div class="grid grid-cols-5 text-center">
+        
+        <!-- Tab 1: 홈 (Active) -->
+        <button type="button" class="flex flex-col items-center group focus:outline-none" onclick="setActiveTab(this)">
+          <div class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center transition-transform group-hover:scale-105 shadow-sm">
+            <i data-lucide="home" class="w-4 h-4"></i>
+          </div>
+          <span class="text-[11px] font-bold text-blue-600 mt-1">홈</span>
+        </button>
+
+        <!-- Tab 2: 유니폼 목록 -->
+        <button type="button" class="flex flex-col items-center group focus:outline-none text-neutral-500 hover:text-neutral-900" onclick="setActiveTab(this)">
+          <div class="w-8 h-8 flex items-center justify-center">
+            <i data-lucide="layout-grid" class="w-5 h-5 stroke-[1.8]"></i>
+          </div>
+          <span class="text-[11px] font-medium mt-1">유니폼 목록</span>
+        </button>
+
+        <!-- Tab 3: 주문내역 -->
+        <button type="button" class="flex flex-col items-center group focus:outline-none text-neutral-500 hover:text-neutral-900" onclick="setActiveTab(this)">
+          <div class="w-8 h-8 flex items-center justify-center">
+            <i data-lucide="package" class="w-5 h-5 stroke-[1.8]"></i>
+          </div>
+          <span class="text-[11px] font-medium mt-1">주문내역</span>
+        </button>
+
+        <!-- Tab 4: 인보이스 -->
+        <button type="button" class="flex flex-col items-center group focus:outline-none text-neutral-500 hover:text-neutral-900" onclick="setActiveTab(this)">
+          <div class="w-8 h-8 flex items-center justify-center">
+            <i data-lucide="receipt-text" class="w-5 h-5 stroke-[1.8]"></i>
+          </div>
+          <span class="text-[11px] font-medium mt-1">인보이스</span>
+        </button>
+
+        <!-- Tab 5: 마이페이지 -->
+        <button type="button" class="flex flex-col items-center group focus:outline-none text-neutral-500 hover:text-neutral-900" onclick="setActiveTab(this)">
+          <div class="w-8 h-8 flex items-center justify-center">
+            <i data-lucide="user" class="w-5 h-5 stroke-[1.8]"></i>
+          </div>
+          <span class="text-[11px] font-medium mt-1">마이페이지</span>
+        </button>
+
+      </div>
+
+      <!-- iOS Home Bar Indicator -->
+      <div class="w-32 h-1 bg-neutral-900 rounded-full mx-auto mt-2"></div>
+    </nav>
+
+    <!-- Custom Toast Message Notification -->
+    <div id="toast" class="fixed top-12 left-1/2 -translate-x-1/2 bg-neutral-900/90 text-white text-xs px-4 py-2.5 rounded-full shadow-2xl opacity-0 pointer-events-none transition-all duration-300 z-50 flex items-center gap-2 backdrop-blur-md">
+      <i id="toastIcon" data-lucide="check" class="w-4 h-4 text-emerald-400"></i>
+      <span id="toastMsg">클립보드에 복사되었습니다</span>
+    </div>
+
+  </div>
+
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    /* ==============================================================
+     * CẤU HÌNH KAKAOTALK CHANNEL (YÊU CẦU 2)
+     * ==============================================================
+     * Thay đổi ID/URL của KakaoTalk Channel tại đây.
+     * Hỗ trợ URL Web (http://pf.kakao.com/_xxxx) hoặc Deeplink kakaoplus://
+     */
+    const KAKAO_CONFIG = {
+      channelId: "_SportsRab", // Thay bằng Kakao Channel ID thực tế
+      webUrl: "https://pf.kakao.com/_SportsRab", // Kakao Channel web link
+      deeplinkUrl: "kakaoplus://plusfriend/home/_SportsRab" // App Deeplink
+    };
+
+    /**
+     * Xử lý click nút KakaoTalk Channel:
+     * Cố gắng kích hoạt deeplink trên mobile app, và tự động fallback mở web URL
+     */
+    function openKakaoChannel() {
+      showToast("카카오톡 상담 채널로 연결합니다...", "message-circle");
+
+      const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+      if (isMobile) {
+        // Thử mở qua Deeplink app KakaoTalk
+        const start = Date.now();
+        window.location.href = KAKAO_CONFIG.deeplinkUrl;
+
+        // Nếu app không mở trong 1.5s -> Chuyển hướng sang Web
+        setTimeout(() => {
+          if (Date.now() - start < 1800) {
+            window.open(KAKAO_CONFIG.webUrl, "_blank");
+          }
+        }, 1500);
+      } else {
+        // Trên PC / Desktop Browser: Mở trực tiếp Web Kakao Channel
+        window.open(KAKAO_CONFIG.webUrl, "_blank");
+      }
+    }
+
+    /**
+     * Sao chép link thông tin Marking
+     */
+    function copyShareLink(title) {
+      const shareText = `[SportsRab] '${title}' 마킹 정보 입력 페이지 링크:\nhttps://sportsrab.kr/marking/share?item=${encodeURIComponent(title)}`;
+
+      // Dùng textarea fallback để tương thích với tất cả iframe/trình duyệt
+      const textarea = document.createElement("textarea");
+      textarea.value = shareText;
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.select();
+
+      try {
+        const successful = document.execCommand("copy");
+        if (successful) {
+          showToast(`'${title}' 마킹 링크가 복사되었습니다!`);
+        } else {
+          showToast("링크 복사에 실패했습니다.", "alert-circle");
+        }
+      } catch (err) {
+        showToast("링크 복사에 실패했습니다.", "alert-circle");
+      } finally {
+        document.body.removeChild(textarea);
+      }
+    }
+
+    /**
+     * Bật / Tắt danh sách mở rộng (더보기)
+     */
+    let isExpanded = false;
+    function toggleViewMore() {
+      const extraCards = document.getElementById("extraCards");
+      const moreText = document.getElementById("moreText");
+      const moreIcon = document.getElementById("moreIcon");
+
+      isExpanded = !isExpanded;
+      if (isExpanded) {
+        extraCards.classList.remove("hidden");
+        moreText.innerText = "접기";
+        moreIcon.classList.add("rotate-180");
+      } else {
+        extraCards.classList.add("hidden");
+        moreText.innerText = "더보기";
+        moreIcon.classList.remove("rotate-180");
+      }
+      lucide.createIcons();
+    }
+
+    /**
+     * Hiển thị thông báo Toast ngắn
+     */
+    let toastTimeout;
+    function showToast(message, iconName = "check") {
+      const toast = document.getElementById("toast");
+      const toastMsg = document.getElementById("toastMsg");
+      const toastIcon = document.getElementById("toastIcon");
+
+      clearTimeout(toastTimeout);
+      toastMsg.innerText = message;
+      toastIcon.setAttribute("data-lucide", iconName);
+      lucide.createIcons();
+
+      toast.classList.remove("opacity-0", "pointer-events-none");
+      toast.classList.add("opacity-100");
+
+      toastTimeout = setTimeout(() => {
+        toast.classList.remove("opacity-100");
+        toast.classList.add("opacity-0", "pointer-events-none");
+      }, 2400);
+    }
+
+    /**
+     * Điều hướng Bottom Tab
+     */
+    function setActiveTab(btn) {
+      // Prototype demo - toast feedback
+      const label = btn.querySelector("span").innerText;
+      if (label !== "홈") {
+        showToast(`'${label}' 탭으로 이동했습니다.`);
+      }
+    }
+  </script>
+</body>
+</html>
