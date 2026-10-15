@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SportsRAB CMS - 주문 관리</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              navy: '#0b2447',
+              sidebar: '#0d2b59',
+              activeNav: '#ffffff',
+              primary: '#0f52ba',
+              btnPrimary: '#0052cc',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .smooth-scroll {
+      scroll-behavior: smooth;
+    }
+  </style>
+</head>
+<body class="bg-[#f0f4f9] text-gray-800 text-[13px] flex h-screen overflow-hidden font-sans">
+
+  <!-- ==================== SIDEBAR ==================== -->
+  <aside class="w-[200px] bg-[#0c2954] text-white flex flex-col justify-between flex-shrink-0 select-none">
+    <div>
+      <!-- Brand Logo -->
+      <div class="h-14 flex items-center px-4 gap-2 border-b border-[#1b3b6d]">
+        <div class="w-6 h-6 rounded bg-black flex items-center justify-center font-bold text-white text-xs tracking-tighter">
+          R
+        </div>
+        <span class="font-bold text-[15px] tracking-tight">SportsRAB CMS</span>
+      </div>
+
+      <!-- Navigation Menu -->
+      <nav class="py-2 text-[12.5px] font-medium text-slate-300">
+        <a href="#" class="flex items-center gap-3 px-4 py-2.5 hover:bg-[#163a70] transition">
+          <i class="fa-solid fa-table-cells-large w-4 text-center text-slate-400"></i>
+          <span>대시보드</span>
+        </a>
+
+        <!-- Active Menu: 주문 관리 -->
+        <a href="#" class="flex items-center gap-3 px-4 py-2.5 bg-white text-[#0c2954] font-bold rounded-l-md ml-2 transition">
+          <i class="fa-solid fa-box-archive w-4 text-center text-[#0c2954]"></i>
+          <span>주문 관리</span>
+        </a>
+
+        <a href="#" class="flex items-center gap-3 px-4 py-2.5 hover:bg-[#163a70] transition">
+          <i class="fa-regular fa-clipboard w-4 text-center text-slate-400"></i>
+          <span>디자인 목록 관리</span>
+        </a>
+
+        <a href="#" class="flex items-center gap-3 px-4 py-2.5 hover:bg-[#163a70] transition">
+          <i class="fa-solid fa-truck-fast w-4 text-center text-slate-400"></i>
+          <span>제작 및 배송 관리</span>
+        </a>
+
+        <!-- Submenu -->
+        <div class="hover:bg-[#163a70]/40 transition">
+          <div class="flex items-center justify-between px-4 py-2.5 cursor-pointer">
+            <div class="flex items-center gap-3">
+              <i class="fa-solid fa-shirt w-4 text-center text-slate-400"></i>
+              <span>유니폼 품목 관리</span>
+            </div>
+            <i class="fa-solid fa-chevron-up text-[10px] text-slate-400"></i>
+          </div>
+          <div class="bg-[#081e3f] py-1 pl-10 text-[11.5px] text-slate-400 flex flex-col gap-1.5">
+            <a href="#" class="hover:text-white py-1">카테고리 및 품목 설정</a>
+            <a href="#" class="hover:text-white py-1">사이즈 설정</a>
+          </div>
+        </div>
+
+        <a href="#" class="flex items-center gap-3 px-4 py-2.5 hover:bg-[#163a70] transition">
+          <i class="fa-regular fa-address-book w-4 text-center text-slate-400"></i>
+          <span>고객 관리</span>
+        </a>
+
+        <a href="#" class="flex items-center gap-3 px-4 py-2.5 hover:bg-[#163a70] transition">
+          <i class="fa-solid fa-chart-column w-4 text-center text-slate-400"></i>
+          <span>매출 관리</span>
+        </a>
+
+        <a href="#" class="flex items-center gap-3 px-4 py-2.5 hover:bg-[#163a70] transition">
+          <i class="fa-solid fa-user-group w-4 text-center text-slate-400"></i>
+          <span>사용자 및 권한 관리</span>
+        </a>
+
+        <a href="#" class="flex items-center gap-3 px-4 py-2.5 hover:bg-[#163a70] transition">
+          <i class="fa-solid fa-industry w-4 text-center text-slate-400"></i>
+          <span>공장 등록 관리</span>
+        </a>
+
+        <div class="hover:bg-[#163a70]/40 transition">
+          <div class="flex items-center justify-between px-4 py-2.5 cursor-pointer">
+            <div class="flex items-center gap-3">
+              <i class="fa-solid fa-gear w-4 text-center text-slate-400"></i>
+              <span>시스템 설정</span>
+            </div>
+            <i class="fa-solid fa-chevron-down text-[10px] text-slate-400"></i>
+          </div>
+        </div>
+      </nav>
+    </div>
+
+    <!-- Logout -->
+    <div class="p-3 border-t border-[#1b3b6d]">
+      <a href="#" class="flex items-center gap-2 px-3 py-2 text-slate-300 hover:text-white text-xs">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        <span>로그아웃</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- ==================== MAIN CONTENT AREA ==================== -->
+  <main class="flex-1 flex flex-col h-full overflow-hidden bg-[#f4f7fb]">
+    
+    <!-- Top Bar -->
+    <header class="h-12 bg-[#0c2954] flex items-center justify-end px-5 gap-4 text-white text-xs">
+      <div class="flex items-center gap-1.5 cursor-pointer">
+        <span class="bg-[#d32f2f] text-white text-[10px] px-1.5 py-0.2 rounded-full font-bold">46</span>
+        <i class="fa-regular fa-bell text-sm"></i>
+        <span>알림</span>
+      </div>
+      <div class="flex items-center gap-2 cursor-pointer border-l border-[#244679] pl-4">
+        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" alt="Avatar" class="w-6 h-6 rounded-full object-cover">
+        <span>최고 관리자</span>
+      </div>
+    </header>
+
+    <!-- Page Body -->
+    <div class="flex-1 flex flex-col p-4 overflow-hidden">
+
+      <!-- Status Pills Bar -->
+      <div class="flex items-center justify-between mb-3">
+        <h1 class="text-base font-bold text-gray-800">주문 관리</h1>
+        
+        <div class="flex items-center gap-1.5 overflow-x-auto text-xs no-scrollbar">
+          <button class="px-3 py-1 bg-white border border-gray-300 text-gray-700 rounded-full font-medium shadow-sm hover:bg-gray-50">
+            전체 <span class="text-blue-600 font-bold">(187)</span>
+          </button>
+          <button class="px-3 py-1 bg-[#475467] text-white rounded-full font-medium shadow-sm">
+            주문 확인 대기 <span class="text-amber-300 font-bold">(65)</span>
+          </button>
+          <button class="px-3 py-1 bg-white border border-gray-300 text-gray-700 rounded-full font-medium shadow-sm hover:bg-gray-50">
+            발주완료 <span class="text-blue-600 font-bold">(15)</span>
+          </button>
+          <button class="px-3 py-1 bg-white border border-gray-300 text-gray-700 rounded-full font-medium shadow-sm hover:bg-gray-50">
+            제작진행 <span class="text-purple-600 font-bold">(16)</span>
+          </button>
+          <button class="px-3 py-1 bg-white border border-gray-300 text-gray-700 rounded-full font-medium shadow-sm hover:bg-gray-50">
+            제작중 <span class="text-amber-600 font-bold">(15)</span>
+          </button>
+          <button class="px-3 py-1 bg-white border border-gray-300 text-gray-700 rounded-full font-medium shadow-sm hover:bg-gray-50">
+            제작완료 <span class="text-emerald-600 font-bold">(24)</span>
+          </button>
+          <button class="px-3 py-1 bg-white border border-gray-300 text-gray-700 rounded-full font-medium shadow-sm hover:bg-gray-50">
+            배송중 <span class="text-blue-500 font-bold">(27)</span>
+          </button>
+          <button class="px-3 py-1 bg-white border border-gray-300 text-gray-700 rounded-full font-medium shadow-sm hover:bg-gray-50">
+            배송완료 <span class="text-gray-500 font-bold">(30)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Filters & Actions Bar -->
+      <div class="bg-white p-2.5 rounded-t-lg border border-gray-200 border-b-0 flex flex-wrap items-center justify-between gap-2 text-xs">
+        <div class="flex flex-wrap items-center gap-2">
+          <select class="border border-gray-300 rounded px-2.5 py-1.5 bg-white text-gray-700 focus:outline-none focus:border-blue-500">
+            <option>생성일</option>
+            <option>수정일</option>
+          </select>
+
+          <div class="flex items-center border border-gray-300 rounded px-2.5 py-1.5 bg-white gap-2">
+            <span class="text-gray-700 font-mono">2026.09.16 - 2026.10.15</span>
+            <i class="fa-regular fa-calendar text-gray-400"></i>
+          </div>
+
+          <div class="flex items-center gap-1">
+            <span class="text-gray-600 font-medium">카테고리</span>
+            <select class="border border-gray-300 rounded px-2.5 py-1.5 bg-white text-gray-500 min-w-[90px] focus:outline-none focus:border-blue-500">
+              <option>선택</option>
+              <option>축구 유니폼</option>
+              <option>바람막이</option>
+            </select>
+          </div>
+
+          <div class="flex items-center gap-1">
+            <span class="text-gray-600 font-medium">담당 공장</span>
+            <select class="border border-gray-300 rounded px-2.5 py-1.5 bg-white text-gray-500 min-w-[90px] focus:outline-none focus:border-blue-500">
+              <option>선택</option>
+              <option>서울 공장</option>
+              <option>경기 공장</option>
+            </select>
+          </div>
+
+          <div class="relative">
+            <input type="text" placeholder="검색할 키워드를 입력하세요" class="border border-gray-300 rounded pl-3 pr-8 py-1.5 w-56 placeholder-gray-400 focus:outline-none focus:border-blue-500">
+            <i class="fa-solid fa-magnifying-glass absolute right-2.5 top-2.5 text-gray-400 text-xs cursor-pointer"></i>
+          </div>
+
+          <button class="flex items-center gap-1 border border-gray-300 rounded px-2.5 py-1.5 bg-white hover:bg-gray-50 text-gray-600">
+            <i class="fa-solid fa-arrow-rotate-right text-[11px]"></i>
+            <span>초기화</span>
+          </button>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button class="w-8 h-8 rounded border border-gray-300 flex items-center justify-center bg-white hover:bg-gray-50 text-[#107c41] shadow-sm" title="엑셀 다운로드">
+            <i class="fa-solid fa-file-excel text-base"></i>
+          </button>
+
+          <button class="flex items-center gap-1.5 bg-[#0052cc] hover:bg-[#0043a8] text-white px-3.5 py-1.5 rounded font-medium shadow-sm transition">
+            <i class="fa-solid fa-plus text-xs"></i>
+            <span>주문 생성</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ==================== DATA TABLE ==================== -->
+      <div class="flex-1 bg-white border border-gray-200 overflow-auto relative">
+        <table class="w-full text-left border-collapse min-w-[1100px]">
+          <!-- Table Header -->
+          <thead class="bg-[#e9f0f8] text-[#334155] font-semibold text-xs border-b border-gray-300 sticky top-0 z-10">
+            <tr>
+              <th class="py-2.5 px-3 text-center w-14">번호</th>
+              <th class="py-2.5 px-3 w-32">주문 번호</th>
+              <th class="py-2.5 px-3 w-28">
+                <div class="flex items-center gap-1 cursor-pointer">
+                  <span>생성일</span>
+                  <i class="fa-solid fa-arrow-down-short-wide text-[11px] text-blue-600"></i>
+                </div>
+              </th>
+              <!-- [ĐÃ ẨN] Cột 발주 일시 -->
+              <th class="py-2.5 px-3 w-40">팀명</th>
+              <th class="py-2.5 px-3 w-36">고객 정보</th>
+              <th class="py-2.5 px-3 w-52">참고 샘플 정보</th>
+              <th class="py-2.5 px-2 text-center w-20">디자인</th>
+              
+              <!-- [MỚI] CỘT HIỂN THỊ CÁC ẢNH MẪU THIẾT KẾ (디자인 시안) -->
+              <th class="py-2.5 px-3 text-center w-64 bg-[#e2ecf7] border-l border-r border-blue-200 text-blue-900">
+                <div class="flex items-center justify-center gap-1">
+                  <span>디자인 시안</span>
+                </div>
+              </th>
+
+              <!-- [ĐÃ ẨN] Cột 인원 / 마킹 -->
+              <!-- [ĐÃ ẨN] Cột 총 금액 -->
+              <!-- [ĐÃ ẨN] Cột 결제상태 -->
+            </tr>
+          </thead>
+
+          <tbody class="divide-y divide-gray-200 text-xs text-gray-700">
+
+            <!-- ROW 1: 1 ảnh (<= 3 ảnh -> KHÔNG hiện mũi tên) -->
+            <tr class="hover:bg-blue-50/40 transition">
+              <td class="py-2.5 px-3 text-center text-gray-500 font-mono">1</td>
+              <td class="py-2.5 px-3 font-medium text-blue-600 hover:underline cursor-pointer">#OD-26100088</td>
+              <td class="py-2.5 px-3 text-gray-500 font-mono">2026.10.14</td>
+              <td class="py-2.5 px-3 font-medium">FC Gangnam United</td>
+              <td class="py-2.5 px-3">
+                <div class="font-medium text-gray-800">김민준</div>
+                <div class="text-gray-400 font-mono text-[11px]">010-8765-4322</div>
+              </td>
+              <td class="py-2.5 px-3">
+                <div class="flex items-center gap-2">
+                  <img src="https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=80&auto=format&fit=crop&q=60" alt="sample" class="w-9 h-9 rounded object-cover border border-gray-200">
+                  <div>
+                    <div class="font-medium text-gray-800 line-clamp-1">후드 바람막이 - 반집업</div>
+                    <div class="text-[11px] text-gray-400">F/W 동계 단체복 리스트</div>
+                  </div>
+                </div>
+              </td>
+              <td class="py-2.5 px-2 text-center">
+                <span class="inline-block px-1.5 py-0.5 rounded bg-[#310000] text-[#ff9a00] font-black text-[11px] border border-[#ff9a00]/30 shadow-sm">Ai</span>
+              </td>
+              
+              <!-- 1 ảnh -->
+              <td class="py-2 px-3 border-l border-r border-gray-100 bg-gray-50/30 text-center">
+                <div class="design-preview-box" data-images='[
+                  "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=300&auto=format&fit=crop&q=80"
+                ]'></div>
+              </td>
+            </tr>
+
+            <!-- ROW 2: 2 ảnh (<= 3 ảnh -> KHÔNG hiện mũi tên) -->
+            <tr class="hover:bg-blue-50/40 transition">
+              <td class="py-2.5 px-3 text-center text-gray-500 font-mono">2</td>
+              <td class="py-2.5 px-3 font-medium text-blue-600 hover:underline cursor-pointer">#OD-26100087</td>
+              <td class="py-2.5 px-3 text-gray-500 font-mono">2026.10.14</td>
+              <td class="py-2.5 px-3 font-medium">FC Gangnam United</td>
+              <td class="py-2.5 px-3">
+                <div class="font-medium text-gray-800">김민준</div>
+                <div class="text-gray-400 font-mono text-[11px]">010-8765-4322</div>
+              </td>
+              <td class="py-2.5 px-3">
+                <div class="flex items-center gap-2">
+                  <img src="https://images.unsplash.com/photo-1578768079052-aa76e520028b?w=80&auto=format&fit=crop&q=60" alt="sample" class="w-9 h-9 rounded object-cover border border-gray-200">
+                  <div>
+                    <div class="font-medium text-gray-800 line-clamp-1">나시 유니폼</div>
+                    <div class="text-[11px] text-gray-400">축구 유니폼</div>
+                  </div>
+                </div>
+              </td>
+              <td class="py-2.5 px-2 text-center">
+                <span class="inline-block px-1.5 py-0.5 rounded bg-[#310000] text-[#ff9a00] font-black text-[11px] border border-[#ff9a00]/30 shadow-sm">Ai</span>
+              </td>
+              
+              <!-- 2 ảnh -->
+              <td class="py-2 px-3 border-l border-r border-gray-100 bg-gray-50/30 text-center">
+                <div class="design-preview-box" data-images='[
+                  "https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=300&auto=format&fit=crop&q=80",
+                  "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=300&auto=format&fit=crop&q=80"
+                ]'></div>
+              </td>
+            </tr>
+
+            <!-- ROW 3: 3 ảnh (<= 3 ảnh -> KHÔNG hiện mũi tên) -->
+            <tr class="hover:bg-blue-50/40 transition">
+              <td class="py-2.5 px-3 text-center text-gray-500 font-mono">3</td>
+              <td class="py-2.5 px-3 font-medium text-blue-600 hover:underline cursor-pointer">#OD-26100086</td>
+              <td class="py-2.5 px-3 text-gray-500 font-mono">2026.10.14</td>
+              <td class="py-2.5 px-3 font-medium">FC Gangnam United</td>
+              <td class="py-2.5 px-3">
+                <div class="font-medium text-gray-800">김민준</div>
+                <div class="text-gray-400 font-mono text-[11px]">010-8765-4322</div>
+              </td>
+              <td class="py-2.5 px-3">
+                <div class="flex items-center gap-2">
+                  <img src="https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=80&auto=format&fit=crop&q=60" alt="sample" class="w-9 h-9 rounded object-cover border border-gray-200">
+                  <div>
+                    <div class="font-medium text-gray-800 line-clamp-1">반팔 라운드 세트</div>
+                    <div class="text-[11px] text-gray-400">S/S 하계 단체복 리스트</div>
+                  </div>
+                </div>
+              </td>
+              <td class="py-2.5 px-2 text-center">
+                <span class="inline-block px-1.5 py-0.5 rounded bg-[#310000] text-[#ff9a00] font-black text-[11px] border border-[#ff9a00]/30 shadow-sm">Ai</span>
+              </td>
+              
+              <!-- 3 ảnh: đủ 3 ô, không cần mũi tên -->
+              <td class="py-2 px-3 border-l border-r border-gray-100 bg-gray-50/30 text-center">
+                <div class="design-preview-box" data-images='[
+                  "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=300&auto=format&fit=crop&q=80",
+                  "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=300&auto=format&fit=crop&q=80",
+                  "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=300&auto=format&fit=crop&q=80"
+                ]'></div>
+              </td>
+            </tr>
+
+            <!-- ROW 4: 5 ảnh (> 3 ảnh -> HIỆN MŨI TÊN TRÁI PHẢI ĐỂ DI CHUYỂN XEM) -->
+            <tr class="hover:bg-blue-50/40 transition">
+              <td class="py-2.5 px-3 text-center text-gray-500 font-mono">4</td>
+              <td class="py-2.5 px-3 font-medium text-blue-600 hover:underline cursor-pointer">#OD-26100085</td>
+              <td class="py-2.5 px-3 text-gray-500 font-mono">2026.10.14</td>
+              <td class="py-2.5 px-3 font-medium">Manchester United1</td>
+              <td class="py-2.5 px-3">
+                <div class="font-medium text-gray-800">WOW</div>
+                <div class="text-gray-400 font-mono text-[11px]">010-1111-1112</div>
+              </td>
+              <td class="py-2.5 px-3">
+                <div class="flex items-center gap-2">
+                  <img src="https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=80&auto=format&fit=crop&q=60" alt="sample" class="w-9 h-9 rounded object-cover border border-gray-200">
+                  <div>
+                    <div class="font-medium text-gray-800 line-clamp-1">트레이닝복 세트</div>
+                    <div class="text-[11px] text-gray-400">F/W 동계 단체복 리스트</div>
+                  </div>
+                </div>
+              </td>
+              <td class="py-2.5 px-2 text-center">
+                <span class="inline-block px-1.5 py-0.5 rounded bg-[#310000] text-[#ff9a00] font-black text-[11px] border border-[#ff9a00]/30 shadow-sm">Ai</span>
+              </td>
+              
+              <!-- 5 ảnh: có mũi tên trái/phải -->
+              <td class="py-2 px-3 border-l border-r border-gray-100 bg-gray-50/30 text-center">
+                <div class="design-preview-box" data-images='[
+                  "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=300&auto=format&fit=crop&q=80",
+                  "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=300&auto=format&fit=crop&q=80",
+                  "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=300&auto=format&fit=crop&q=80",
+                  "https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=300&auto=format&fit=crop&q=80",
+                  "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=300&auto=format&fit=crop&q=80"
+                ]'></div>
+              </td>
+            </tr>
+
+            <!-- ROW 5: 9 ảnh (Tối đa 9 ảnh -> CÓ MŨI TÊN TRÁI PHẢI) -->
+            <tr class="hover:bg-blue-50/40 transition">
+              <td class="py-2.5 px-3 text-center text-gray-500 font-mono">5</td>
+              <td class="py-2.5 px-3 font-medium text-blue-600 hover:underline cursor-pointer">#OD-26100084</td>
+              <td class="py-2.5 px-3 text-gray-500 font-mono">2026.10.14</td>
+              <td class="py-2.5 px-3 font-medium">Manchester United1</td>
+              <td class="py-2.5 px-3">
+                <div class="font-medium text-gray-800">WOW</div>
+                <div class="text-gray-400 font-mono text-[11px]">010-1111-1112</div>
+              </td>
+              <td class="py-2.5 px-3">
+                <div class="flex items-center gap-2">
+                  <img src="https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=80&auto=format&fit=crop&q=60" alt="sample" class="w-9 h-9 rounded object-cover border border-gray-200">
+                  <div>
+                    <div class="font-medium text-gray-800 line-clamp-1">트레이닝복 세트</div>
+                    <div class="text-[11px] text-gray-400">F/W 동계 단체복 리스트</div>
+                  </div>
+                </div>
+              </td>
+              <td class="py-2.5 px-2 text-center">
+                <span class="inline-block px-1.5 py-0.5 rounded bg-[#310000] text-[#ff9a00] font-black text-[11px] border border-[#ff9a00]/30 shadow-sm">Ai</span>
+              </td>
+              
+              <!-- 9 ảnh: có mũi tên trái/phải -->
+              <td class="py-2 px-3 border-l border-r border-gray-100 bg-gray-50/30 text-center">
+                <div class="design-preview-box" data-images='[
+                  "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=300&auto=format&fit=crop&q=80",
+                  "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=300&auto=format&fit=crop&q=80",
+                  "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=300&auto=format&fit=crop&q=80",
+                  "https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=300&auto=format&fit=crop&q=80",
+                  "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=300&auto=format&fit=crop&q=80",
+                  "https://images.unsplash.com/photo-1578768079052-aa76e520028b?w=300&auto=format&fit=crop&q=80",
+                  "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=300&auto=format&fit=crop&q=80",
+                  "https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=300&auto=format&fit=crop&q=80",
+                  "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=300&auto=format&fit=crop&q=80"
+                ]'></div>
+              </td>
+            </tr>
+
+            <!-- ROW 6: 4 ảnh (> 3 ảnh -> CÓ MŨI TÊN TRÁI PHẢI) -->
+            <tr class="hover:bg-blue-50/40 transition">
+              <td class="py-2.5 px-3 text-center text-gray-500 font-mono">6</td>
+              <td class="py-2.5 px-3 font-medium text-blue-600 hover:underline cursor-pointer">#OD-26100083</td>
+              <td class="py-2.5 px-3 text-gray-500 font-mono">2026.10.14</td>
+              <td class="py-2.5 px-3 font-medium">FC Gangnam United</td>
+              <td class="py-2.5 px-3">
+                <div class="font-medium text-gray-800">김민준</div>
+                <div class="text-gray-400 font-mono text-[11px]">010-8765-4322</div>
+              </td>
+              <td class="py-2.5 px-3">
+                <div>
+                  <div class="font-medium text-blue-600 hover:underline cursor-pointer">test124342</div>
+                  <div class="text-[11px] text-gray-400">축구 유니폼</div>
+                </div>
+              </td>
+              <td class="py-2.5 px-2 text-center">
+                <span class="inline-block px-1.5 py-0.5 rounded bg-[#310000] text-[#ff9a00] font-black text-[11px] border border-[#ff9a00]/30 shadow-sm">Ai</span>
+              </td>
+              
+              <!-- 4 ảnh: có mũi tên trái/phải -->
+              <td class="py-2 px-3 border-l border-r border-gray-100 bg-gray-50/30 text-center">
+                <div class="design-preview-box" data-images='[
+                  "https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=300&auto=format&fit=crop&q=80",
+                  "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=300&auto=format&fit=crop&q=80",
+                  "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=300&auto=format&fit=crop&q=80",
+                  "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=300&auto=format&fit=crop&q=80"
+                ]'></div>
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ==================== TABLE FOOTER & PAGINATION ==================== -->
+      <div class="bg-white px-4 py-2.5 rounded-b-lg border border-gray-200 border-t-0 flex items-center justify-between text-xs text-gray-600">
+        <div class="flex items-center gap-3">
+          <span class="font-medium">총 <b class="text-gray-900">65</b>건</span>
+          <div class="flex items-center gap-1">
+            <select class="border border-gray-300 rounded px-2 py-1 bg-white text-gray-700 focus:outline-none">
+              <option>20</option>
+              <option>50</option>
+              <option>100</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-1 font-mono">
+          <button class="w-6 h-6 flex items-center justify-center rounded border border-gray-200 text-gray-400 hover:bg-gray-50">
+            <i class="fa-solid fa-chevron-left text-[10px]"></i>
+          </button>
+          <button class="w-6 h-6 flex items-center justify-center rounded bg-[#0052cc] text-white font-bold">1</button>
+          <button class="w-6 h-6 flex items-center justify-center rounded border border-gray-200 text-gray-700 hover:bg-gray-50">2</button>
+          <button class="w-6 h-6 flex items-center justify-center rounded border border-gray-200 text-gray-700 hover:bg-gray-50">3</button>
+          <button class="w-6 h-6 flex items-center justify-center rounded border border-gray-200 text-gray-700 hover:bg-gray-50">4</button>
+          <button class="w-6 h-6 flex items-center justify-center rounded border border-gray-200 text-gray-600 hover:bg-gray-50">
+            <i class="fa-solid fa-chevron-right text-[10px]"></i>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ==================== IMAGE PREVIEW MODAL ==================== -->
+  <div id="imageModal" class="fixed inset-0 bg-black/75 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+    <div class="relative max-w-xl w-full bg-white rounded-lg shadow-2xl overflow-hidden p-3">
+      <button onclick="closeModal()" class="absolute top-3 right-3 text-gray-500 hover:text-black w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center transition">
+        <i class="fa-solid fa-xmark text-base"></i>
+      </button>
+      <div class="p-3 flex flex-col items-center">
+        <h3 class="text-xs font-bold text-gray-600 mb-2">디자인 시안 원본 미리보기</h3>
+        <img id="modalImg" src="" alt="Full view" class="max-h-[70vh] w-auto rounded border border-gray-200 object-contain shadow-sm">
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== DYNAMIC LOGIC SCRIPT ==================== -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const boxes = document.querySelectorAll(".design-preview-box");
+
+      boxes.forEach((box) => {
+        let images = [];
+        try {
+          images = JSON.parse(box.getAttribute("data-images") || "[]");
+        } catch (e) {
+          images = [];
+        }
+
+        const count = images.length;
+        if (count === 0) {
+          box.innerHTML = `<span class="text-gray-400 text-[11px]">-</span>`;
+          return;
+        }
+
+        // =================================================================
+        // ĐIỀU KIỆN 1: Nếu <= 3 ảnh -> KHÔNG HIỆN MŨI TÊN, HIỂN THỊ CÁC ẢNH
+        // =================================================================
+        if (count <= 3) {
+          const wrapper = document.createElement("div");
+          wrapper.className = "flex items-center justify-center gap-1.5 py-1";
+
+          images.forEach((imgUrl, idx) => {
+            const imgItem = document.createElement("img");
+            imgItem.src = imgUrl;
+            imgItem.alt = `시안 ${idx + 1}`;
+            imgItem.className = "w-11 h-11 object-cover rounded border border-gray-300 hover:scale-105 hover:border-blue-500 transition cursor-pointer shadow-xs";
+            imgItem.addEventListener("click", () => openModal(imgUrl));
+            wrapper.appendChild(imgItem);
+          });
+
+          box.appendChild(wrapper);
+          return;
+        }
+
+        // =================================================================
+        // ĐIỀU KIỆN 2: Nếu > 3 ảnh -> HIỆN MŨI TÊN TRÁI PHẢI ĐỂ DI CHUYỂN XEM
+        // =================================================================
+        let startIndex = 0; // Vị trí bắt đầu của khung nhìn 3 ảnh
+
+        const container = document.createElement("div");
+        container.className = "flex flex-col items-center gap-0.5 py-0.5";
+
+        const sliderRow = document.createElement("div");
+        sliderRow.className = "flex items-center justify-center gap-1";
+
+        // Nút Prev (<)
+        const btnPrev = document.createElement("button");
+        btnPrev.type = "button";
+        btnPrev.className = "w-5 h-5 flex items-center justify-center rounded-full bg-white border border-gray-300 text-gray-600 hover:bg-gray-100 hover:text-blue-600 shadow-xs transition";
+        btnPrev.innerHTML = `<i class="fa-solid fa-chevron-left text-[9px]"></i>`;
+
+        // Khung hiển thị 3 ảnh
+        const viewport = document.createElement("div");
+        viewport.className = "flex items-center gap-1 overflow-hidden";
+
+        // Nút Next (>)
+        const btnNext = document.createElement("button");
+        btnNext.type = "button";
+        btnNext.className = "w-5 h-5 flex items-center justify-center rounded-full bg-white border border-gray-300 text-gray-600 hover:bg-gray-100 hover:text-blue-600 shadow-xs transition";
+        btnNext.innerHTML = `<i class="fa-solid fa-chevron-right text-[9px]"></i>`;
+
+        // Bộ đếm vị trí (ví dụ 1~3 / 5)
+        const counter = document.createElement("div");
+        counter.className = "text-[10px] text-gray-500 font-mono tracking-tighter";
+
+        // Hàm render 3 ảnh tại vị trí startIndex
+        function renderThumbnails() {
+          viewport.innerHTML = "";
+          const visibleImages = images.slice(startIndex, startIndex + 3);
+
+          visibleImages.forEach((imgUrl, i) => {
+            const actualIndex = startIndex + i;
+            const imgEl = document.createElement("img");
+            imgEl.src = imgUrl;
+            imgEl.alt = `시안 ${actualIndex + 1}`;
+            imgEl.className = "w-11 h-11 object-cover rounded border border-gray-300 hover:scale-105 hover:border-blue-500 transition cursor-pointer shadow-xs";
+            imgEl.addEventListener("click", () => openModal(imgUrl));
+            viewport.appendChild(imgEl);
+          });
+
+          // Cập nhật text vị trí
+        //   const endVisible = Math.min(startIndex + 3, count);
+        //   counter.textContent = `${startIndex + 1}~${endVisible} / ${count}`;
+
+          // Cập nhật trạng thái disable/enable mũi tên
+          btnPrev.style.opacity = startIndex === 0 ? "0.4" : "1";
+          btnPrev.style.cursor = startIndex === 0 ? "not-allowed" : "pointer";
+
+          btnNext.style.opacity = (startIndex + 3 >= count) ? "0.4" : "1";
+          btnNext.style.cursor = (startIndex + 3 >= count) ? "not-allowed" : "pointer";
+        }
+
+        // Event click nút Trái (<)
+        btnPrev.addEventListener("click", (e) => {
+          e.stopPropagation();
+          if (startIndex > 0) {
+            startIndex--;
+            renderThumbnails();
+          }
+        });
+
+        // Event click nút Phải (>)
+        btnNext.addEventListener("click", (e) => {
+          e.stopPropagation();
+          if (startIndex + 3 < count) {
+            startIndex++;
+            renderThumbnails();
+          }
+        });
+
+        renderThumbnails();
+
+        sliderRow.appendChild(btnPrev);
+        sliderRow.appendChild(viewport);
+        sliderRow.appendChild(btnNext);
+
+        container.appendChild(sliderRow);
+        container.appendChild(counter);
+
+        box.appendChild(container);
+      });
+    });
+
+    // Modal Image Preview
+    function openModal(src) {
+      const modal = document.getElementById("imageModal");
+      const modalImg = document.getElementById("modalImg");
+      modalImg.src = src;
+      modal.classList.remove("hidden");
+    }
+
+    function closeModal() {
+      document.getElementById("imageModal").classList.add("hidden");
+    }
+  </script>
+</body>
+</html>
