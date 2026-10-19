@@ -107,10 +107,10 @@
       <!-- Modal Header -->
       <div class="p-5 pb-3">
         <div class="flex items-center justify-between mb-2">
-          <span id="modal-badge" class="px-2.5 py-0.5 rounded-full text-xs font-semibold"></span>
+          <span id="modal-badge" class="inline-flex items-center justify-center px-2.5 py-0.5 rounded-[4px] text-xs font-normal text-[#333333] border border-[#7C7C7C] bg-white"></span>
           <span id="modal-date" class="text-xs text-slate-400"></span>
         </div>
-        <h3 id="modal-title" class="text-[16px] font-bold text-slate-900 leading-snug"></h3>
+        <h3 id="modal-title" class="text-[16px] font-bold text-[#003B8F] leading-snug"></h3>
       </div>
 
       <div class="h-px bg-slate-100 w-full"></div>
@@ -194,19 +194,9 @@
     let notifications = [...mockNotifications];
     let isForcedEmpty = false;
 
-    // Helper tạo class màu cho Badge theo phân loại
-    function getBadgeStyle(type) {
-      switch (type) {
-        case "긴급":
-          return "bg-[#FEE2E2] text-[#B91C1C]"; // Đỏ nhạt
-        case "점검":
-          return "bg-[#FFEDD5] text-[#C2410C]"; // Cam nhạt
-        case "휴무":
-          return "bg-[#DCFCE7] text-[#15803D]"; // Xanh lá nhạt
-        case "일반":
-        default:
-          return "bg-[#E0E7FF] text-[#3730A3]"; // Xanh pastel
-      }
+    // Helper tạo HTML Badge cho 유형 theo chuẩn (border xám, background trắng)
+    function getTypeBadgeHTML(type) {
+      return `<span class="inline-flex items-center justify-center px-2 py-0.5 rounded-[4px] text-[11px] font-normal text-[#333333] border border-[#7C7C7C] bg-white leading-tight select-none whitespace-nowrap">${type}</span>`;
     }
 
     // Helper: Chỉ lấy ngày tháng năm (bỏ giờ)
@@ -237,16 +227,8 @@
 
       notifications.forEach(item => {
         const itemDiv = document.createElement("div");
-        itemDiv.className = "flex items-start px-4 py-3.5 hover:bg-slate-50/80 active:bg-slate-100 transition cursor-pointer select-none";
+        itemDiv.className = `flex items-start px-4 py-3.5 hover:bg-slate-50/80 active:bg-slate-100 transition cursor-pointer select-none ${item.isRead ? "bg-white" : "bg-blue-50/20"}`;
         itemDiv.onclick = () => openModal(item.id);
-
-        // Màu tiêu đề: 긴급 thì cam đậm (#EA580C), còn lại là slate-900 (#0F172A)
-        const titleColorClass = item.isUrgent ? "text-[#EA580C] font-bold" : "text-slate-900 font-semibold";
-
-        // Tách subContext: phần sau "시스템 공지 | " sẽ có màu đen
-        const subContextParts = item.subContext.split(" | ");
-        const subContextMain = subContextParts[0] || "";
-        const subContextSub = subContextParts[1] || "";
 
         itemDiv.innerHTML = `
           <!-- Cột trái: Icon Megaphone viền xanh nét chuẩn 24x24 trong khung 36px -->
@@ -258,31 +240,24 @@
 
           <!-- Cột phải: Khối nội dung 3 dòng -->
           <div class="flex-1 min-w-0">
-            <!-- Dòng 1: Tiêu đề + Thời gian + Chấm xanh chưa đọc -->
+            <!-- Dòng 1: text 공지 사항 (có bold) + Thời gian + Chấm xanh chưa đọc -->
             <div class="flex items-center justify-between gap-2">
-              <h2 class="text-[14px] ${titleColorClass} truncate flex-1 leading-snug">
-                ${item.title}
-              </h2>
+              <span class="text-[13px] font-bold text-slate-900">공지 사항</span>
               <div class="flex items-center flex-shrink-0 space-x-1.5">
                 <span class="text-[12px] text-slate-400 font-normal">${item.timeAgo}</span>
-                ${!item.isRead ? '<span class="w-1.5 h-1.5 rounded-full bg-[#1D4ED8]"></span>' : '<span class="w-1.5 h-1.5"></span>'}
+                ${!item.isRead ? '<span class="w-1.5 h-1.5 rounded-full bg-[#1D4ED8]"></span>' : ''}
               </div>
             </div>
 
-            <!-- Dòng 2: Ngữ cảnh phân hệ - phần sau "시스템 공지 |" có màu đen -->
-            <div class="mt-0.5">
-              <p class="text-[12px] font-medium">
-                <span class="text-[#1D4ED8]">${subContextMain}</span>
-                ${subContextSub ? `<span class="text-slate-900"> | ${subContextSub}</span>` : ''}
-              </p>
-            </div>
+            <!-- Dòng 2: 제목, text màu xanh dương #003B8F, không bold -->
+            <p class="text-[13px] text-[#003B8F] font-normal truncate mt-0.5">
+              ${item.title}
+            </p>
 
-            <!-- Dòng 3: Đoạn trích nội dung (không có badge) -->
-            <div class="mt-1">
-              <p class="text-[12.5px] text-slate-500 truncate">
-                ${item.previewText}
-              </p>
-            </div>
+            <!-- Dòng 3: nội dung, nếu dài thì ba chấm -->
+            <p class="text-[12.5px] text-slate-500 truncate mt-0.5">
+              ${item.previewText}
+            </p>
           </div>
         `;
         container.appendChild(itemDiv);
@@ -303,9 +278,9 @@
       const modalBox = document.getElementById("modal-box");
       const modalBadge = document.getElementById("modal-badge");
       
-      // Chỉ hiển thị [긴급], [점검], ... không thêm typeName
-      modalBadge.className = `px-2.5 py-0.5 rounded-full text-xs font-semibold ${getBadgeStyle(item.type)}`;
-      modalBadge.textContent = `[${item.type}]`;
+      // Hiển thị 유형 với khung border xám, background trắng
+      modalBadge.className = "inline-flex items-center justify-center px-2.5 py-0.5 rounded-[4px] text-xs font-normal text-[#333333] border border-[#7C7C7C] bg-white";
+      modalBadge.textContent = item.type;
       
       // Chỉ hiển thị ngày tháng năm, không hiển thị giờ
       document.getElementById("modal-date").textContent = getDateOnly(item.fullDate);
