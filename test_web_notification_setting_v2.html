@@ -1396,6 +1396,30 @@
       renderUnifiedUserChecklist();
     }
 
+    function toggleExpandAllTeams() {
+      const filtered = getFilteredUsers();
+      const activeTeams = teamsList.filter((team) =>
+        filtered.some(
+          (u) =>
+            u.teamId === team.id &&
+            (u.role === "감독자" || u.role === "학부모"),
+        ),
+      );
+
+      const allExpanded =
+        activeTeams.length > 0 &&
+        activeTeams.every((t) => expandedTeamIds.has(t.id));
+
+      if (allExpanded) {
+        // Thu gọn tất cả
+        activeTeams.forEach((t) => expandedTeamIds.delete(t.id));
+      } else {
+        // Mở rộng tất cả
+        activeTeams.forEach((t) => expandedTeamIds.add(t.id));
+      }
+      renderUnifiedUserChecklist();
+    }
+
     function toggleTeamAllUsers(teamId, isChecked) {
       const filtered = getFilteredUsers();
       const teamMembers = filtered.filter(
@@ -1465,7 +1489,8 @@
     }
 
     // Helper render Tree Menu cho 감독자 & 학부모
-    // Checkbox Tên Team thụt ra ngoài cùng, checkbox thành viên thụt sâu vào trong
+    // 1. Tên leader nằm chung dòng với tên team (bên phải Tên team) khi có tick 감독자. Khi chỉ tick 학부모 thì không hiển thị leader.
+    // 2. Không còn nút 접기/펼치기 lặp lại ở từng team, chỉ cần click vào dòng team là đóng/mở.
     function renderTeamTreeHTML(teamUsers, isFullWidth = false) {
       if (teamUsers.length === 0) {
         return '<div class="py-6 text-center text-gray-400 text-[12px]">일치하는 대상자가 없습니다.</div>';
@@ -1479,81 +1504,134 @@
         return '<div class="py-6 text-center text-gray-400 text-[12px]">일치하는 대상자가 없습니다.</div>';
       }
 
-      const roleWidthClass = isFullWidth ? "w-[70px]" : "w-[60px]";
-      const phoneWidthClass = isFullWidth ? "w-[115px]" : "w-[105px]";
-      const gapClass = isFullWidth ? "gap-4" : "gap-3";
+      const showLeader = Boolean(roleFilters["감독자"]);
+      const showParents = Boolean(roleFilters["학부모"]);
 
       return displayedTeams
         .map((team) => {
-          const members = teamUsers.filter((u) => u.teamId === team.id);
-          const selectedMembers = members.filter((u) => selectedUserIds.has(u.id));
+          // Lấy leader của team này
+          const teamLeader = masterUsers.find(
+            (u) => u.teamId === team.id && u.role === "감독자",
+          );
+
+          // Danh sách thành viên cần hiển thị trong team
+          const allTeamMembers = teamUsers.filter((u) => u.teamId === team.id);
+          // Danh sách con (parents) để xổ ra khi click team
+          const childMembers = showParents
+            ? allTeamMembers.filter((u) => u.role === "학부모")
+            : [];
+
+          const selectedMembers = allTeamMembers.filter((u) =>
+            selectedUserIds.has(u.id),
+          );
           const isAllTeamSelected =
-            members.length > 0 && selectedMembers.length === members.length;
+            allTeamMembers.length > 0 &&
+            selectedMembers.length === allTeamMembers.length;
           const isExpanded = expandedTeamIds.has(team.id);
+
+          const isLeaderSelected =
+            teamLeader && selectedUserIds.has(teamLeader.id);
 
           return `
             <div class="team-group">
-              <!-- Team Header Row: Checkbox Tên Team nằm ngoài cùng sát lề trái (thụt ra ngoài) -->
-              <div class="px-3 py-2 bg-[#F8FAFC] hover:bg-gray-100/90 border-b border-[#E9E9E9] flex items-center justify-between cursor-pointer select-none transition">
-                <div class="flex items-center gap-2 min-w-0">
-                  <!-- 1. Checkbox của Tên Team (nằm ngoài cùng sát lề trái) -->
-                  <input type="checkbox" onchange="toggleTeamAllUsers('${team.id}', this.checked)"
+              <!-- Team Header Row: Click vào dòng để mở/đóng team -->
+              <div onclick="${childMembers.length > 0 ? `toggleTeamExpand('${team.id}')` : ""}"
+                class="px-3 py-2 bg-[#F8FAFC] hover:bg-gray-100/90 border-b border-[#E9E9E9] flex items-center justify-between ${childMembers.length > 0 ? "cursor-pointer" : "cursor-default"} select-none transition">
+                <div class="flex items-center gap-2 min-w-0 flex-1">
+                  <!-- 1. Checkbox chọn cả team (hoặc chọn leader nếu chỉ tick leader) -->
+                  <input type="checkbox" onchange="toggleTeamAllUsers('${team.id}', this.checked)" onclick="event.stopPropagation()"
                     ${isAllTeamSelected ? "checked" : ""}
                     class="w-3.5 h-3.5 rounded text-[#1F5FBA] focus:ring-0 cursor-pointer flex-shrink-0" />
 
-                  <!-- 2. Nút expand / collapse mũi tên -->
-                  <button type="button" onclick="toggleTeamExpand('${team.id}')"
-                    class="w-4 h-4 flex items-center justify-center text-gray-500 hover:text-gray-800 p-0 rounded transition">
-                    <svg class="w-3.5 h-3.5 transform transition-transform ${isExpanded ? "rotate-90" : ""}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-                    </svg>
-                  </button>
+                  <!-- 2. Mũi tên đóng/mở (chỉ hiển thị khi có thành viên phụ huynh để xổ) -->
+                  ${
+                    childMembers.length > 0
+                      ? `
+                    <button type="button" onclick="event.stopPropagation(); toggleTeamExpand('${team.id}')"
+                      class="w-4 h-4 flex items-center justify-center text-gray-500 hover:text-gray-800 p-0 rounded transition flex-shrink-0">
+                      <svg class="w-3.5 h-3.5 transform transition-transform ${isExpanded ? "rotate-90" : ""}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                      </svg>
+                    </button>
+                  `
+                      : '<div class="w-2 flex-shrink-0"></div>'
+                  }
 
                   <!-- 3. Tên Team -->
-                  <span onclick="toggleTeamExpand('${team.id}')" class="font-bold text-[13px] text-[#171717] truncate hover:text-[#003B8F]">
+                  <span class="font-bold text-[13px] text-[#171717] truncate ${childMembers.length > 0 ? "hover:text-[#003B8F]" : ""}">
                     ${team.name}
                   </span>
 
-                  <!-- 4. Badge số lượng -->
-                  <span class="text-[10.5px] text-[#003B8F] font-semibold bg-[#DCEBFB] px-1.5 py-0.2 rounded flex-shrink-0">
-                    ${selectedMembers.length}/${members.length}명
-                  </span>
+                  <!-- 4. Tên Leader (감독자) hiển thị ngay bên phải tên team khi có tick 감독자 -->
+                  <!-- 4. Tên Leader (감독자) hiển thị dạng Pill Chip thanh lịch ngay bên phải tên team khi có tick 감독자 -->
+                  ${
+                    showLeader && teamLeader
+                      ? `
+                    <label class="inline-flex items-center gap-1.5 cursor-pointer bg-[#DCEBFB] hover:bg-[#CFE3FA] text-[#003B8F] px-2 py-0.5 rounded border border-blue-200 text-[11.5px] transition flex-shrink-0"
+                      onclick="event.stopPropagation()" title="감독자 개별 선택">
+                      <input type="checkbox" onchange="toggleSingleUser('${teamLeader.id}', this.checked)"
+                        ${selectedUserIds.has(teamLeader.id) ? "checked" : ""}
+                        class="w-3 h-3 rounded text-[#1F5FBA] focus:ring-0 cursor-pointer" />
+                      <span class="text-[11px] text-[#003B8F]/80">감독자:</span>
+                      <span class="font-bold">${teamLeader.name}</span>
+                      <span class="text-[10.5px] text-[#003B8F]/70 font-mono">(${teamLeader.phone})</span>
+                    </label>
+                    <div onclick="event.stopPropagation(); toggleSingleUser('${teamLeader.id}', ${!isLeaderSelected})"
+                      title="클릭하여 감독자 선택/해제"
+                      class="inline-flex items-center gap-1.5 ml-1 px-2.5 py-0.5 rounded-full text-[11.5px] transition flex-shrink-0 cursor-pointer select-none ${
+                        isLeaderSelected
+                          ? "bg-blue-50/90 text-[#003B8F] border border-blue-200/90 hover:bg-blue-100 font-medium shadow-2xs"
+                          : "bg-gray-100/90 text-gray-400 border border-gray-200 hover:bg-gray-200/80 line-through"
+                      }">
+                      <svg class="w-3 h-3 ${isLeaderSelected ? "text-[#1F5FBA]" : "text-gray-400"}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                      </svg>
+                      <span class="text-[10.5px] font-semibold ${isLeaderSelected ? "text-[#1F5FBA]" : "text-gray-400"}">감독</span>
+                      <span class="font-medium">${teamLeader.name}</span>
+                      <span class="text-[10.5px] font-mono opacity-80">${teamLeader.phone}</span>
+                      ${
+                        isLeaderSelected
+                          ? `<svg class="w-3 h-3 text-[#1F5FBA] ml-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>`
+                          : ""
+                      }
+                    </div>
+                  `
+                      : ""
+                  }
                 </div>
 
-                <button type="button" onclick="toggleTeamExpand('${team.id}')" class="text-[11px] text-gray-400 hover:text-[#003B8F] flex-shrink-0 font-medium">
-                  ${isExpanded ? "접기 ▲" : "펼치기 ▼"}
-                </button>
+                  <!-- 5. Badge tổng số lượng đã chọn trong team -->
+                  <span class="text-[10.5px] text-[#003B8F] font-semibold bg-[#DCEBFB] px-1.5 py-0.2 rounded flex-shrink-0 ml-1">
+                    ${selectedMembers.length}/${allTeamMembers.length}명
+                  </span>
+                </div>
+                <!-- 5. Badge tổng số lượng đã chọn trong team (chuyển sang góc phải để cân đối dòng) -->
+                <span class="text-[11px] text-[#003B8F] font-semibold bg-[#DCEBFB] px-2 py-0.5 rounded flex-shrink-0 mr-1">
+                  ${selectedMembers.length}/${allTeamMembers.length}명
+                </span>
               </div>
 
-              <!-- Members Tree Children: Checkbox thành viên thụt vào trong rõ rệt kèm nhánh cây └ -->
+              <!-- Danh sách thành viên con (학부모) xổ ra khi team được mở -->
               ${
-                isExpanded
+                childMembers.length > 0 && isExpanded
                   ? `
                 <div class="divide-y divide-[#F3F3F3] bg-white">
-                  ${members
+                  ${childMembers
                     .map((u) => {
                       const isChecked = selectedUserIds.has(u.id);
-                      const roleBadgeClass =
-                        u.role === "감독자"
-                          ? "bg-purple-50 text-purple-700 border-purple-200"
-                          : "bg-orange-50 text-orange-700 border-orange-200";
-
                       return `
                         <label class="pl-9 pr-3 py-1.5 flex items-center justify-between hover:bg-blue-50/20 cursor-pointer transition text-[12px]">
                           <div class="flex items-center gap-2 min-w-0 flex-1">
-                            <!-- Ký hiệu nhánh cây thụt vào trong -->
                             <span class="text-gray-300 font-mono text-[13px] select-none flex-shrink-0 -mr-0.5">└</span>
-                            <!-- Checkbox thành viên thụt sâu vào trong so với checkbox team -->
                             <input type="checkbox" onchange="toggleSingleUser('${u.id}', this.checked)" ${isChecked ? "checked" : ""}
                               class="w-3.5 h-3.5 rounded text-[#1F5FBA] focus:ring-0 cursor-pointer flex-shrink-0" />
                             <span class="font-medium text-[#171717] truncate">${u.name}</span>
                           </div>
-                          <!-- Khối căn chuẩn 100% cột 역할 và 연락처 -->
-                          <div class="flex items-center ${gapClass} pr-2 flex-shrink-0">
-                            <div class="${roleWidthClass} flex justify-center flex-shrink-0">
-                              <span class="text-[10.5px] px-1.5 py-0.2 rounded border ${roleBadgeClass} font-medium">${u.role}</span>
+                          <div class="flex items-center gap-4 pr-2 flex-shrink-0">
+                            <div class="w-[60px] flex justify-center flex-shrink-0">
+                              <span class="text-[10.5px] px-1.5 py-0.2 rounded border bg-orange-50 text-orange-700 border-orange-200 font-medium">학부모</span>
                             </div>
-                            <span class="${phoneWidthClass} text-center text-[11.5px] text-[#636363] font-mono flex-shrink-0">${u.phone}</span>
+                            <span class="w-[105px] text-center text-[11.5px] text-[#636363] font-mono flex-shrink-0">${u.phone}</span>
                           </div>
                         </label>
                       `;
@@ -1601,6 +1679,10 @@
         adminUsers.length > 0 && adminSelectedCount === adminUsers.length;
       const allTeamUsersSelected =
         teamUsers.length > 0 && teamUsersSelectedCount === teamUsers.length;
+
+      const displayedTeamsForExpand = teamsList.filter((team) =>
+        teamUsers.some((u) => u.teamId === team.id),
+      );
 
       if (!hasAdmin && !hasTeamRoles) {
         wrapper.innerHTML = `
@@ -1658,14 +1740,30 @@
 
             <!-- CỘT PHẢI: DANH SÁCH 감독자 / 학부모 THEO TREE MENU -->
             <div class="w-[72%] flex flex-col min-h-0 bg-white">
-              <!-- Title cột Tree Menu: chỉ hiển thị tổng số, không có tên cột 역할/연락처 -->
+              <!-- Header cột Tree Menu: Bên trái giữ nguyên 팀명/팀원, bên phải bổ sung nút 펼치기/접기 tất cả team -->
               <div class="px-3 py-2 bg-[#F8FAFC] border-b border-[#E9E9E9] flex items-center justify-between text-[11.5px] font-semibold text-[#636363] flex-shrink-0">
-                <div class="flex items-center gap-1.5 flex-1 min-w-0">
+                <div class="flex items-center gap-1.5 min-w-0">
                   <input type="checkbox" id="checkAllTeamUsers" onchange="toggleAllTeamUsers(this.checked)"
                     ${allTeamUsersSelected ? "checked" : ""}
                     class="w-3.5 h-3.5 rounded text-[#1F5FBA] focus:ring-0 cursor-pointer flex-shrink-0" />
                   <span class="text-[#171717] font-semibold truncate">팀명 / 팀원 (${teamUsersSelectedCount}/${teamUsers.length}명)</span>
                 </div>
+                <!-- Nút 펼치기/접기 tất cả team nằm bên phải -->
+                ${
+                  roleFilters["학부모"]
+                    ? `
+                  <button type="button" onclick="toggleExpandAllTeams()"
+                    class="px-2 py-0.5 text-[11px] font-semibold bg-white hover:bg-blue-50 text-[#003B8F] border border-[#CBD5E1] hover:border-[#003B8F] rounded-[5px] transition flex items-center gap-1 cursor-pointer shadow-2xs flex-shrink-0">
+                    <span>${
+                      displayedTeamsForExpand.length > 0 &&
+                      displayedTeamsForExpand.every((t) => expandedTeamIds.has(t.id))
+                        ? "전체 접기 ▲"
+                        : "전체 펼치기 ▼"
+                    }</span>
+                  </button>
+                `
+                    : ""
+                }
               </div>
               <div class="flex-1 overflow-y-auto custom-scroll divide-y divide-[#E9E9E9]">
                 ${renderTeamTreeHTML(teamUsers, false)}
@@ -1720,7 +1818,7 @@
         wrapper.innerHTML = `
           <div class="flex-1 flex flex-col min-h-0 bg-white">
             <div class="px-3 py-2 bg-[#F8FAFC] border-b border-[#E9E9E9] flex items-center justify-between text-[12px] font-semibold text-[#636363] flex-shrink-0">
-              <div class="flex items-center gap-2 flex-1 min-w-0">
+              <div class="flex items-center gap-2 min-w-0">
                 <input type="checkbox" id="checkAllTeamUsers" onchange="toggleAllTeamUsers(this.checked)"
                   ${allTeamUsersSelected ? "checked" : ""}
                   class="w-4 h-4 rounded text-[#1F5FBA] focus:ring-0 cursor-pointer flex-shrink-0" />
@@ -1731,6 +1829,22 @@
                   <button type="button" onclick="unselectAllFilteredUsers()" class="hover:text-red-600 hover:underline cursor-pointer font-medium">전체 해제</button>
                 </div>
               </div>
+              <!-- Nút 펼치기/접기 tất cả team nằm bên phải -->
+              ${
+                roleFilters["학부모"]
+                  ? `
+                <button type="button" onclick="toggleExpandAllTeams()"
+                  class="px-2.5 py-1 text-[11.5px] font-semibold bg-white hover:bg-blue-50 text-[#003B8F] border border-[#CBD5E1] hover:border-[#003B8F] rounded-[5px] transition flex items-center gap-1 cursor-pointer shadow-2xs flex-shrink-0">
+                  <span>${
+                    displayedTeamsForExpand.length > 0 &&
+                    displayedTeamsForExpand.every((t) => expandedTeamIds.has(t.id))
+                      ? "전체 접기 ▲"
+                      : "전체 펼치기 ▼"
+                  }</span>
+                </button>
+              `
+                  : ""
+              }
             </div>
             <div class="flex-1 overflow-y-auto custom-scroll divide-y divide-[#E9E9E9]">
               ${renderTeamTreeHTML(teamUsers, true)}
