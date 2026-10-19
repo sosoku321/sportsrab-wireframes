@@ -127,7 +127,7 @@
             class="absolute -top-1 -right-2 bg-[#DE3B40] text-white text-[9px] font-bold px-1.5 py-0.2 rounded-full min-w-[15px] h-[15px] flex items-center justify-center">2</span>
         </button>
 
-        <!-- Dropdown Thông báo: Ảnh/icon bên trái, 3 dòng text bên phải -->
+        <!-- Dropdown Thông báo -->
         <div id="bellDropdown"
           class="hidden absolute right-0 mt-2 w-[380px] bg-white rounded-[12px] shadow-2xl border border-[#E9E9E9] text-[#171717] z-50 overflow-hidden">
           <div class="px-4 py-3 border-b border-[#E9E9E9] flex items-center justify-between bg-[#E9E9E9]/40">
@@ -295,7 +295,7 @@
           </div>
         </div>
 
-        <!-- 2. 유형 (Được đồng bộ tự động với danh sách BO tự quản lý) -->
+        <!-- 2. 유형 -->
         <div class="flex items-center gap-2">
           <span class="text-[#636363] font-medium whitespace-nowrap">유형</span>
           <select id="filterType" onchange="applyFilters()"
@@ -350,7 +350,7 @@
           </button>
         </div>
 
-        <!-- 새로 추가 Button (Mở Drawer chuẩn CMS) -->
+        <!-- 새로 추가 Button -->
         <div>
           <button onclick="openDrawer(false)"
             class="bg-[#0047AB] hover:bg-[#003B8F] text-white px-4 py-1.5 rounded-[6px] font-semibold text-[13.5px] flex items-center gap-1.5 transition shadow-sm cursor-pointer">
@@ -452,14 +452,14 @@
     </main>
   </div>
 
-  <!-- ================= FLOATING DRAWER OVERLAY (DESIGN SYSTEM CHUẨN) ================= -->
+  <!-- ================= FLOATING DRAWER OVERLAY ================= -->
   <div id="drawerOverlay" onclick="closeDrawer()"
     class="hidden fixed inset-0 z-40 bg-[rgba(49,49,49,0.40)] backdrop-blur-[3px] transition-opacity"></div>
 
-  <!-- ================= FLOATING MODAL DRAWER (1000px, BO GÓC 14px, CÁCH LỀ 16px) ================= -->
+  <!-- ================= FLOATING MODAL DRAWER ================= -->
   <div id="drawerPanel"
     class="fixed right-4 top-4 bottom-4 w-[1000px] max-w-[calc(100vw-32px)] bg-white z-50 rounded-[14px] shadow-2xl overflow-hidden flex flex-col translate-x-[calc(100%+32px)] transition-transform duration-300 ease-in-out border border-[#E9E9E9]">
-    <!-- Header Drawer: Nền xám #E9E9E9, text 16px font-semibold #171717, nút X -->
+    <!-- Header Drawer -->
     <div class="px-4 py-2.5 bg-[#E9E9E9] flex items-center justify-between flex-shrink-0">
       <span id="drawerTitle" class="text-[16px] font-semibold text-[#171717]">새 공지 추가</span>
       <button onclick="closeDrawer()" class="text-[#171717] hover:opacity-70 transition p-1 cursor-pointer" title="닫기">
@@ -469,11 +469,11 @@
       </button>
     </div>
 
-    <!-- Body Drawer: 2 Cột (Trái: Thông tin 공지, Phải: Đối tượng nhận 게시 대상) -->
+    <!-- Body Drawer -->
     <div class="flex-1 overflow-hidden flex p-4 gap-4 bg-white">
       <input type="hidden" id="editNoticeId" />
 
-      <!-- ===== CỘT TRÁI: THÔNG TIN CÔNG BÁO (NỬA TRÁI) ===== -->
+      <!-- ===== CỘT TRÁI: THÔNG TIN CÔNG BÁO ===== -->
       <div class="w-1/2 flex flex-col gap-3 overflow-y-auto pr-1 custom-scroll">
         <!-- Section Header -->
         <div class="flex items-center gap-1.5 text-[#003B8F] flex-shrink-0">
@@ -484,9 +484,9 @@
           <span class="text-[16px] font-semibold">공지 사항 정보</span>
         </div>
 
-        <!-- Container Box xám #FAFAFA, bo góc 12px -->
+        <!-- Container Box -->
         <div class="bg-[#FAFAFA] rounded-[12px] p-3.5 border border-[#F3F3F3] space-y-3.5 flex-1">
-          <!-- 1. 유형 (Dropdown + Nút ⚙️ 유형 관리) -->
+          <!-- 1. 유형 -->
           <div>
             <div class="flex items-center justify-between mb-1.5">
               <label class="text-[14px] text-[#636363]">유형 <span class="text-[#EF4444]">*</span> :</label>
@@ -495,7 +495,6 @@
               <div class="relative flex-1">
                 <select id="drawerTypeSelect"
                   class="w-full bg-white border border-[#E9E9E9] rounded-[6px] px-3 py-2 text-[14px] text-[#171717] focus:outline-none focus:border-[#1F5FBA] cursor-pointer appearance-none">
-                  <!-- Render qua JS -->
                 </select>
                 <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-gray-400">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -530,11 +529,10 @@
             <div id="quillEditor"></div>
           </div>
 
-          <!-- 4. 알림 미리보기: Trái là Icon, Phải là 3 dòng text -->
+          <!-- 4. 알림 미리보기 -->
           <div>
             <label class="text-[14px] text-[#636363] block mb-1.5">알림 미리보기:</label>
             <div class="bg-white rounded-[8px] p-3 border border-[#E9E9E9] flex items-center gap-3 shadow-xs">
-              <!-- Ảnh/icon bên trái -->
               <div
                 class="w-11 h-11 rounded-[8px] bg-[#DCEBFB] flex items-center justify-center flex-shrink-0 text-[#1F5FBA]">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -542,7 +540,6 @@
                     d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                 </svg>
               </div>
-              <!-- 3 dòng text bên phải -->
               <div class="flex-1 min-w-0">
                 <p class="font-bold text-[13px] text-[#171717] leading-tight">
                   공지 사항
@@ -571,7 +568,7 @@
         </div>
       </div>
 
-      <!-- ===== CỘT PHẢI: CÀI ĐẶT ĐỐI TƯỢNG NHẬN (NỬA PHẢI) ===== -->
+      <!-- ===== CỘT PHẢI: CÀI ĐẶT ĐỐI TƯỢNG NHẬN ===== -->
       <div class="w-1/2 flex flex-col gap-3 overflow-y-auto pl-1 custom-scroll">
         <!-- Section Header -->
         <div class="flex items-center gap-1.5 text-[#003B8F] flex-shrink-0">
@@ -582,7 +579,7 @@
           <span class="text-[16px] font-semibold">게시 대상 설정</span>
         </div>
 
-        <!-- 2 Tab chính: [전체 / 역할별] vs [팀 / 개별 지정] -->
+        <!-- 2 Tab chính -->
         <div
           class="grid grid-cols-2 p-1 bg-[#FAFAFA] rounded-[8px] border border-[#E9E9E9] text-center text-[13px] font-medium flex-shrink-0">
           <button type="button" onclick="setTargetType('ROLE')" id="tab_ROLE"
@@ -650,24 +647,32 @@
           </div>
         </div>
 
-        <!-- ================= TAB 2: 팀 / 개별 지정 (CASCADING SELECTION CHUẨN) ================= -->
+        <!-- ================= TAB 2: 팀 / 개별 지정 ================= -->
         <div id="targetArea_TEAM_USER"
           class="hidden bg-[#FAFAFA] rounded-[12px] p-3.5 border border-[#F3F3F3] space-y-3 flex-1 flex flex-col">
-          <!-- BƯỚC 1: Chọn Team/Phòng ban -->
-          <div>
+          <!-- BƯỚC 1: Chọn Team/Phòng ban (Searchable Dropdown) -->
+          <div class="relative" id="teamSearchDropdownContainer">
             <label class="text-[13.5px] font-semibold text-[#171717] block mb-1.5">1단계: 팀 선택
               <span class="text-[#EF4444]">*</span></label>
+            <input type="hidden" id="teamCascadingSelect" value="" />
             <div class="relative">
-              <select id="teamCascadingSelect" onchange="onTeamSelectChange(this.value)"
-                class="w-full bg-white border border-[#E9E9E9] rounded-[6px] px-3 py-2 text-[14px] text-[#171717] focus:outline-none focus:border-[#1F5FBA] appearance-none cursor-pointer">
-                <option value="">팀을 선택하세요</option>
-                <!-- Render từ masterTeams -->
-              </select>
-              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-gray-400">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <input type="text" id="teamSearchInput" autocomplete="off"
+                placeholder="팀 검색 또는 선택..."
+                onfocus="openTeamDropdown()"
+                oninput="filterTeamOptions(this.value)"
+                class="w-full bg-white border border-[#E9E9E9] rounded-[6px] pl-3 pr-8 py-2 text-[14px] text-[#171717] focus:outline-none focus:border-[#1F5FBA] placeholder:text-[#CFCECE] cursor-pointer" />
+              <button type="button" onclick="toggleTeamDropdown(event)"
+                class="absolute inset-y-0 right-0 flex items-center px-2.5 text-gray-400 hover:text-gray-600 cursor-pointer">
+                <svg id="teamDropdownArrow" class="w-4 h-4 transition-transform duration-200" fill="none"
+                  stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                 </svg>
-              </div>
+              </button>
+            </div>
+            <!-- Menu Dropdown Option list -->
+            <div id="teamOptionsList"
+              class="hidden absolute left-0 right-0 top-full mt-1 max-h-[180px] overflow-y-auto bg-white border border-[#E9E9E9] rounded-[8px] shadow-lg z-30 divide-y divide-[#F3F3F3] custom-scroll">
+              <!-- Render tự động qua JS -->
             </div>
           </div>
 
@@ -710,7 +715,6 @@
               <!-- Danh sách thành viên dạng checklist (Scrollable) -->
               <div id="internalMemberList"
                 class="max-h-[140px] overflow-y-auto space-y-1 custom-scroll pr-1 divide-y divide-[#F3F3F3]">
-                <!-- Render thành viên qua JS -->
               </div>
 
               <!-- Nút Action: + 목록에 추가 -->
@@ -727,7 +731,7 @@
             </div>
           </div>
 
-          <!-- DANH SÁCH ĐÃ CHỌN (SELECTED LIST Ở DƯỚI CÙNG - TÍCH LŨY DỌC) -->
+          <!-- DANH SÁCH ĐÃ CHỌN (TÍCH LŨY DỌC) -->
           <div class="flex-1 flex flex-col min-h-0 pt-1">
             <div class="flex items-center justify-between pb-1.5">
               <div class="flex items-center gap-1.5">
@@ -744,7 +748,6 @@
             <!-- Container cuộn dọc các dòng tích lũy -->
             <div id="selectedAccumulatedList"
               class="flex-1 max-h-[180px] overflow-y-auto space-y-1.5 custom-scroll pr-1">
-              <!-- Render tự động qua JS -->
             </div>
 
             <!-- Empty State -->
@@ -758,7 +761,7 @@
       </div>
     </div>
 
-    <!-- Footer Drawer: Nền trắng, viền trên #E9E9E9, NÚT CĂN GIỮA (180px mỗi nút) -->
+    <!-- Footer Drawer -->
     <div class="px-4 py-3.5 bg-white border-t border-[#E9E9E9] flex items-center justify-center gap-3 flex-shrink-0">
       <button type="button" onclick="closeDrawer()"
         class="w-[180px] py-2 bg-white border border-[#B8B8B8] hover:bg-gray-50 text-[#313131] rounded-[6px] font-semibold text-[14px] transition cursor-pointer text-center">
@@ -801,7 +804,7 @@
     </div>
   </div>
 
-  <!-- ================= MODAL QUẢN LÝ LOẠI (유형 관리 - CHUẨN DESIGN SYSTEM) ================= -->
+  <!-- ================= MODAL QUẢN LÝ LOẠI ================= -->
   <div id="typeManagerModal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4">
     <div onclick="closeTypeManagerModal()" class="fixed inset-0 bg-[rgba(49,49,49,0.40)] backdrop-blur-[3px]"></div>
     <div
@@ -821,7 +824,6 @@
 
         <!-- Danh sách 유형 hiện có -->
         <div id="typeManagerList" class="space-y-1.5 max-h-[220px] overflow-y-auto custom-scroll pr-1">
-          <!-- Render động qua JS -->
         </div>
 
         <!-- Thêm mới 유형 -->
@@ -850,10 +852,8 @@
   <!-- ================= JAVASCRIPT ================= -->
   <script>
     // ===== 1. MASTER DATA =====
-    // Danh sách 유형 (BO tự quản lý)
     let noticeTypes = ["점검", "휴무", "일반", "긴급"];
 
-    // Dữ liệu Team và Thành viên trong Team
     const masterTeams = [
       {
         id: "t1",
@@ -971,7 +971,6 @@
       },
     ];
 
-    // Dữ liệu danh sách 공지 사항
     let notices = [
       {
         id: "NOT-004",
@@ -1071,13 +1070,12 @@
 
     // ===== 2. STATE TRONG DRAWER =====
     let currentTargetType = "ROLE";
-    let drawerActiveStatus = true; // Trạng thái 활성 상태 trong Drawer
+    let drawerActiveStatus = true;
     let editingTypeIndex = null;
 
-    // State cho Tab 2 (Cascading Selection & Danh sách tích lũy):
-    let currentSelectedTeamId = ""; // Team đang chọn ở Bước 1
-    let tempSelectedMemberIds = []; // Mảng member id đang được tick chọn ở Bước 2
-    let accumulatedTargets = []; // Danh sách đã chọn tích lũy ở dưới cùng [{ type: 'TEAM'|'USER', ... }]
+    let currentSelectedTeamId = "";
+    let tempSelectedMemberIds = [];
+    let accumulatedTargets = [];
 
     // ===== 3. UTILITIES =====
     function getTypeBadgeHTML(type) {
@@ -1136,8 +1134,8 @@
           <td class="py-2.5 px-3 border-r border-[#F3F3F3]">
             <div class="relative group inline-block max-w-[230px]">
               <span class="text-[#171717] truncate block cursor-default font-normal">${item.targetDisplay}</span>
-              <!-- Tooltip chi tiết khi hover -->
-              <div class="hidden group-hover:block absolute top-full left-0 mt-1.5 w-max max-w-[340px] px-3 py-2 bg-gray-900 text-white text-[11.5px] rounded-[6px] shadow-xl z-30 leading-relaxed pointer-events-none">
+              <!-- Tooltip: Hiển thị ở trên, background màu xám, text màu đen -->
+              <div class="hidden group-hover:block absolute bottom-full left-0 mb-1.5 w-max max-w-[340px] px-3 py-2 bg-[#E9E9E9] text-[#171717] border border-[#CFCECE] text-[11.5px] rounded-[6px] shadow-lg z-30 leading-relaxed pointer-events-none">
                 ${targetDetailsText}
               </div>
             </div>
@@ -1290,7 +1288,6 @@
     }
 
     function syncAllTypeDropdowns() {
-      // 1. Drawer Select
       const drawerSel = document.getElementById("drawerTypeSelect");
       const curDrawerVal = drawerSel ? drawerSel.value : "";
       if (drawerSel) {
@@ -1304,7 +1301,6 @@
         });
       }
 
-      // 2. Filter Bar Select
       const filterSel = document.getElementById("filterType");
       const curFilterVal = filterSel ? filterSel.value : "ALL";
       if (filterSel) {
@@ -1319,7 +1315,7 @@
       }
     }
 
-    // ===== 6. DRAWER (새 공지 추가 / 공지 정보 수정) =====
+    // ===== 6. DRAWER =====
     let quillEditor = null;
 
     function initQuill() {
@@ -1387,7 +1383,7 @@
 
       initQuill();
       syncAllTypeDropdowns();
-      populateTeamCascadingSelect();
+      populateTeamOptions();
 
       if (isEdit && id) {
         const item = notices.find((n) => n.id === id);
@@ -1405,7 +1401,6 @@
           quillEditor.root.innerHTML = item.content;
         }
 
-        // Khôi phục Tab và Dữ liệu
         setTargetType(item.targetType, true);
 
         if (item.targetType === "ROLE") {
@@ -1430,7 +1425,6 @@
 
         updateNotifPreview();
       } else {
-        // Tạo mới
         document.getElementById("drawerTitle").innerText = "새 공지 추가";
         document.getElementById("editNoticeId").value = "";
         document.getElementById("drawerTitleInput").value = "";
@@ -1448,6 +1442,7 @@
     function closeDrawer() {
       const panel = document.getElementById("drawerPanel");
       panel.classList.add("translate-x-[calc(100%+32px)]");
+      closeTeamDropdown();
       setTimeout(
         () =>
           document.getElementById("drawerOverlay").classList.add("hidden"),
@@ -1455,35 +1450,20 @@
       );
     }
 
-    // Chuyển tab đối tượng (Quy tắc feedback 4: khi chuyển tab, tab cũ bị reset về default)
     function setTargetType(type, isEditLoading = false) {
       currentTargetType = type;
 
       if (!isEditLoading) {
         if (type === "ROLE") {
-          // Khi chuyển sang ROLE: mặc định chọn 전체 선택 (và tick cả 3)
           document.getElementById("roleAll").checked = true;
           document.getElementById("roleAdmin").checked = true;
           document.getElementById("roleLeader").checked = true;
           document.getElementById("roleMember").checked = true;
 
-          // Reset sạch Tab TEAM_USER
-          currentSelectedTeamId = "";
-          tempSelectedMemberIds = [];
-          accumulatedTargets = [];
-          document.getElementById("teamCascadingSelect").value = "";
-          updateStep2UI();
-          renderAccumulatedTargets();
+          resetTeamUserTab();
         } else if (type === "TEAM_USER") {
-          // Khi chuyển sang TEAM_USER: reset sạch danh sách tích lũy
-          currentSelectedTeamId = "";
-          tempSelectedMemberIds = [];
-          accumulatedTargets = [];
-          document.getElementById("teamCascadingSelect").value = "";
-          updateStep2UI();
-          renderAccumulatedTargets();
+          resetTeamUserTab();
 
-          // Reset tab ROLE
           document.getElementById("roleAll").checked = false;
           document.getElementById("roleAdmin").checked = false;
           document.getElementById("roleLeader").checked = false;
@@ -1491,7 +1471,6 @@
         }
       }
 
-      // UI Tab
       ["ROLE", "TEAM_USER"].forEach((t) => {
         const tabBtn = document.getElementById(`tab_${t}`);
         const area = document.getElementById(`targetArea_${t}`);
@@ -1507,7 +1486,18 @@
       });
     }
 
-    // ===== 7. TAB ROLE (ĐỒNG BỘ CHECKBOX 전체 선택) =====
+    function resetTeamUserTab() {
+      currentSelectedTeamId = "";
+      tempSelectedMemberIds = [];
+      accumulatedTargets = [];
+      document.getElementById("teamCascadingSelect").value = "";
+      document.getElementById("teamSearchInput").value = "";
+      closeTeamDropdown();
+      updateStep2UI();
+      renderAccumulatedTargets();
+    }
+
+    // ===== 7. TAB ROLE =====
     function toggleAllRoles(checkbox) {
       document.getElementById("roleAdmin").checked = checkbox.checked;
       document.getElementById("roleLeader").checked = checkbox.checked;
@@ -1521,23 +1511,76 @@
       document.getElementById("roleAll").checked = allChecked;
     }
 
-    // ===== 8. TAB TEAM_USER (CASCADING SELECTION CHUẨN) =====
-    function populateTeamCascadingSelect() {
-      const select = document.getElementById("teamCascadingSelect");
-      if (!select) return;
-      select.innerHTML = '<option value="">팀을 선택하세요</option>';
-      masterTeams.forEach((t) => {
-        const opt = document.createElement("option");
-        opt.value = t.id;
-        opt.textContent = `${t.name} (${t.members.length}명)`;
-        select.appendChild(opt);
-      });
+    // ===== 8. TAB TEAM_USER (CASCADING & SEARCHABLE TEAM DROPDOWN) =====
+    function populateTeamOptions(filter = "") {
+      const list = document.getElementById("teamOptionsList");
+      if (!list) return;
+
+      const q = filter.toLowerCase().trim();
+      const filtered = masterTeams.filter((t) =>
+        t.name.toLowerCase().includes(q),
+      );
+
+      if (filtered.length === 0) {
+        list.innerHTML =
+          '<div class="px-3 py-3 text-center text-gray-400 text-[12.5px]">일치하는 팀이 없습니다.</div>';
+        return;
+      }
+
+      list.innerHTML = filtered
+        .map(
+          (t) => `
+        <div onclick="selectTeamOption('${t.id}', '${t.name}')"
+          class="px-3 py-2 text-[13px] text-[#171717] hover:bg-[#DCEBFB]/50 hover:text-[#003B8F] cursor-pointer flex items-center justify-between transition">
+          <span class="font-medium">${t.name}</span>
+          <span class="text-[11.5px] text-gray-400">${t.members.length}명</span>
+        </div>
+      `,
+        )
+        .join("");
     }
 
-    // Bước 1: Khi chọn Team từ dropdown
+    function openTeamDropdown() {
+      const list = document.getElementById("teamOptionsList");
+      const arrow = document.getElementById("teamDropdownArrow");
+      if (!list) return;
+      list.classList.remove("hidden");
+      if (arrow) arrow.classList.add("rotate-180");
+      populateTeamOptions(document.getElementById("teamSearchInput").value);
+    }
+
+    function closeTeamDropdown() {
+      const list = document.getElementById("teamOptionsList");
+      const arrow = document.getElementById("teamDropdownArrow");
+      if (list) list.classList.add("hidden");
+      if (arrow) arrow.classList.remove("rotate-180");
+    }
+
+    function toggleTeamDropdown(e) {
+      if (e) e.stopPropagation();
+      const list = document.getElementById("teamOptionsList");
+      if (list && list.classList.contains("hidden")) {
+        openTeamDropdown();
+      } else {
+        closeTeamDropdown();
+      }
+    }
+
+    function filterTeamOptions(keyword) {
+      openTeamDropdown();
+      populateTeamOptions(keyword);
+    }
+
+    function selectTeamOption(teamId, teamName) {
+      document.getElementById("teamCascadingSelect").value = teamId;
+      document.getElementById("teamSearchInput").value = teamName;
+      closeTeamDropdown();
+      onTeamSelectChange(teamId);
+    }
+
     function onTeamSelectChange(teamId) {
       currentSelectedTeamId = teamId;
-      tempSelectedMemberIds = []; // Mặc định chưa tick người nào lẻ
+      tempSelectedMemberIds = [];
 
       const searchInput = document.getElementById("internalMemberSearch");
       if (searchInput) searchInput.value = "";
@@ -1545,7 +1588,6 @@
       updateStep2UI();
     }
 
-    // Cập nhật giao diện Bước 2 dựa trên Team đã chọn
     function updateStep2UI() {
       const placeholder = document.getElementById("step2Placeholder");
       const activeCard = document.getElementById("step2ActiveCard");
@@ -1562,7 +1604,6 @@
       placeholder.classList.add("hidden");
       activeCard.classList.remove("hidden");
 
-      // Checkbox "Chọn tất cả thành viên trong [Tên Team] (X người)"
       const checkAll = document.getElementById("checkAllInTeam");
       const checkAllLabel = document.getElementById("checkAllInTeamLabel");
       const badge = document.getElementById("teamMemberCountBadge");
@@ -1575,7 +1616,6 @@
       updateStep2SelectedHint();
     }
 
-    // Render danh sách checklist thành viên ở Bước 2
     function renderInternalMemberList(members) {
       const container = document.getElementById("internalMemberList");
       container.innerHTML = "";
@@ -1613,7 +1653,6 @@
       });
     }
 
-    // Tìm kiếm thành viên nội bộ trong Team
     function filterInternalMembers() {
       if (!currentSelectedTeamId) return;
       const teamObj = masterTeams.find((t) => t.id === currentSelectedTeamId);
@@ -1632,7 +1671,6 @@
       renderInternalMemberList(filtered);
     }
 
-    // Khi tick / bỏ tick "Chọn tất cả thành viên trong [Tên Team]"
     function onToggleCheckAllInTeam(isChecked) {
       if (!currentSelectedTeamId) return;
       const teamObj = masterTeams.find((t) => t.id === currentSelectedTeamId);
@@ -1647,7 +1685,6 @@
       updateStep2SelectedHint();
     }
 
-    // Khi tick / bỏ tick từng thành viên lẻ
     function onToggleMemberCheckbox(memberId, isChecked) {
       if (!currentSelectedTeamId) return;
       const teamObj = masterTeams.find((t) => t.id === currentSelectedTeamId);
@@ -1662,7 +1699,6 @@
         );
       }
 
-      // Tự động đồng bộ checkbox "Chọn tất cả"
       const checkAll = document.getElementById("checkAllInTeam");
       checkAll.checked =
         tempSelectedMemberIds.length === teamObj.members.length;
@@ -1680,7 +1716,6 @@
       }
     }
 
-    // Nút Action: "+ 목록에 추가" (Thêm vào danh sách tích lũy)
     function addSelectedToAccumulatedList() {
       if (!currentSelectedTeamId) {
         alert("팀을 먼저 선택해주세요.");
@@ -1695,8 +1730,6 @@
           teamObj.members.length > 0);
 
       if (isAllChecked) {
-        // LOẠI 1 (CẢ NHÓM): Team: [Tên Team] (Toàn bộ X thành viên)
-        // Kiểm tra xem team này đã có ở dạng cả nhóm chưa
         const existingTeamIdx = accumulatedTargets.findIndex(
           (item) => item.type === "TEAM" && item.teamId === teamObj.id,
         );
@@ -1707,7 +1740,6 @@
           return;
         }
 
-        // Xóa bất kỳ thành viên lẻ nào của team này đã thêm trước đó (vì giờ đã chọn cả team)
         accumulatedTargets = accumulatedTargets.filter(
           (item) => !(item.type === "USER" && item.teamId === teamObj.id),
         );
@@ -1720,7 +1752,6 @@
           memberIds: teamObj.members.map((m) => m.id),
         });
       } else {
-        // LOẠI 2 (CÁ NHÂN): [Vai trò] Tên - [Tên Team] - SĐT
         if (tempSelectedMemberIds.length === 0) {
           alert(
             "추가할 멤버를 최소 1명 이상 선택하거나 '팀 전체 인원 선택'을 체크해주세요.",
@@ -1728,7 +1759,6 @@
           return;
         }
 
-        // Nếu team này đã ở dạng CẢ NHÓM thì báo nhắc
         const isTeamAlreadyFull = accumulatedTargets.some(
           (item) => item.type === "TEAM" && item.teamId === teamObj.id,
         );
@@ -1740,7 +1770,6 @@
           ) {
             return;
           }
-          // Xóa cả nhóm để thay bằng cá nhân
           accumulatedTargets = accumulatedTargets.filter(
             (item) => !(item.type === "TEAM" && item.teamId === teamObj.id),
           );
@@ -1774,7 +1803,6 @@
         }
       }
 
-      // Reset tạm thời phần chọn lẻ ở Bước 2 để người dùng tiếp tục chọn team khác
       tempSelectedMemberIds = [];
       document.getElementById("checkAllInTeam").checked = false;
       filterInternalMembers();
@@ -1783,13 +1811,11 @@
       renderAccumulatedTargets();
     }
 
-    // Xóa 1 mục khỏi danh sách tích lũy
     function removeAccumulatedTarget(index) {
       accumulatedTargets.splice(index, 1);
       renderAccumulatedTargets();
     }
 
-    // Xóa tất cả
     function clearAllAccumulatedTargets() {
       if (accumulatedTargets.length === 0) return;
       if (confirm("선택된 모든 대상을 목록에서 삭제하시겠습니까?")) {
@@ -1798,7 +1824,6 @@
       }
     }
 
-    // Render danh sách tích lũy ở dưới cùng
     function renderAccumulatedTargets() {
       const container = document.getElementById("selectedAccumulatedList");
       const emptyNotice = document.getElementById("selectedAccumulatedEmpty");
@@ -1818,7 +1843,6 @@
         const itemDiv = document.createElement("div");
 
         if (target.type === "TEAM") {
-          // LOẠI 1 (CẢ NHÓM)
           itemDiv.className =
             "p-2 bg-[#EFF6FF] border border-[#BFDBFE] rounded-[6px] flex items-center justify-between shadow-xs";
           itemDiv.innerHTML = `
@@ -1831,7 +1855,6 @@
             </button>
           `;
         } else if (target.type === "USER") {
-          // LOẠI 2 (CÁ NHÂN)
           const roleBadgeClass =
             target.role === "감독자"
               ? "bg-purple-50 text-purple-700 border-purple-200"
@@ -1859,7 +1882,7 @@
       });
     }
 
-    // ===== 9. LƯU CÔNG BÁO (SAVE NOTICE) =====
+    // ===== 9. LƯU CÔNG BÁO =====
     function saveNotice() {
       const titleInput = document
         .getElementById("drawerTitleInput")
@@ -1886,7 +1909,6 @@
       let roleDetails = null;
       let targetList = null;
 
-      // Xử lý lấy dữ liệu theo Tab đang active
       if (currentTargetType === "ROLE") {
         const roles = [];
         if (document.getElementById("roleAdmin").checked)
@@ -1923,7 +1945,6 @@
 
         targetList = JSON.parse(JSON.stringify(accumulatedTargets));
 
-        // Format targetDisplay cho bảng
         if (accumulatedTargets.length === 1) {
           const item = accumulatedTargets[0];
           if (item.type === "TEAM") {
@@ -1932,7 +1953,6 @@
             targetDisplay = `${item.teamName}: ${item.memberName} (${item.role})`;
           }
         } else {
-          // Nhiều đối tượng
           const firstItem = accumulatedTargets[0];
           const firstLabel =
             firstItem.type === "TEAM"
@@ -1941,7 +1961,6 @@
           targetDisplay = `${firstLabel} 외 ${accumulatedTargets.length - 1}건`;
         }
 
-        // Chi tiết cho tooltip hover
         targetDetails = [];
         accumulatedTargets.forEach((item) => {
           if (item.type === "TEAM") {
@@ -1957,7 +1976,6 @@
       }
 
       if (editId) {
-        // Cập nhật notice cũ
         const idx = notices.findIndex((n) => n.id === editId);
         if (idx !== -1) {
           notices[idx].title = titleInput;
@@ -1972,7 +1990,6 @@
           notices[idx].isRead = false;
         }
       } else {
-        // Tạo notice mới
         const newId = `NOT-00${notices.length + 1}`;
         notices.unshift({
           id: newId,
@@ -2034,13 +2051,11 @@
         const shortContent = stripHtml(item.content);
 
         itemDiv.innerHTML = `
-          <!-- Icon bên trái -->
           <div class="w-9 h-9 rounded-[8px] bg-[#DCEBFB] flex items-center justify-center flex-shrink-0 text-[#1F5FBA] mt-0.5">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
             </svg>
           </div>
-          <!-- 3 dòng text bên phải -->
           <div class="flex-1 min-w-0">
             <div class="flex items-center justify-between">
               <p class="font-bold text-[12px] text-[#171717]">공지 사항</p>
@@ -2059,7 +2074,7 @@
       renderBellList();
     }
 
-    // Đóng chuông dropdown khi click ra ngoài
+    // Đóng dropdown chuông hoặc dropdown tìm kiếm team khi click ra ngoài
     document.addEventListener("click", (e) => {
       const bellBtn = document.getElementById("bellBtn");
       const bellDrop = document.getElementById("bellDropdown");
@@ -2070,6 +2085,11 @@
         !bellDrop.contains(e.target)
       ) {
         bellDrop.classList.add("hidden");
+      }
+
+      const teamContainer = document.getElementById("teamSearchDropdownContainer");
+      if (teamContainer && !teamContainer.contains(e.target)) {
+        closeTeamDropdown();
       }
     });
 
