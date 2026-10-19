@@ -304,17 +304,6 @@
           </select>
         </div>
 
-        <!-- 3. 대상 구분 -->
-        <div class="flex items-center gap-2">
-          <span class="text-[#636363] font-medium whitespace-nowrap">대상 구분</span>
-          <select id="filterTarget" onchange="applyFilters()"
-            class="border border-[#E9E9E9] rounded-[6px] px-2.5 py-1.5 text-[#171717] bg-white focus:outline-none focus:border-[#1F5FBA] cursor-pointer">
-            <option value="ALL">전체</option>
-            <option value="ROLE">전체 / 역할별</option>
-            <option value="TEAM_USER">팀 / 개별 지정</option>
-          </select>
-        </div>
-
         <!-- 4. 활성 상태 -->
         <div class="flex items-center gap-2">
           <span class="text-[#636363] font-medium whitespace-nowrap">활성 상태</span>
@@ -458,7 +447,7 @@
 
   <!-- ================= FLOATING MODAL DRAWER ================= -->
   <div id="drawerPanel"
-    class="fixed right-4 top-4 bottom-4 w-[1000px] max-w-[calc(100vw-32px)] bg-white z-50 rounded-[14px] shadow-2xl overflow-hidden flex flex-col translate-x-[calc(100%+32px)] transition-transform duration-300 ease-in-out border border-[#E9E9E9]">
+    class="fixed right-4 top-4 bottom-4 w-[1260px] max-w-[calc(100vw-32px)] bg-white z-50 rounded-[14px] shadow-2xl overflow-hidden flex flex-col translate-x-[calc(100%+32px)] transition-transform duration-300 ease-in-out border border-[#E9E9E9]">
     <!-- Header Drawer -->
     <div class="px-4 py-2.5 bg-[#E9E9E9] flex items-center justify-between flex-shrink-0">
       <span id="drawerTitle" class="text-[16px] font-semibold text-[#171717]">새 공지 추가</span>
@@ -470,22 +459,35 @@
     </div>
 
     <!-- Body Drawer -->
-    <div class="flex-1 overflow-hidden flex p-4 gap-4 bg-white">
+    <div class="flex-1 overflow-hidden flex p-4 gap-4 bg-white min-h-0">
       <input type="hidden" id="editNoticeId" />
 
       <!-- ===== CỘT TRÁI: THÔNG TIN CÔNG BÁO (유형, 제목, 내용) ===== -->
-      <div class="w-[46%] flex flex-col gap-3 overflow-y-auto pr-1 custom-scroll">
-        <!-- Section Header -->
-        <div class="flex items-center gap-1.5 text-[#003B8F] flex-shrink-0 h-[26px]">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
-          </svg>
-          <span class="text-[15px] font-semibold">공지 사항 정보</span>
+      <div class="w-[36%] flex flex-col gap-3 overflow-hidden pr-1">
+        <!-- Section Header: text 공지 사항 정보 bên trái, toggle switch bên phải -->
+        <div class="flex items-center justify-between flex-shrink-0 h-[26px]">
+          <div class="flex items-center gap-1.5 text-[#003B8F]">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+            </svg>
+            <span class="text-[15px] font-semibold">공지 사항 정보</span>
+          </div>
+
+          <!-- Toggle switch 활성 상태 căn lề phải trong Section Header -->
+          <div class="flex items-center gap-2">
+            <span class="text-[12.5px] font-semibold text-[#171717]">활성 상태:</span>
+            <button type="button" id="drawerStatusToggle" onclick="toggleDrawerStatus()"
+              class="relative inline-flex h-5 w-10 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none bg-[#1F5FBA]"
+              title="활성 상태 토글">
+              <span id="drawerStatusBall"
+                class="pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out translate-x-5"></span>
+            </button>
+          </div>
         </div>
 
-        <!-- Container Box -->
-        <div class="bg-[#FAFAFA] rounded-[12px] p-3.5 border border-[#F3F3F3] space-y-3.5 flex-1 flex flex-col">
+        <!-- Container Box Cột trái -->
+        <div class="bg-[#FAFAFA] rounded-[12px] p-3.5 border border-[#F3F3F3] space-y-3 flex-1 flex flex-col min-h-0">
           <!-- 1. 유형 -->
           <div>
             <div class="flex items-center justify-between mb-1.5">
@@ -520,7 +522,7 @@
               class="w-full bg-white border border-[#E9E9E9] rounded-[6px] px-3 py-2 text-[14px] text-[#171717] focus:outline-none focus:border-[#1F5FBA] placeholder:text-[#CFCECE]" />
           </div>
 
-          <!-- 3. 내용 (Quill Rich Text Editor: diện tích mở rộng, không lo scroll) -->
+          <!-- 3. 내용 (Quill Rich Text Editor) -->
           <div class="flex-1 flex flex-col min-h-0">
             <label class="text-[13.5px] font-medium text-[#636363] block mb-1.5">내용 <span class="text-[#EF4444]">*</span> :</label>
             <div id="quillEditor" class="flex-1"></div>
@@ -528,8 +530,8 @@
         </div>
       </div>
 
-      <!-- ===== CỘT PHẢI: GỒM 게시 대상 설정 (GỘP TAB) + 활성 상태 + 알림 미리보기 ===== -->
-      <div class="w-[54%] flex flex-col gap-3 overflow-y-auto pl-1 custom-scroll">
+      <!-- ===== CỘT PHẢI: GỒM 게시 대상 설정 (GỘP TAB + TREE MENU) ===== -->
+      <div class="w-[64%] flex flex-col gap-3 overflow-hidden pl-1">
         <!-- Section Header -->
         <div class="flex items-center justify-between flex-shrink-0 h-[26px]">
           <div class="flex items-center gap-1.5 text-[#003B8F]">
@@ -541,14 +543,14 @@
           </div>
           <span id="targetSelectedSummaryBadge"
             class="text-[12px] bg-[#DCEBFB] text-[#003B8F] font-semibold px-2.5 py-0.5 rounded-full">
-            총 135명 중 135명 선택됨
+            총 45명 중 45명 선택됨
           </span>
         </div>
 
         <!-- 1. KHỐI: 게시 대상 설정 -->
-        <div class="bg-[#FAFAFA] rounded-[12px] p-3.5 border border-[#F3F3F3] space-y-3">
+        <div class="bg-[#FAFAFA] rounded-[12px] p-3.5 border border-[#F3F3F3] space-y-3 flex-1 flex flex-col min-h-0">
           <!-- Lựa chọn 역할 (Vai trò) -->
-          <div class="p-2.5 bg-white rounded-[8px] border border-[#E9E9E9] space-y-2">
+          <div class="p-2.5 bg-white rounded-[8px] border border-[#E9E9E9] space-y-2 flex-shrink-0">
             <div class="flex items-center justify-between pb-1.5 border-b border-[#F3F3F3]">
               <span class="text-[13px] font-semibold text-[#171717]">역할 선택:</span>
               <label class="inline-flex items-center gap-1.5 cursor-pointer text-[12.5px] font-semibold text-[#003B8F]">
@@ -566,7 +568,7 @@
               <label class="flex items-center gap-2 p-1.5 rounded-[6px] hover:bg-gray-50 border border-transparent hover:border-[#E9E9E9] cursor-pointer transition">
                 <input type="checkbox" id="roleLeaderCheckbox" onchange="onRoleFilterChange('감독자', this.checked)"
                   class="w-4 h-4 rounded text-[#1F5FBA] focus:ring-0 cursor-pointer" />
-                <span class="text-[13px] font-medium text-[#171717]">감독자 <span class="text-[11.5px] text-gray-400" id="roleLeaderCount">(100)</span></span>
+                <span class="text-[13px] font-medium text-[#171717]">감독자 <span class="text-[11.5px] text-gray-400" id="roleLeaderCount">(10)</span></span>
               </label>
               <label class="flex items-center gap-2 p-1.5 rounded-[6px] hover:bg-gray-50 border border-transparent hover:border-[#E9E9E9] cursor-pointer transition">
                 <input type="checkbox" id="roleMemberCheckbox" onchange="onRoleFilterChange('학부모', this.checked)"
@@ -576,104 +578,30 @@
             </div>
           </div>
 
-          <!-- Lọc theo Đội & Tìm kiếm tên/SĐT -->
-          <div class="grid grid-cols-2 gap-2">
-            <div class="relative">
-              <select id="unifiedTeamSelect" onchange="onUnifiedTeamFilterChange(this.value)"
-                class="w-full bg-white border border-[#E9E9E9] rounded-[6px] px-3 py-1.5 text-[12.5px] text-[#171717] focus:outline-none focus:border-[#1F5FBA] cursor-pointer appearance-none">
-                <option value="ALL">전체</option>
-              </select>
-              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-gray-400">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                </svg>
-              </div>
-            </div>
-            <div class="relative">
-              <input type="text" id="unifiedUserSearchInput" oninput="onUnifiedUserSearch(this.value)"
-                placeholder="이름 또는 연락처 검색..."
-                class="w-full bg-white border border-[#E9E9E9] rounded-[6px] pl-8 pr-3 py-1.5 text-[12.5px] text-[#171717] focus:outline-none focus:border-[#1F5FBA] placeholder:text-[#CFCECE]" />
-              <svg class="w-3.5 h-3.5 text-gray-400 absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none"
-                fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
+          <!-- Tìm kiếm tên, 연락처 hoặc 팀명 (Full-width, đã bỏ dropdown chọn team) -->
+          <div class="relative flex-shrink-0">
+            <input type="text" id="unifiedUserSearchInput" oninput="onUnifiedUserSearch(this.value)"
+              placeholder="이름, 연락처 또는 팀명 검색"
+              class="w-full bg-white border border-[#E9E9E9] rounded-[6px] pl-8 pr-3 py-1.5 text-[12.5px] text-[#171717] focus:outline-none focus:border-[#1F5FBA] placeholder:text-[#CFCECE]" />
+            <svg class="w-3.5 h-3.5 text-gray-400 absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none"
+              fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+
+          <!-- Danh sách thành viên (Checklist container mở rộng tràn đầy chiều cao) -->
+          <div class="bg-white rounded-[8px] border border-[#E9E9E9] overflow-hidden flex-1 flex flex-col min-h-0">
+            <div id="unifiedUserChecklistWrapper" class="flex-1 flex flex-col min-h-0">
+              <!-- Render tự động qua JS: Split hoặc Single Tree Menu -->
             </div>
           </div>
 
-          <!-- Danh sách thành viên (Checklist cuộn) -->
-          <div class="bg-white rounded-[8px] border border-[#E9E9E9] overflow-hidden">
-            <!-- Header của list -->
-            <div class="px-3 py-2 bg-[#F8FAFC] border-b border-[#E9E9E9] flex items-center justify-between text-[12.5px]">
-              <div class="flex items-center gap-2">
-                <input type="checkbox" id="checkAllVisibleUsers" onchange="toggleAllVisibleUsers(this.checked)"
-                  class="w-4 h-4 rounded text-[#1F5FBA] focus:ring-0 cursor-pointer" />
-                <span id="visibleListCountHint" class="font-semibold text-[#171717]">목록 전체 선택 (100명)</span>
-              </div>
-              <div class="flex items-center gap-2">
-                <button type="button" onclick="selectAllFilteredUsers()"
-                  class="text-[11.5px] text-[#003B8F] hover:underline cursor-pointer font-medium">전체 선택</button>
-                <span class="text-gray-300">|</span>
-                <button type="button" onclick="unselectAllFilteredUsers()"
-                  class="text-[11.5px] text-gray-500 hover:text-red-600 hover:underline cursor-pointer font-medium">전체 해제</button>
-              </div>
-            </div>
-
-            <!-- Items container cuộn -->
-            <div id="unifiedUserChecklist" class="h-[270px] overflow-y-auto divide-y divide-[#F3F3F3] custom-scroll">
-              <!-- Render tự động qua JS -->
-            </div>
-          </div>
-
-          <div class="text-[11.5px] text-[#636363] px-1 flex items-center gap-1.5">
+          <div class="text-[11.5px] text-[#636363] px-1 flex items-center gap-1.5 flex-shrink-0">
             <svg class="w-3.5 h-3.5 text-[#1F5FBA] flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <span>역할을 선택하면 대상자가 자동 표시되며, 개별 체크를 해제하여 발송 대상을 조정할 수 있습니다.</span>
-          </div>
-        </div>
-
-        <!-- 2. KHỐI: 활성 상태 (Đơn giản, gọn gàng) -->
-        <div class="bg-white rounded-[8px] px-3.5 py-2.5 border border-[#E9E9E9] flex items-center justify-between shadow-xs">
-          <span class="text-[13.5px] font-semibold text-[#171717]">활성 상태</span>
-          <button type="button" id="drawerStatusToggle" onclick="toggleDrawerStatus()"
-            class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none bg-[#1F5FBA]">
-            <span id="drawerStatusBall"
-              class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out translate-x-5"></span>
-          </button>
-        </div>
-
-        <!-- 3. KHỐI: 알림 미리보기 (Dòng 1: 공지 사항, Dòng 2: 유형, Dòng 3: 제목) -->
-        <div class="bg-[#FAFAFA] rounded-[10px] p-3 border border-[#E9E9E9] space-y-2 shadow-xs">
-          <div class="flex items-center justify-between">
-            <span class="text-[13px] font-semibold text-[#171717] flex items-center gap-1.5">
-              <svg class="w-3.5 h-3.5 text-[#1F5FBA]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-              </svg>
-              알림 미리보기
-            </span>
-            </div>
-
-          <!-- Preview Card Mockup -->
-          <div class="bg-white rounded-[8px] p-3 border border-[#E9E9E9] flex items-start gap-3 shadow-xs">
-            <div class="w-9 h-9 rounded-[8px] bg-[#DCEBFB] flex items-center justify-center flex-shrink-0 text-[#1F5FBA] mt-0.5">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-              </svg>
-            </div>
-            <div class="flex-1 min-w-0">
-              <!-- Dòng 1: text 공지 사항 -->
-              <div class="flex items-center justify-between">
-                <p class="font-bold text-[12px] text-[#171717]">공지 사항</p>
-                <span class="text-[10.5px] text-gray-400">방금 전</span>
-              </div>
-              <!-- Dòng 2: loại 유형 (màu xanh dương #003B8F) -->
-              <p id="previewNotifType" class="text-[12px] text-[#003B8F] font-semibold truncate mt-0.5">점검</p>
-              <!-- Dòng 3: 제목 -->
-              <p id="previewNotifTitle" class="text-[12px] text-[#171717] font-medium truncate mt-0.5">(제목이 여기에 표시됩니다)</p>
-            </div>
           </div>
         </div>
       </div>
@@ -778,6 +706,11 @@
       { id: "t3", name: "ABCD Team" },
       { id: "t4", name: "Busan Dragons" },
       { id: "t5", name: "Incheon Warriors" },
+      { id: "t6", name: "Daegu FC Academy" },
+      { id: "t7", name: "Suwon Bluewings Youth" },
+      { id: "t8", name: "Gwangju FC U-12" },
+      { id: "t9", name: "Ulsan HD Youth" },
+      { id: "t10", name: "Jeju United Academy" },
     ];
 
     const masterUsers = [];
@@ -795,28 +728,23 @@
       });
     });
 
-    // 2. Giám sát viên / 감독자 (Đúng 100 người xuất hiện)
+    // 2. Giám sát viên / 감독자 (Mỗi team đúng 1 감독자)
     const leaderBaseNames = [
       "Marcus Thompson", "Liam Gallagher", "정태호", "이지현", "강수호",
       "박지우", "김감독", "박코치", "최성환", "윤진우",
-      "장민호", "서준호", "임재범", "송태섭", "정대만",
-      "강백호", "채치수", "서태웅", "권준호", "신준섭",
     ];
-    for (let i = 1; i <= 100; i++) {
-      const team = teamsList[(i - 1) % teamsList.length];
-      const baseName = leaderBaseNames[(i - 1) % leaderBaseNames.length];
-      const name = i <= leaderBaseNames.length ? baseName : `${baseName} ${Math.floor((i - 1) / leaderBaseNames.length) + 1}`;
+    teamsList.forEach((team, idx) => {
       masterUsers.push({
-        id: `lead_${i}`,
-        name: name,
+        id: `lead_${idx + 1}`,
+        name: leaderBaseNames[idx] || `감독자 ${idx + 1}`,
         role: "감독자",
         teamId: team.id,
         teamName: team.name,
-        phone: `010-${2000 + (i % 900)}-${String(3000 + i).padStart(4, "0")}`,
+        phone: `010-${2000 + (idx + 1) * 33}-${String(3000 + idx + 1).padStart(4, "0")}`,
       });
-    }
+    });
 
-    // 3. Phụ huynh / 학부모 (30 người)
+    // 3. Phụ huynh / 학부모 (30 người: 3 người / 1 team)
     const parentBaseNames = [
       "Hwang Minji", "김동준", "Sofia Martinez", "최민서", "Mia Chen",
       "이서준", "한유진", "윤소희", "조예은", "오지호",
@@ -845,7 +773,7 @@
           "<p>안정적인 서비스 제공을 위해 긴급 패치 작업이 진행될 예정입니다.<br>작업 시간 동안 일시적인 접속 지연이 발생할 수 있으니 양해 부탁드립니다.</p><p><br></p><p><strong>■ 작업 시간:</strong> 2026년 10월 12일 16:00 ~ 16:30 (30분간)<br><strong>■ 영향 범위:</strong> 전체 시스템 주문 및 디자인 조회</p>",
         targetType: "ROLE",
         targetDisplay: "전체",
-        targetDetails: ["전체 관리자 및 회원 (총 135명)"],
+        targetDetails: ["전체 대상 (총 45명: 관리자 5, 감독자 10, 학부모 30)"],
         targetUserIds: masterUsers.map((u) => u.id),
         createdAt: "2026.10.12",
         creator: "홍길동",
@@ -859,8 +787,10 @@
         content:
           "<p>안녕하세요. <strong>SportsRAB</strong> 관리팀입니다.</p><p><br></p><p>시스템 성능 향상 및 보안 업데이트를 위한 정기 점검이 아래와 같이 진행됩니다.<br>점검 시간 동안에는 서비스 이용이 제한되오니 업무에 참고하시기 바랍니다.</p><p><br></p><p>1. 점검 일시: 2026년 10월 15일(목) 02:00 ~ 06:00 (4시간)<br>2. 점검 대상: SportsRAB CMS 및 모바일 앱 전 기능<br>3. 점검 내용: 데이터베이스 인덱스 최적화 및 서버 보안 패치</p>",
         targetType: "ROLE",
-        targetDisplay: "감독자 전체 (100명)",
-        targetDetails: ["감독자 전체 100명"],
+        targetDisplay: "감독자 전체 (10명)",
+        targetDetails: masterUsers
+          .filter((u) => u.role === "감독자")
+          .map((u) => `[${u.role}] ${u.name}${u.teamName ? ` - ${u.teamName}` : ""} - ${u.phone}`),
         targetUserIds: masterUsers.filter((u) => u.role === "감독자").map((u) => u.id),
         createdAt: "2026.10.11",
         creator: "김관리",
@@ -874,9 +804,15 @@
         content:
           "<p>추석 황금연휴 기간 동안의 본사 휴무 일정 및 유니폼 제작/배송 마감 일정을 안내해 드립니다.</p><p><br></p><p>- 연휴 기간: 2026.10.15 ~ 2026.10.18<br>- 주문 마감: 2026.10.13 18:00 이전 발주 건에 한해 연휴 전 순차 출고</p>",
         targetType: "ROLE",
-        targetDisplay: "감독자 80명 (일부 지정)",
-        targetDetails: masterUsers.filter((u) => u.role === "감독자").slice(0, 80).map((u) => `[${u.role}] ${u.name}${u.teamName ? ` - ${u.teamName}` : ""} - ${u.phone}`),
-        targetUserIds: masterUsers.filter((u) => u.role === "감독자").slice(0, 80).map((u) => u.id),
+        targetDisplay: "감독자 8명 (일부)",
+        targetDetails: masterUsers
+          .filter((u) => u.role === "감독자")
+          .slice(0, 8)
+          .map((u) => `[${u.role}] ${u.name}${u.teamName ? ` - ${u.teamName}` : ""} - ${u.phone}`),
+        targetUserIds: masterUsers
+          .filter((u) => u.role === "감독자")
+          .slice(0, 8)
+          .map((u) => u.id),
         createdAt: "2026.10.08",
         creator: "홍길동",
         status: false,
@@ -889,9 +825,9 @@
         content:
           "<p>새로운 2026 가을 시즌 기능성 유니폼 및 패딩 조끼 샘플이 시스템에 업데이트되었습니다.<br>디자인 목록 관리 메뉴에서 신규 라인업을 확인하실 수 있습니다.</p>",
         targetType: "ROLE",
-        targetDisplay: "Seoul Tigers: Marcus Thompson 외 1명",
+        targetDisplay: "개별 지정 (2명)",
         targetDetails: [
-          "[감독자] Marcus Thompson - Seoul Tigers - 010-2001-3001",
+          "[감독자] Marcus Thompson - Seoul Tigers - 010-2033-3001",
           "[학부모] Hwang Minji - Seoul Tigers - 010-4001-5001",
         ],
         targetUserIds: ["lead_1", "mem_1"],
@@ -925,6 +861,162 @@
       return tmp.textContent || tmp.innerText || "";
     }
 
+    // Quy ước hiển thị Tooltip: tối đa 5 người đầu tiên, nếu > 5 thì tóm tắt "...외 N명"
+    function getTargetTooltipHTML(item) {
+      if (!item.targetDetails || item.targetDetails.length === 0) {
+        return `<span class="text-[#171717]">${item.targetDisplay || ""}</span>`;
+      }
+      if (item.targetDetails.length === 1) {
+        return `<span class="text-[#171717]">${item.targetDetails[0]}</span>`;
+      }
+      const maxItems = 5;
+      const displayItems = item.targetDetails.slice(0, maxItems);
+      let html = displayItems.map((d) => `<div class="truncate">${d}</div>`).join("");
+      if (item.targetDetails.length > maxItems) {
+        const remainCount = item.targetDetails.length - maxItems;
+        html += `<div class="mt-1.5 pt-1 border-t border-[#CFCECE] text-[#636363] font-medium">...외 ${remainCount}명</div>`;
+      }
+      return html;
+    }
+
+    // Quy ước chuẩn tạo text cột "게시 대상" và danh sách targetDetails
+    function computeTargetDisplayAndDetails(selectedIds) {
+      const selectedUsers = masterUsers.filter((u) => selectedIds.has(u.id));
+      const selectedCount = selectedUsers.length;
+      const totalCount = masterUsers.length;
+
+      if (selectedCount === 0) {
+        return {
+          targetDisplay: "미지정 (0명)",
+          targetDetails: ["지정된 대상이 없습니다."],
+        };
+      }
+
+      const adminTotal = masterUsers.filter((u) => u.role === "관리자").length;
+      const leaderTotal = masterUsers.filter((u) => u.role === "감독자").length;
+      const parentTotal = masterUsers.filter((u) => u.role === "학부모").length;
+
+      const adminSelected = selectedUsers.filter((u) => u.role === "관리자").length;
+      const leaderSelected = selectedUsers.filter((u) => u.role === "감독자").length;
+      const parentSelected = selectedUsers.filter((u) => u.role === "학부모").length;
+
+      // 1. Toàn bộ hệ thống
+      if (selectedCount === totalCount) {
+        return {
+          targetDisplay: "전체",
+          targetDetails: [
+            `전체 대상 (총 ${totalCount}명: 관리자 ${adminTotal}, 감독자 ${leaderTotal}, 학부모 ${parentTotal})`,
+          ],
+        };
+      }
+
+      const userDetails = selectedUsers.map(
+        (u) => `[${u.role}] ${u.name}${u.teamName ? ` - ${u.teamName}` : ""} - ${u.phone}`,
+      );
+
+      // 2. Toàn bộ 1 hoặc kết hợp vai trò (Full role selection)
+      // Chỉ chọn quản trị viên
+      if (adminSelected > 0 && leaderSelected === 0 && parentSelected === 0) {
+        return {
+          targetDisplay:
+            adminSelected === adminTotal
+              ? `관리자 전체 (${adminTotal}명)`
+              : `관리자 ${adminSelected}명 (일부)`,
+          targetDetails: userDetails,
+        };
+      }
+      // Chỉ chọn giám sát viên
+      if (leaderSelected > 0 && adminSelected === 0 && parentSelected === 0) {
+        return {
+          targetDisplay:
+            leaderSelected === leaderTotal
+              ? `감독자 전체 (${leaderTotal}명)`
+              : `감독자 ${leaderSelected}명 (일부)`,
+          targetDetails: userDetails,
+        };
+      }
+      // Chỉ chọn phụ huynh
+      if (parentSelected > 0 && adminSelected === 0 && leaderSelected === 0) {
+        return {
+          targetDisplay:
+            parentSelected === parentTotal
+              ? `학부모 전체 (${parentTotal}명)`
+              : `학부모 ${parentSelected}명 (일부)`,
+          targetDetails: userDetails,
+        };
+      }
+
+      // Kết hợp trọn vẹn các vai trò
+      if (
+        adminSelected === adminTotal &&
+        leaderSelected === leaderTotal &&
+        parentSelected === 0
+      ) {
+        return {
+          targetDisplay: `관리자 + 감독자 (${adminSelected + leaderSelected}명)`,
+          targetDetails: userDetails,
+        };
+      }
+      if (
+        adminSelected === adminTotal &&
+        parentSelected === parentTotal &&
+        leaderSelected === 0
+      ) {
+        return {
+          targetDisplay: `관리자 + 학부모 (${adminSelected + parentSelected}명)`,
+          targetDetails: userDetails,
+        };
+      }
+      if (
+        leaderSelected === leaderTotal &&
+        parentSelected === parentTotal &&
+        adminSelected === 0
+      ) {
+        return {
+          targetDisplay: `감독자 + 학부모 (${leaderSelected + parentSelected}명)`,
+          targetDetails: userDetails,
+        };
+      }
+
+      // 3. Theo Đội bóng (Toàn bộ 1 hoặc nhiều đội bóng)
+      if (adminSelected === 0) {
+        const fullySelectedTeams = [];
+        let isOnlyFullTeams = true;
+
+        teamsList.forEach((team) => {
+          const teamAll = masterUsers.filter((u) => u.teamId === team.id);
+          const teamSelected = selectedUsers.filter((u) => u.teamId === team.id);
+          if (teamSelected.length > 0) {
+            if (teamSelected.length === teamAll.length) {
+              fullySelectedTeams.push(team);
+            } else {
+              isOnlyFullTeams = false;
+            }
+          }
+        });
+
+        if (isOnlyFullTeams && fullySelectedTeams.length > 0) {
+          if (fullySelectedTeams.length === 1) {
+            return {
+              targetDisplay: `팀: ${fullySelectedTeams[0].name} (${selectedCount}명)`,
+              targetDetails: userDetails,
+            };
+          } else {
+            return {
+              targetDisplay: `팀: ${fullySelectedTeams[0].name} 외 ${fullySelectedTeams.length - 1}개 팀 (총 ${selectedCount}명)`,
+              targetDetails: userDetails,
+            };
+          }
+        }
+      }
+
+      // 4. Trường hợp còn lại: Chỉ định lẻ / Hỗn hợp (Phương án A)
+      return {
+        targetDisplay: `개별 지정 (${selectedCount}명)`,
+        targetDetails: userDetails,
+      };
+    }
+
     // ===== 4. RENDER BẢNG CHÍNH =====
     function renderTable(data = notices) {
       const tbody = document.getElementById("noticeTableBody");
@@ -952,10 +1044,7 @@
                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
              </button>`;
 
-        const targetDetailsText =
-          item.targetDetails && item.targetDetails.length
-            ? item.targetDetails.join("<br>")
-            : item.targetDisplay;
+        const targetTooltipHTML = getTargetTooltipHTML(item);
 
         tr.innerHTML = `
           <td class="py-2.5 px-3 text-center text-gray-500 border-r border-[#F3F3F3]">${index + 1}</td>
@@ -968,8 +1057,8 @@
             <div class="relative group inline-block max-w-[230px]">
               <span class="text-[#171717] truncate block cursor-default font-normal">${item.targetDisplay}</span>
               <!-- Tooltip: Hiển thị ở trên, background màu xám, text màu đen -->
-              <div class="hidden group-hover:block absolute bottom-full left-0 mb-1.5 w-max max-w-[340px] px-3 py-2 bg-[#E9E9E9] text-[#171717] border border-[#CFCECE] text-[11.5px] rounded-[6px] shadow-lg z-30 leading-relaxed pointer-events-none">
-                ${targetDetailsText}
+              <div class="hidden group-hover:block absolute bottom-full left-0 mb-1.5 w-max max-w-[360px] px-3 py-2 bg-[#E9E9E9] text-[#171717] border border-[#CFCECE] text-[11.5px] rounded-[6px] shadow-lg z-30 leading-relaxed pointer-events-none">
+                ${targetTooltipHTML}
               </div>
             </div>
           </td>
@@ -1195,21 +1284,25 @@
     function updateDrawerStatusUI() {
       const toggle = document.getElementById("drawerStatusToggle");
       const ball = document.getElementById("drawerStatusBall");
+      if (!toggle || !ball) return;
 
       if (drawerActiveStatus) {
         toggle.className =
-          "relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none bg-[#1F5FBA]";
+          "relative inline-flex h-5 w-10 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none bg-[#1F5FBA]";
         ball.className =
-          "pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out translate-x-5";
+          "pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out translate-x-5";
       } else {
         toggle.className =
-          "relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none bg-[#CFCECE]";
+          "relative inline-flex h-5 w-10 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none bg-[#CFCECE]";
         ball.className =
-          "pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out translate-x-0";
+          "pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out translate-x-0";
       }
     }
 
-    // ===== 7. UNIFIED TARGET SELECTION (GỘP TAB) =====
+    // ===== 7. UNIFIED TARGET SELECTION (GỘP TAB + TREE MENU) =====
+    // Mặc định không xổ ra thành viên trong team — chỉ hiển thị tên team.
+    let expandedTeamIds = new Set();
+
     function populateUnifiedTeamOptions() {
       const select = document.getElementById("unifiedTeamSelect");
       if (!select) return;
@@ -1270,6 +1363,10 @@
 
     function onUnifiedUserSearch(val) {
       unifiedSearchKeyword = val.toLowerCase().trim();
+      if (unifiedSearchKeyword) {
+        // Tự động mở rộng tất cả các team khi tìm kiếm
+        teamsList.forEach((t) => expandedTeamIds.add(t.id));
+      }
       renderUnifiedUserChecklist();
     }
 
@@ -1290,56 +1387,57 @@
       });
     }
 
-    function renderUnifiedUserChecklist() {
-      const container = document.getElementById("unifiedUserChecklist");
-      if (!container) return;
-      container.innerHTML = "";
-
-      const filtered = getFilteredUsers();
-      const hint = document.getElementById("visibleListCountHint");
-      const checkAll = document.getElementById("checkAllVisibleUsers");
-
-      if (filtered.length === 0) {
-        container.innerHTML =
-          '<div class="py-4 text-center text-gray-400 text-[12.5px]">선택된 조건에 일치하는 대상자가 없습니다.</div>';
-        if (hint) hint.textContent = "목록 (0명)";
-        if (checkAll) checkAll.checked = false;
-        return;
+    function toggleTeamExpand(teamId) {
+      if (expandedTeamIds.has(teamId)) {
+        expandedTeamIds.delete(teamId);
+      } else {
+        expandedTeamIds.add(teamId);
       }
+      renderUnifiedUserChecklist();
+    }
 
-      const allVisibleSelected = filtered.every((u) => selectedUserIds.has(u.id));
-      if (checkAll) checkAll.checked = allVisibleSelected;
-      if (hint) hint.textContent = `목록 전체 선택 (${filtered.length}명)`;
-
-      filtered.forEach((u) => {
-        const isChecked = selectedUserIds.has(u.id);
-        const roleBadgeClass =
-          u.role === "감독자"
-            ? "bg-purple-50 text-purple-700 border-purple-200"
-            : u.role === "관리자"
-              ? "bg-blue-50 text-blue-700 border-blue-200"
-              : "bg-orange-50 text-orange-700 border-orange-200";
-
-        const row = document.createElement("label");
-        row.className =
-          "py-1.5 px-3 flex items-center justify-between hover:bg-gray-50 cursor-pointer transition text-[12.5px]";
-        row.innerHTML = `
-          <div class="flex items-center gap-2.5 min-w-0">
-            <input type="checkbox" onchange="toggleSingleUser('${u.id}', this.checked)" ${isChecked ? "checked" : ""}
-              class="w-4 h-4 rounded text-[#1F5FBA] focus:ring-0 cursor-pointer flex-shrink-0">
-            <span class="w-6 h-6 rounded-full bg-[#E9E9E9] text-[#171717] font-bold text-[10.5px] flex items-center justify-center flex-shrink-0">
-              ${u.name.charAt(0)}
-            </span>
-            <span class="font-medium text-[#171717] truncate">${u.name}</span>
-            <span class="text-[11px] px-1.5 py-0.2 rounded border ${roleBadgeClass} flex-shrink-0">${u.role}</span>
-            ${u.teamName ? `<span class="text-gray-300">·</span><span class="text-[#636363] text-[11.5px] truncate">${u.teamName}</span>` : ''}
-          </div>
-          <div class="text-[#636363] text-[11.5px] flex-shrink-0 pl-2">
-            <span>${u.phone}</span>
-          </div>
-        `;
-        container.appendChild(row);
+    function toggleTeamAllUsers(teamId, isChecked) {
+      const filtered = getFilteredUsers();
+      const teamMembers = filtered.filter(
+        (u) => u.teamId === teamId && (u.role === "감독자" || u.role === "학부모"),
+      );
+      teamMembers.forEach((u) => {
+        if (isChecked) {
+          selectedUserIds.add(u.id);
+        } else {
+          selectedUserIds.delete(u.id);
+        }
       });
+      renderUnifiedUserChecklist();
+      updateTargetSelectedSummary();
+    }
+
+    function toggleAllAdmins(isChecked) {
+      const filtered = getFilteredUsers();
+      const admins = filtered.filter((u) => u.role === "관리자");
+      admins.forEach((u) => {
+        if (isChecked) {
+          selectedUserIds.add(u.id);
+        } else {
+          selectedUserIds.delete(u.id);
+        }
+      });
+      renderUnifiedUserChecklist();
+      updateTargetSelectedSummary();
+    }
+
+    function toggleAllTeamUsers(isChecked) {
+      const filtered = getFilteredUsers();
+      const teamUsers = filtered.filter((u) => u.role !== "관리자");
+      teamUsers.forEach((u) => {
+        if (isChecked) {
+          selectedUserIds.add(u.id);
+        } else {
+          selectedUserIds.delete(u.id);
+        }
+      });
+      renderUnifiedUserChecklist();
+      updateTargetSelectedSummary();
     }
 
     function toggleSingleUser(userId, isChecked) {
@@ -1348,27 +1446,6 @@
       } else {
         selectedUserIds.delete(userId);
       }
-
-      const filtered = getFilteredUsers();
-      const checkAll = document.getElementById("checkAllVisibleUsers");
-      if (checkAll) {
-        checkAll.checked =
-          filtered.length > 0 &&
-          filtered.every((u) => selectedUserIds.has(u.id));
-      }
-
-      updateTargetSelectedSummary();
-    }
-
-    function toggleAllVisibleUsers(isChecked) {
-      const filtered = getFilteredUsers();
-      filtered.forEach((u) => {
-        if (isChecked) {
-          selectedUserIds.add(u.id);
-        } else {
-          selectedUserIds.delete(u.id);
-        }
-      });
       renderUnifiedUserChecklist();
       updateTargetSelectedSummary();
     }
@@ -1387,6 +1464,287 @@
       updateTargetSelectedSummary();
     }
 
+    // Helper render Tree Menu cho 감독자 & 학부모
+    // Checkbox Tên Team thụt ra ngoài cùng, checkbox thành viên thụt sâu vào trong
+    function renderTeamTreeHTML(teamUsers, isFullWidth = false) {
+      if (teamUsers.length === 0) {
+        return '<div class="py-6 text-center text-gray-400 text-[12px]">일치하는 대상자가 없습니다.</div>';
+      }
+
+      const displayedTeams = teamsList.filter((team) =>
+        teamUsers.some((u) => u.teamId === team.id),
+      );
+
+      if (displayedTeams.length === 0) {
+        return '<div class="py-6 text-center text-gray-400 text-[12px]">일치하는 대상자가 없습니다.</div>';
+      }
+
+      const roleWidthClass = isFullWidth ? "w-[70px]" : "w-[60px]";
+      const phoneWidthClass = isFullWidth ? "w-[115px]" : "w-[105px]";
+      const gapClass = isFullWidth ? "gap-4" : "gap-3";
+
+      return displayedTeams
+        .map((team) => {
+          const members = teamUsers.filter((u) => u.teamId === team.id);
+          const selectedMembers = members.filter((u) => selectedUserIds.has(u.id));
+          const isAllTeamSelected =
+            members.length > 0 && selectedMembers.length === members.length;
+          const isExpanded = expandedTeamIds.has(team.id);
+
+          return `
+            <div class="team-group">
+              <!-- Team Header Row: Checkbox Tên Team nằm ngoài cùng sát lề trái (thụt ra ngoài) -->
+              <div class="px-3 py-2 bg-[#F8FAFC] hover:bg-gray-100/90 border-b border-[#E9E9E9] flex items-center justify-between cursor-pointer select-none transition">
+                <div class="flex items-center gap-2 min-w-0">
+                  <!-- 1. Checkbox của Tên Team (nằm ngoài cùng sát lề trái) -->
+                  <input type="checkbox" onchange="toggleTeamAllUsers('${team.id}', this.checked)"
+                    ${isAllTeamSelected ? "checked" : ""}
+                    class="w-3.5 h-3.5 rounded text-[#1F5FBA] focus:ring-0 cursor-pointer flex-shrink-0" />
+
+                  <!-- 2. Nút expand / collapse mũi tên -->
+                  <button type="button" onclick="toggleTeamExpand('${team.id}')"
+                    class="w-4 h-4 flex items-center justify-center text-gray-500 hover:text-gray-800 p-0 rounded transition">
+                    <svg class="w-3.5 h-3.5 transform transition-transform ${isExpanded ? "rotate-90" : ""}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+
+                  <!-- 3. Tên Team -->
+                  <span onclick="toggleTeamExpand('${team.id}')" class="font-bold text-[13px] text-[#171717] truncate hover:text-[#003B8F]">
+                    ${team.name}
+                  </span>
+
+                  <!-- 4. Badge số lượng -->
+                  <span class="text-[10.5px] text-[#003B8F] font-semibold bg-[#DCEBFB] px-1.5 py-0.2 rounded flex-shrink-0">
+                    ${selectedMembers.length}/${members.length}명
+                  </span>
+                </div>
+
+                <button type="button" onclick="toggleTeamExpand('${team.id}')" class="text-[11px] text-gray-400 hover:text-[#003B8F] flex-shrink-0 font-medium">
+                  ${isExpanded ? "접기 ▲" : "펼치기 ▼"}
+                </button>
+              </div>
+
+              <!-- Members Tree Children: Checkbox thành viên thụt vào trong rõ rệt kèm nhánh cây └ -->
+              ${
+                isExpanded
+                  ? `
+                <div class="divide-y divide-[#F3F3F3] bg-white">
+                  ${members
+                    .map((u) => {
+                      const isChecked = selectedUserIds.has(u.id);
+                      const roleBadgeClass =
+                        u.role === "감독자"
+                          ? "bg-purple-50 text-purple-700 border-purple-200"
+                          : "bg-orange-50 text-orange-700 border-orange-200";
+
+                      return `
+                        <label class="pl-9 pr-3 py-1.5 flex items-center justify-between hover:bg-blue-50/20 cursor-pointer transition text-[12px]">
+                          <div class="flex items-center gap-2 min-w-0 flex-1">
+                            <!-- Ký hiệu nhánh cây thụt vào trong -->
+                            <span class="text-gray-300 font-mono text-[13px] select-none flex-shrink-0 -mr-0.5">└</span>
+                            <!-- Checkbox thành viên thụt sâu vào trong so với checkbox team -->
+                            <input type="checkbox" onchange="toggleSingleUser('${u.id}', this.checked)" ${isChecked ? "checked" : ""}
+                              class="w-3.5 h-3.5 rounded text-[#1F5FBA] focus:ring-0 cursor-pointer flex-shrink-0" />
+                            <span class="font-medium text-[#171717] truncate">${u.name}</span>
+                          </div>
+                          <!-- Khối căn chuẩn 100% cột 역할 và 연락처 -->
+                          <div class="flex items-center ${gapClass} pr-2 flex-shrink-0">
+                            <div class="${roleWidthClass} flex justify-center flex-shrink-0">
+                              <span class="text-[10.5px] px-1.5 py-0.2 rounded border ${roleBadgeClass} font-medium">${u.role}</span>
+                            </div>
+                            <span class="${phoneWidthClass} text-center text-[11.5px] text-[#636363] font-mono flex-shrink-0">${u.phone}</span>
+                          </div>
+                        </label>
+                      `;
+                    })
+                    .join("")}
+                </div>
+              `
+                  : ""
+              }
+            </div>
+          `;
+        })
+        .join("");
+    }
+
+    function renderUnifiedUserChecklist() {
+      const wrapper = document.getElementById("unifiedUserChecklistWrapper");
+      if (!wrapper) return;
+
+      // Lưu scroll position của các container trước khi render lại
+      const scrollMap = [];
+      wrapper.querySelectorAll(".overflow-y-auto").forEach((el, idx) => {
+        scrollMap[idx] = el.scrollTop;
+      });
+
+      const filtered = getFilteredUsers();
+
+      // Kiểm tra trạng thái các vai trò được tick
+      const hasAdmin = Boolean(roleFilters["관리자"]);
+      const hasTeamRoles = Boolean(roleFilters["감독자"] || roleFilters["학부모"]);
+
+      const adminUsers = filtered.filter((u) => u.role === "관리자");
+      const teamUsers = filtered.filter(
+        (u) => u.role === "감독자" || u.role === "학부모",
+      );
+
+      const adminSelectedCount = adminUsers.filter((u) =>
+        selectedUserIds.has(u.id),
+      ).length;
+      const teamUsersSelectedCount = teamUsers.filter((u) =>
+        selectedUserIds.has(u.id),
+      ).length;
+
+      const allAdminsSelected =
+        adminUsers.length > 0 && adminSelectedCount === adminUsers.length;
+      const allTeamUsersSelected =
+        teamUsers.length > 0 && teamUsersSelectedCount === teamUsers.length;
+
+      if (!hasAdmin && !hasTeamRoles) {
+        wrapper.innerHTML = `
+          <div class="flex-1 flex items-center justify-center p-6 text-gray-400 text-[12.5px]">
+            선택된 역할이 없습니다. 상단의 역할을 선택해주세요.
+          </div>
+        `;
+        return;
+      }
+
+      if (filtered.length === 0) {
+        wrapper.innerHTML = `
+          <div class="flex-1 flex items-center justify-center p-6 text-gray-400 text-[12.5px]">
+            선택된 조건에 일치하는 대상자가 없습니다.
+          </div>
+        `;
+        return;
+      }
+
+      // TRƯỜNG HỢP 1: Có tick 관리자 VÀ có tick vai trò đội (감독자 hoặc 학부모 hoặc cả hai)
+      // -> Chia 2 cột: Bên trái là 관리자, bên phải là 감독자/학부모 Tree Menu
+      if (hasAdmin && hasTeamRoles) {
+        wrapper.innerHTML = `
+          <div class="flex-1 flex min-h-0 divide-x divide-[#E9E9E9]">
+            <!-- CỘT TRÁI: DANH SÁCH 관리자 RIÊNG (Không hiển thị badge 관리자) -->
+            <div class="w-[28%] flex flex-col min-h-0 bg-white">
+              <div class="px-3 py-2 bg-[#F8FAFC] border-b border-[#E9E9E9] flex items-center justify-between text-[12px] flex-shrink-0">
+                <label class="flex items-center gap-1.5 cursor-pointer font-semibold text-[#171717] min-w-0 truncate">
+                  <input type="checkbox" id="checkAllAdmins" onchange="toggleAllAdmins(this.checked)"
+                    ${allAdminsSelected ? "checked" : ""}
+                    class="w-3.5 h-3.5 rounded text-[#1F5FBA] focus:ring-0 cursor-pointer flex-shrink-0" />
+                  <span class="truncate">관리자</span>
+                </label>
+                <span class="text-[11px] text-[#003B8F] font-semibold bg-[#DCEBFB] px-1.5 py-0.2 rounded flex-shrink-0">
+                  ${adminSelectedCount}/${adminUsers.length}명
+                </span>
+              </div>
+              <div class="flex-1 overflow-y-auto divide-y divide-[#F3F3F3] custom-scroll">
+                ${adminUsers
+                  .map(
+                    (u) => `
+                  <label class="px-3 py-2 flex items-center justify-between hover:bg-gray-50 cursor-pointer transition text-[12px]">
+                    <div class="flex items-center gap-2 min-w-0">
+                      <input type="checkbox" onchange="toggleSingleUser('${u.id}', this.checked)" ${selectedUserIds.has(u.id) ? "checked" : ""}
+                        class="w-3.5 h-3.5 rounded text-[#1F5FBA] focus:ring-0 cursor-pointer flex-shrink-0" />
+                      <span class="font-medium text-[#171717] truncate">${u.name}</span>
+                    </div>
+                    <span class="text-[11px] text-[#636363] flex-shrink-0 font-mono">${u.phone}</span>
+                  </label>
+                `,
+                  )
+                  .join("")}
+              </div>
+            </div>
+
+            <!-- CỘT PHẢI: DANH SÁCH 감독자 / 학부모 THEO TREE MENU -->
+            <div class="w-[72%] flex flex-col min-h-0 bg-white">
+              <!-- Title cột Tree Menu: chỉ hiển thị tổng số, không có tên cột 역할/연락처 -->
+              <div class="px-3 py-2 bg-[#F8FAFC] border-b border-[#E9E9E9] flex items-center justify-between text-[11.5px] font-semibold text-[#636363] flex-shrink-0">
+                <div class="flex items-center gap-1.5 flex-1 min-w-0">
+                  <input type="checkbox" id="checkAllTeamUsers" onchange="toggleAllTeamUsers(this.checked)"
+                    ${allTeamUsersSelected ? "checked" : ""}
+                    class="w-3.5 h-3.5 rounded text-[#1F5FBA] focus:ring-0 cursor-pointer flex-shrink-0" />
+                  <span class="text-[#171717] font-semibold truncate">팀명 / 팀원 (${teamUsersSelectedCount}/${teamUsers.length}명)</span>
+                </div>
+              </div>
+              <div class="flex-1 overflow-y-auto custom-scroll divide-y divide-[#E9E9E9]">
+                ${renderTeamTreeHTML(teamUsers, false)}
+              </div>
+            </div>
+          </div>
+        `;
+      }
+      // TRƯỜNG HỢP 2: CHỈ TICK 관리자 RIÊNG (Không tick vai trò đội)
+      // -> Hiển thị danh sách 관리자 toàn phần (full-width), không chia cột
+      else if (hasAdmin && !hasTeamRoles) {
+        wrapper.innerHTML = `
+          <div class="flex-1 flex flex-col min-h-0 bg-white">
+            <div class="px-3 py-2 bg-[#F8FAFC] border-b border-[#E9E9E9] flex items-center justify-between text-[12px] flex-shrink-0">
+              <label class="flex items-center gap-2 cursor-pointer font-semibold text-[#171717]">
+                <input type="checkbox" id="checkAllAdmins" onchange="toggleAllAdmins(this.checked)"
+                  ${allAdminsSelected ? "checked" : ""}
+                  class="w-4 h-4 rounded text-[#1F5FBA] focus:ring-0 cursor-pointer" />
+                <span>관리자 전체 선택 (${adminSelectedCount}/${adminUsers.length}명)</span>
+              </label>
+              <div class="flex items-center gap-2">
+                <button type="button" onclick="selectAllFilteredUsers()" class="text-[11.5px] text-[#003B8F] hover:underline cursor-pointer font-medium">전체 선택</button>
+                <span class="text-gray-300">|</span>
+                <button type="button" onclick="unselectAllFilteredUsers()" class="text-[11.5px] text-gray-500 hover:text-red-600 hover:underline cursor-pointer font-medium">전체 해제</button>
+              </div>
+            </div>
+            <div class="flex-1 overflow-y-auto divide-y divide-[#F3F3F3] custom-scroll">
+              ${adminUsers
+                .map(
+                  (u) => `
+                <label class="px-3 py-2 flex items-center justify-between hover:bg-gray-50 cursor-pointer transition text-[12.5px]">
+                  <div class="flex items-center gap-2.5 min-w-0">
+                    <input type="checkbox" onchange="toggleSingleUser('${u.id}', this.checked)" ${selectedUserIds.has(u.id) ? "checked" : ""}
+                      class="w-4 h-4 rounded text-[#1F5FBA] focus:ring-0 cursor-pointer flex-shrink-0" />
+                    <span class="w-6 h-6 rounded-full bg-[#E9E9E9] text-[#171717] font-bold text-[10px] flex items-center justify-center flex-shrink-0">
+                      ${u.name.charAt(0)}
+                    </span>
+                    <span class="font-medium text-[#171717] truncate">${u.name}</span>
+                  </div>
+                  <span class="text-[12px] text-[#636363] flex-shrink-0 font-mono">${u.phone}</span>
+                </label>
+              `,
+                )
+                .join("")}
+            </div>
+          </div>
+        `;
+      }
+      // TRƯỜNG HỢP 3: CHỈ TICK 감독자 / 학부모 (Không tick 관리자)
+      // -> Hiển thị Tree Menu toàn phần (full-width), không chia cột
+      else {
+        wrapper.innerHTML = `
+          <div class="flex-1 flex flex-col min-h-0 bg-white">
+            <div class="px-3 py-2 bg-[#F8FAFC] border-b border-[#E9E9E9] flex items-center justify-between text-[12px] font-semibold text-[#636363] flex-shrink-0">
+              <div class="flex items-center gap-2 flex-1 min-w-0">
+                <input type="checkbox" id="checkAllTeamUsers" onchange="toggleAllTeamUsers(this.checked)"
+                  ${allTeamUsersSelected ? "checked" : ""}
+                  class="w-4 h-4 rounded text-[#1F5FBA] focus:ring-0 cursor-pointer flex-shrink-0" />
+                <span class="text-[#171717] font-semibold truncate">팀명 / 대상자 (${teamUsersSelectedCount}/${teamUsers.length}명)</span>
+                <div class="flex items-center gap-1.5 ml-2 text-[11.5px] text-gray-400 font-normal">
+                  <button type="button" onclick="selectAllFilteredUsers()" class="hover:text-[#003B8F] hover:underline cursor-pointer font-medium">전체 선택</button>
+                  <span>|</span>
+                  <button type="button" onclick="unselectAllFilteredUsers()" class="hover:text-red-600 hover:underline cursor-pointer font-medium">전체 해제</button>
+                </div>
+              </div>
+            </div>
+            <div class="flex-1 overflow-y-auto custom-scroll divide-y divide-[#E9E9E9]">
+              ${renderTeamTreeHTML(teamUsers, true)}
+            </div>
+          </div>
+        `;
+      }
+
+      // Khôi phục scroll position
+      wrapper.querySelectorAll(".overflow-y-auto").forEach((el, idx) => {
+        if (scrollMap[idx] !== undefined) el.scrollTop = scrollMap[idx];
+      });
+    }
+
     function updateTargetSelectedSummary() {
       const badge = document.getElementById("targetSelectedSummaryBadge");
       if (!badge) return;
@@ -1394,20 +1752,27 @@
       const totalCount = masterUsers.length;
       const selectedCount = selectedUserIds.size;
 
-      const leaderTotal = masterUsers.filter((u) => u.role === "감독자").length; // 100
+      const leaderTotal = masterUsers.filter((u) => u.role === "감독자").length;
       const leaderSelected = masterUsers.filter(
         (u) => u.role === "감독자" && selectedUserIds.has(u.id),
       ).length;
 
-      const adminTotal = masterUsers.filter((u) => u.role === "관리자").length; // 5
+      const adminTotal = masterUsers.filter((u) => u.role === "관리자").length;
       const adminSelected = masterUsers.filter(
         (u) => u.role === "관리자" && selectedUserIds.has(u.id),
       ).length;
 
-      const parentTotal = masterUsers.filter((u) => u.role === "학부모").length; // 30
+      const parentTotal = masterUsers.filter((u) => u.role === "학부모").length;
       const parentSelected = masterUsers.filter(
         (u) => u.role === "학부모" && selectedUserIds.has(u.id),
       ).length;
+
+      const adminCountEl = document.getElementById("roleAdminCount");
+      if (adminCountEl) adminCountEl.textContent = `(${adminTotal})`;
+      const leaderCountEl = document.getElementById("roleLeaderCount");
+      if (leaderCountEl) leaderCountEl.textContent = `(${leaderTotal})`;
+      const parentCountEl = document.getElementById("roleMemberCount");
+      if (parentCountEl) parentCountEl.textContent = `(${parentTotal})`;
 
       if (selectedCount === totalCount) {
         badge.textContent = `총 ${totalCount}명 중 ${selectedCount}명 선택됨 (전체)`;
@@ -1457,6 +1822,9 @@
       const searchInp = document.getElementById("unifiedUserSearchInput");
       if (searchInp) searchInp.value = "";
 
+      // Mặc định không xổ ra thành viên trong team (chỉ hiển thị tên team)
+      expandedTeamIds = new Set();
+
       if (isEdit && id) {
         const item = notices.find((n) => n.id === id);
         if (!item) return;
@@ -1482,7 +1850,7 @@
           } else if (item.targetDisplay.includes("감독자")) {
             masterUsers
               .filter((u) => u.role === "감독자")
-              .slice(0, 80)
+              .slice(0, 8)
               .forEach((u) => selectedUserIds.add(u.id));
           } else {
             masterUsers.slice(0, 2).forEach((u) => selectedUserIds.add(u.id));
@@ -1580,65 +1948,10 @@
         selectedUserIds.has(u.id),
       );
 
-      let targetDisplay = "";
-      let targetDetails = [];
-      const totalCount = masterUsers.length;
-      const selectedCount = selectedUsers.length;
-
-      const leaderTotal = masterUsers.filter((u) => u.role === "감독자").length;
-      const leaderSelected = selectedUsers.filter(
-        (u) => u.role === "감독자",
-      ).length;
-      const adminTotal = masterUsers.filter((u) => u.role === "관리자").length;
-      const adminSelected = selectedUsers.filter(
-        (u) => u.role === "관리자",
-      ).length;
-      const parentTotal = masterUsers.filter((u) => u.role === "학부모").length;
-      const parentSelected = selectedUsers.filter(
-        (u) => u.role === "학부모",
-      ).length;
-
-      if (selectedCount === totalCount) {
-        targetDisplay = "전체";
-        targetDetails = ["전체 관리자 및 회원 (총 135명)"];
-      } else if (
-        leaderSelected > 0 &&
-        adminSelected === 0 &&
-        parentSelected === 0
-      ) {
-        if (leaderSelected === leaderTotal) {
-          targetDisplay = `감독자 전체 (${leaderTotal}명)`;
-        } else {
-          targetDisplay = `감독자 ${leaderSelected}명 (일부 지정)`;
-        }
-        targetDetails = selectedUsers.map(
-          (u) => `[${u.role}] ${u.name}${u.teamName ? ` - ${u.teamName}` : ""} - ${u.phone}`,
-        );
-      } else if (
-        adminSelected > 0 &&
-        leaderSelected === 0 &&
-        parentSelected === 0
-      ) {
-        targetDisplay = `관리자 (${adminSelected}명)`;
-        targetDetails = selectedUsers.map(
-          (u) => `[${u.role}] ${u.name}${u.teamName ? ` - ${u.teamName}` : ""} - ${u.phone}`,
-        );
-      } else if (
-        parentSelected > 0 &&
-        adminSelected === 0 &&
-        leaderSelected === 0
-      ) {
-        targetDisplay = `학부모 (${parentSelected}명)`;
-        targetDetails = selectedUsers.map(
-          (u) => `[${u.role}] ${u.name}${u.teamName ? ` - ${u.teamName}` : ""} - ${u.phone}`,
-        );
-      } else {
-        const firstUser = selectedUsers[0];
-        targetDisplay = `${firstUser.teamName}: ${firstUser.name} 외 ${selectedCount - 1}명`;
-        targetDetails = selectedUsers.map(
-          (u) => `[${u.role}] ${u.name}${u.teamName ? ` - ${u.teamName}` : ""} - ${u.phone}`,
-        );
-      }
+      // Tính toán 게시 대상 và targetDetails theo quy ước chuẩn mới
+      const targetInfo = computeTargetDisplayAndDetails(selectedUserIds);
+      const targetDisplay = targetInfo.targetDisplay;
+      const targetDetails = targetInfo.targetDetails;
 
       if (editId) {
         const idx = notices.findIndex((n) => n.id === editId);
@@ -1777,7 +2090,8 @@
     // ===== 12. FILTER BAR LOGIC =====
     function applyFilters() {
       const type = document.getElementById("filterType").value;
-      const target = document.getElementById("filterTarget").value;
+      const targetEl = document.getElementById("filterTarget");
+      const target = targetEl ? targetEl.value : "ALL";
       const status = document.getElementById("filterStatus").value;
       const keyword = document
         .getElementById("filterKeyword")
@@ -1806,7 +2120,8 @@
 
     function resetFilters() {
       document.getElementById("filterType").value = "ALL";
-      document.getElementById("filterTarget").value = "ALL";
+      const targetEl = document.getElementById("filterTarget");
+      if (targetEl) targetEl.value = "ALL";
       document.getElementById("filterStatus").value = "ALL";
       document.getElementById("filterKeyword").value = "";
       document.getElementById("filterDate").value = "";
