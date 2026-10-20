@@ -1,0 +1,2232 @@
+<!doctype html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SportsRAB CMS - 공지 사항 설정 (Phương án 3: Inline Muted Text)</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" as="style" crossorigin
+    href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <!-- Quill Rich Text Editor -->
+  <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet" />
+  <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: [
+              "Pretendard",
+              "-apple-system",
+              "BlinkMacSystemFont",
+              "system-ui",
+              "Roboto",
+              "sans-serif",
+            ],
+          },
+          colors: {
+            brand: {
+              DEFAULT: "#1F5FBA",
+              dark: "#003B8F",
+              navy: "#0047AB",
+              light: "#DCEBFB",
+              hover: "#1a52a2",
+            },
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    /* Custom scrollbar */
+    .custom-scroll::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+
+    .custom-scroll::-webkit-scrollbar-track {
+      background: #f3f3f3;
+      border-radius: 4px;
+    }
+
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #cfcece;
+      border-radius: 4px;
+    }
+
+    .custom-scroll::-webkit-scrollbar-thumb:hover {
+      background: #b8b8b8;
+    }
+
+    /* Quill Editor System Style */
+    .ql-toolbar.ql-snow {
+      border-color: #e9e9e9 !important;
+      border-radius: 6px 6px 0 0;
+      background: #fafafa;
+      padding: 6px 8px;
+    }
+
+    .ql-container.ql-snow {
+      border-color: #e9e9e9 !important;
+      border-radius: 0 0 6px 6px;
+      background: white;
+      font-family: "Pretendard", sans-serif;
+      font-size: 13.5px;
+      min-height: 280px;
+    }
+
+    .ql-editor {
+      min-height: 280px;
+      max-height: 400px;
+      padding: 10px 12px;
+      color: #171717;
+    }
+
+    .ql-editor.ql-blank::before {
+      color: #cfcece;
+      font-style: normal;
+      left: 12px;
+    }
+  </style>
+</head>
+
+<body class="bg-[#FAFAFA] font-sans text-[#171717] antialiased min-h-screen flex flex-col select-none">
+  <!-- ================= TOP HEADER BAR ================= -->
+  <header
+    class="h-[46px] w-full bg-[#1F5FBA] px-4 flex items-center justify-between text-white flex-shrink-0 z-30 fixed top-0 left-0 right-0 shadow-sm">
+    <div class="flex items-center gap-2">
+      <!-- Logo SportsRAB -->
+      <div class="w-7 h-7 bg-white/20 rounded flex items-center justify-center font-bold text-sm tracking-wider">
+        <span class="text-white">SR</span>
+      </div>
+      <span class="font-semibold text-[16px] tracking-tight">SportsRAB CMS</span>
+    </div>
+
+    <div class="flex items-center gap-5 text-[14px]">
+      <!-- Chuông thông báo (Bell Dropdown Container) -->
+      <div class="relative">
+        <button id="bellBtn" onclick="toggleBellDropdown()"
+          class="flex items-center gap-1.5 hover:text-blue-100 transition relative py-1 focus:outline-none cursor-pointer">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+          </svg>
+          <span>알림</span>
+          <span id="bellBadge"
+            class="absolute -top-1 -right-2 bg-[#DE3B40] text-white text-[9px] font-bold px-1.5 py-0.2 rounded-full min-w-[15px] h-[15px] flex items-center justify-center">2</span>
+        </button>
+
+        <!-- Dropdown Thông báo -->
+        <div id="bellDropdown"
+          class="hidden absolute right-0 mt-2 w-[380px] bg-white rounded-[12px] shadow-2xl border border-[#E9E9E9] text-[#171717] z-50 overflow-hidden">
+          <div class="px-4 py-3 border-b border-[#E9E9E9] flex items-center justify-between bg-[#E9E9E9]/40">
+            <div class="flex items-center gap-2">
+              <span class="font-semibold text-[14px] text-[#171717]">알림</span>
+            </div>
+            <button onclick="markAllNotificationsAsRead()"
+              class="text-[12px] text-[#003B8F] hover:underline font-medium cursor-pointer">
+              모두 읽음
+            </button>
+          </div>
+          <div id="bellNotificationList"
+            class="max-h-[380px] overflow-y-auto divide-y divide-[#F3F3F3] text-[12px] custom-scroll">
+            <!-- Items render động qua JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- User Profile -->
+      <div class="flex items-center gap-2 cursor-pointer hover:opacity-90">
+        <img class="w-5 h-5 rounded-full object-cover bg-white/20 ring-1 ring-white/50"
+          src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=64&h=64&fit=crop&crop=face"
+          alt="Avatar" />
+        <span>홍길동</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= MAIN BODY CONTAINER ================= -->
+  <div class="flex flex-1 pt-[46px] min-h-[calc(100vh-46px)]">
+    <!-- ================= SIDEBAR ================= -->
+    <aside class="w-[200px] bg-[#1F5FBA] text-white flex-shrink-0 flex flex-col justify-between p-3 select-none">
+      <div class="flex flex-col gap-0.5 text-[14px]">
+        <!-- Dashboard -->
+        <div class="flex items-center gap-2.5 px-3 py-2 rounded hover:bg-white/10 cursor-pointer text-white/90">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+          </svg>
+          <span>대시보드</span>
+        </div>
+
+        <!-- 주문 관리 -->
+        <div class="flex items-center gap-2.5 px-3 py-2 rounded hover:bg-white/10 cursor-pointer text-white/90">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+          </svg>
+          <span>주문 관리</span>
+        </div>
+        <div class="pl-7 flex flex-col gap-0.5 text-[13px] text-white/70 pb-1">
+          <span class="py-1 hover:text-white cursor-pointer">주문 관리</span>
+          <span class="py-1 hover:text-white cursor-pointer">제작 및 배송 관리</span>
+        </div>
+
+        <!-- 유니폼 품목 관리 -->
+        <div class="flex items-center gap-2.5 px-3 py-2 rounded hover:bg-white/10 cursor-pointer text-white/90">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+          </svg>
+          <span>유니폼 품목 관리</span>
+        </div>
+        <div class="pl-7 flex flex-col gap-0.5 text-[13px] text-white/70 pb-1">
+          <span class="py-1 hover:text-white cursor-pointer">카테고리 및 품목 설정</span>
+          <span class="py-1 hover:text-white cursor-pointer">사이즈 설정</span>
+        </div>
+
+        <!-- 고객 관리 -->
+        <div class="flex items-center gap-2.5 px-3 py-2 rounded hover:bg-white/10 cursor-pointer text-white/90">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+          <span>고객 관리</span>
+        </div>
+
+        <!-- 매출 관리 -->
+        <div class="flex items-center gap-2.5 px-3 py-2 rounded hover:bg-white/10 cursor-pointer text-white/90">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+          </svg>
+          <span>매출 관리</span>
+        </div>
+
+        <!-- 사용자 및 권한 관리 -->
+        <div class="flex items-center gap-2.5 px-3 py-2 rounded hover:bg-white/10 cursor-pointer text-white/90">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+          </svg>
+          <span>사용자 및 권한 관리</span>
+        </div>
+
+        <!-- 공장 목록 관리 -->
+        <div class="flex items-center gap-2.5 px-3 py-2 rounded hover:bg-white/10 cursor-pointer text-white/90">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+          </svg>
+          <span>공장 목록 관리</span>
+        </div>
+
+        <!-- 시스템 설정 (Active parent) -->
+        <div
+          class="flex items-center gap-2.5 px-3 py-2 rounded hover:bg-white/10 cursor-pointer font-semibold text-white">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path
+              d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
+            </path>
+          </svg>
+          <span>시스템 설정</span>
+        </div>
+
+        <!-- Submenu của 시스템 설정 -->
+        <div class="flex flex-col gap-1 pl-4 py-1 text-[13px]">
+          <div
+            class="bg-white text-[#1F5FBA] font-normal px-3 py-1.5 rounded flex items-center shadow-sm cursor-pointer">
+            <span>공지 사항 설정</span>
+          </div>
+          <span class="px-3 py-1 text-white/80 hover:text-white cursor-pointer">비용 설정</span>
+          <span class="px-3 py-1 text-white/80 hover:text-white cursor-pointer">배송업체 설정</span>
+          <span class="px-3 py-1 text-white/80 hover:text-white cursor-pointer">배너 설정</span>
+          <span class="px-3 py-1 text-white/80 hover:text-white cursor-pointer">작업 이력</span>
+        </div>
+      </div>
+
+      <!-- Bottom sidebar -->
+      <div class="pt-4 border-t border-white/20">
+        <button
+          class="flex items-center gap-2 px-3 py-2 text-[13px] text-white/80 hover:text-white w-full transition cursor-pointer">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+          </svg>
+          <span>로그아웃</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- ================= MAIN CONTENT AREA ================= -->
+    <main class="flex-1 p-5 flex flex-col gap-4 overflow-x-hidden">
+      <!-- Tiêu đề trang -->
+      <div class="flex items-center justify-between">
+        <h1 class="text-[18px] font-medium text-[#003B8F] tracking-tight">
+          공지 사항 설정
+        </h1>
+      </div>
+
+      <!-- Filter Bar -->
+      <div class="bg-white p-3 rounded-[8px] border border-[#E9E9E9] flex flex-wrap items-center gap-3 text-[13px]">
+        <!-- 1. 등록일 -->
+        <div class="flex items-center gap-2">
+          <span class="text-[#636363] font-medium whitespace-nowrap">등록일</span>
+          <div class="relative flex items-center">
+            <input type="text" id="filterDate" placeholder="2026.10.01 - 2026.10.12"
+              class="border border-[#E9E9E9] rounded-[6px] px-3 py-1.5 text-[#171717] w-[205px] focus:outline-none focus:border-[#1F5FBA] text-[13px]" />
+            <svg class="w-4 h-4 text-[#CFCECE] absolute right-2.5 pointer-events-none" fill="none" stroke="currentColor"
+              stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          </div>
+        </div>
+
+        <!-- 2. 유형 -->
+        <div class="flex items-center gap-2">
+          <span class="text-[#636363] font-medium whitespace-nowrap">유형</span>
+          <select id="filterType" onchange="applyFilters()"
+            class="border border-[#E9E9E9] rounded-[6px] px-2.5 py-1.5 text-[#171717] bg-white focus:outline-none focus:border-[#1F5FBA] cursor-pointer">
+            <option value="ALL">전체</option>
+          </select>
+        </div>
+
+        <!-- 4. 활성 상태 -->
+        <div class="flex items-center gap-2">
+          <span class="text-[#636363] font-medium whitespace-nowrap">활성 상태</span>
+          <select id="filterStatus" onchange="applyFilters()"
+            class="border border-[#E9E9E9] rounded-[6px] px-2.5 py-1.5 text-[#171717] bg-white focus:outline-none focus:border-[#1F5FBA] cursor-pointer">
+            <option value="ALL">전체</option>
+            <option value="ON">활성</option>
+            <option value="OFF">비활성</option>
+          </select>
+        </div>
+
+        <!-- 5. 키워드 검색 -->
+        <div class="flex-1 min-w-[200px] flex items-center gap-2">
+          <div class="relative flex-1">
+            <input type="text" id="filterKeyword" oninput="applyFilters()" placeholder="검색할 키워드를 입력하세요"
+              class="w-full border border-[#E9E9E9] rounded-[6px] pl-3 pr-8 py-1.5 text-[#171717] focus:outline-none focus:border-[#1F5FBA] text-[13px] placeholder:text-[#CFCECE]" />
+            <svg class="w-4 h-4 text-[#CFCECE] absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none"
+              fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+          <!-- 초기화 Button -->
+          <button onclick="resetFilters()"
+            class="border border-[#E9E9E9] hover:bg-gray-50 text-[#313131] px-3 py-1.5 rounded-[6px] font-medium text-[13px] flex items-center gap-1 transition shadow-sm cursor-pointer">
+            <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" height="1em" width="1em"
+              xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2z"></path>
+              <path
+                d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466">
+              </path>
+            </svg>
+            <span>초기화</span>
+          </button>
+        </div>
+
+        <!-- 새로 추가 Button -->
+        <div>
+          <button onclick="openDrawer(false)"
+            class="bg-[#0047AB] hover:bg-[#003B8F] text-white px-4 py-1.5 rounded-[6px] font-semibold text-[13.5px] flex items-center gap-1.5 transition shadow-sm cursor-pointer">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+            </svg>
+            <span>새로 추가</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Data Table Container -->
+      <div class="bg-white rounded-[12px] border border-[#E9E9E9] overflow-hidden shadow-sm flex flex-col">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-[13px]">
+            <thead>
+              <tr class="bg-[#DCEBFB] text-[#171717] font-semibold border-b border-[#F3F3F3]">
+                <th class="py-2.5 px-3 text-center border-r border-[#F3F3F3] w-[50px]">
+                  번호
+                </th>
+                <th class="py-2.5 px-3 border-r border-[#F3F3F3] w-[130px]">
+                  공지 ID
+                </th>
+                <th class="py-2.5 px-3 text-center border-r border-[#F3F3F3] w-[105px]">
+                  유형
+                </th>
+                <th class="py-2.5 px-3 border-r border-[#F3F3F3] min-w-[260px]">
+                  제목
+                </th>
+                <th class="py-2.5 px-3 border-r border-[#F3F3F3] w-[240px]">
+                  게시 대상
+                </th>
+                <th class="py-2.5 px-3 border-r border-[#F3F3F3] w-[90px]">
+                  등록자
+                </th>
+                <th class="py-2.5 px-3 border-r border-[#F3F3F3] w-[110px]">
+                  등록일
+                </th>
+                <th class="py-2.5 px-3 text-center border-r border-[#F3F3F3] w-[90px]">
+                  활성 상태
+                </th>
+                <th class="py-2.5 px-3 text-center w-[70px]">작업</th>
+              </tr>
+            </thead>
+            <tbody id="noticeTableBody" class="divide-y divide-[#F3F3F3]">
+              <!-- Rows render tự động qua JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Trạng thái trống (No Data) -->
+        <div id="noDataRow" class="hidden p-12 text-center text-gray-400">
+          <svg class="w-10 h-10 mx-auto text-gray-300 mb-2" fill="none" stroke="currentColor" stroke-width="1.5"
+            viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          <p class="text-[13.5px]">조건에 일치하는 공지 사항이 없습니다.</p>
+        </div>
+      </div>
+
+      <!-- Pagination & Footer info -->
+      <div class="flex items-center justify-between text-[13px] text-[#171717] px-1 py-1">
+        <div class="flex items-center gap-2">
+          <span id="totalCountDisplay">총 4건</span>
+          <select class="border border-[#E9E9E9] rounded-[6px] px-2 py-1 text-[#171717] bg-white focus:outline-none">
+            <option>20</option>
+            <option>30</option>
+            <option>50</option>
+          </select>
+        </div>
+        <div class="flex items-center gap-1 select-none">
+          <button
+            class="w-6 h-6 flex items-center justify-center border border-[#E9E9E9] rounded-[4px] hover:bg-gray-50 text-gray-400">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <button
+            class="w-6 h-6 flex items-center justify-center bg-[#1F5FBA] text-white rounded-[4px] font-semibold text-xs">
+            1
+          </button>
+          <button
+            class="w-6 h-6 flex items-center justify-center border border-[#E9E9E9] rounded-[4px] hover:bg-gray-50 text-[#171717] text-xs">
+            2
+          </button>
+          <button
+            class="w-6 h-6 flex items-center justify-center border border-[#E9E9E9] rounded-[4px] hover:bg-gray-50 text-[#171717] text-xs">
+            3
+          </button>
+          <button
+            class="w-6 h-6 flex items-center justify-center border border-[#E9E9E9] rounded-[4px] hover:bg-gray-50 text-gray-400">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ================= FLOATING DRAWER OVERLAY ================= -->
+  <div id="drawerOverlay" onclick="closeDrawer()"
+    class="hidden fixed inset-0 z-40 bg-[rgba(49,49,49,0.40)] backdrop-blur-[3px] transition-opacity"></div>
+
+  <!-- ================= FLOATING MODAL DRAWER ================= -->
+  <div id="drawerPanel"
+    class="fixed right-4 top-4 bottom-4 w-[1260px] max-w-[calc(100vw-32px)] bg-white z-50 rounded-[14px] shadow-2xl overflow-hidden flex flex-col translate-x-[calc(100%+32px)] transition-transform duration-300 ease-in-out border border-[#E9E9E9]">
+    <!-- Header Drawer -->
+    <div class="px-4 py-2.5 bg-[#E9E9E9] flex items-center justify-between flex-shrink-0">
+      <span id="drawerTitle" class="text-[16px] font-semibold text-[#171717]">새 공지 추가</span>
+          <span class="ml-2.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200">Phương án 3: Inline Text Tối giản</span>
+      <button onclick="closeDrawer()" class="text-[#171717] hover:opacity-70 transition p-1 cursor-pointer" title="닫기">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Body Drawer -->
+    <div class="flex-1 overflow-hidden flex p-4 gap-4 bg-white min-h-0">
+      <input type="hidden" id="editNoticeId" />
+
+      <!-- ===== CỘT TRÁI: THÔNG TIN CÔNG BÁO (유형, 제목, 내용) ===== -->
+      <div class="w-[36%] flex flex-col gap-3 overflow-hidden pr-1">
+        <!-- Section Header: text 공지 사항 정보 bên trái, toggle switch bên phải -->
+        <div class="flex items-center justify-between flex-shrink-0 h-[26px]">
+          <div class="flex items-center gap-1.5 text-[#003B8F]">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+            </svg>
+            <span class="text-[15px] font-semibold">공지 사항 정보</span>
+          </div>
+
+          <!-- Toggle switch 활성 상태 căn lề phải trong Section Header -->
+          <div class="flex items-center gap-2">
+            <span class="text-[12.5px] font-semibold text-[#171717]">활성 상태:</span>
+            <button type="button" id="drawerStatusToggle" onclick="toggleDrawerStatus()"
+              class="relative inline-flex h-5 w-10 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none bg-[#1F5FBA]"
+              title="활성 상태 토글">
+              <span id="drawerStatusBall"
+                class="pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out translate-x-5"></span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Container Box Cột trái -->
+        <div class="bg-[#FAFAFA] rounded-[12px] p-3.5 border border-[#F3F3F3] space-y-3 flex-1 flex flex-col min-h-0">
+          <!-- 1. 유형 -->
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <label class="text-[13.5px] font-medium text-[#636363]">유형 <span class="text-[#EF4444]">*</span> :</label>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="relative flex-1">
+                <select id="drawerTypeSelect" onchange="updateNotifPreview()"
+                  class="w-full bg-white border border-[#E9E9E9] rounded-[6px] px-3 py-2 text-[14px] text-[#171717] focus:outline-none focus:border-[#1F5FBA] cursor-pointer appearance-none">
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-gray-400">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                  </svg>
+                </div>
+              </div>
+              <button type="button" onclick="openTypeManagerModal()"
+                class="px-3 py-2 bg-white border border-[#E9E9E9] hover:border-[#003B8F] text-[#171717] hover:text-[#003B8F] rounded-[6px] text-[13px] font-medium flex items-center gap-1.5 transition whitespace-nowrap cursor-pointer shadow-sm">
+                <svg class="w-3.5 h-3.5 text-gray-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <span>유형 관리</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 2. 제목 -->
+          <div>
+            <label class="text-[13.5px] font-medium text-[#636363] block mb-1.5">제목 <span class="text-[#EF4444]">*</span> :</label>
+            <input type="text" id="drawerTitleInput" placeholder="공지사항 제목을 입력하세요"
+              class="w-full bg-white border border-[#E9E9E9] rounded-[6px] px-3 py-2 text-[14px] text-[#171717] focus:outline-none focus:border-[#1F5FBA] placeholder:text-[#CFCECE]" />
+          </div>
+
+          <!-- 3. 내용 (Quill Rich Text Editor) -->
+          <div class="flex-1 flex flex-col min-h-0">
+            <label class="text-[13.5px] font-medium text-[#636363] block mb-1.5">내용 <span class="text-[#EF4444]">*</span> :</label>
+            <div id="quillEditor" class="flex-1"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== CỘT PHẢI: GỒM 게시 대상 설정 (GỘP TAB + TREE MENU) ===== -->
+      <div class="w-[64%] flex flex-col gap-3 overflow-hidden pl-1">
+        <!-- Section Header -->
+        <div class="flex items-center justify-between flex-shrink-0 h-[26px]">
+          <div class="flex items-center gap-1.5 text-[#003B8F]">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+            <span class="text-[15px] font-semibold">게시 대상 설정</span>
+          </div>
+          <span id="targetSelectedSummaryBadge"
+            class="text-[12px] bg-[#DCEBFB] text-[#003B8F] font-semibold px-2.5 py-0.5 rounded-full">
+            총 45명 중 45명 선택됨
+          </span>
+        </div>
+
+        <!-- 1. KHỐI: 게시 대상 설정 -->
+        <div class="bg-[#FAFAFA] rounded-[12px] p-3.5 border border-[#F3F3F3] space-y-3 flex-1 flex flex-col min-h-0">
+          <!-- Lựa chọn 역할 (Vai trò) -->
+          <div class="p-2.5 bg-white rounded-[8px] border border-[#E9E9E9] space-y-2 flex-shrink-0">
+            <div class="flex items-center justify-between pb-1.5 border-b border-[#F3F3F3]">
+              <span class="text-[13px] font-semibold text-[#171717]">역할 선택:</span>
+              <label class="inline-flex items-center gap-1.5 cursor-pointer text-[12.5px] font-semibold text-[#003B8F]">
+                <input type="checkbox" id="unifiedRoleAll" onchange="toggleUnifiedAllRoles(this.checked)"
+                  class="w-4 h-4 rounded text-[#1F5FBA] focus:ring-0 cursor-pointer" />
+                <span>전체 역할 선택</span>
+              </label>
+            </div>
+            <div class="grid grid-cols-3 gap-2">
+              <label class="flex items-center gap-2 p-1.5 rounded-[6px] hover:bg-gray-50 border border-transparent hover:border-[#E9E9E9] cursor-pointer transition">
+                <input type="checkbox" id="roleAdminCheckbox" onchange="onRoleFilterChange('관리자', this.checked)"
+                  class="w-4 h-4 rounded text-[#1F5FBA] focus:ring-0 cursor-pointer" />
+                <span class="text-[13px] font-medium text-[#171717]">관리자 <span class="text-[11.5px] text-gray-400" id="roleAdminCount">(5)</span></span>
+              </label>
+              <label class="flex items-center gap-2 p-1.5 rounded-[6px] hover:bg-gray-50 border border-transparent hover:border-[#E9E9E9] cursor-pointer transition">
+                <input type="checkbox" id="roleLeaderCheckbox" onchange="onRoleFilterChange('감독자', this.checked)"
+                  class="w-4 h-4 rounded text-[#1F5FBA] focus:ring-0 cursor-pointer" />
+                <span class="text-[13px] font-medium text-[#171717]">감독자 <span class="text-[11.5px] text-gray-400" id="roleLeaderCount">(10)</span></span>
+              </label>
+              <label class="flex items-center gap-2 p-1.5 rounded-[6px] hover:bg-gray-50 border border-transparent hover:border-[#E9E9E9] cursor-pointer transition">
+                <input type="checkbox" id="roleMemberCheckbox" onchange="onRoleFilterChange('학부모', this.checked)"
+                  class="w-4 h-4 rounded text-[#1F5FBA] focus:ring-0 cursor-pointer" />
+                <span class="text-[13px] font-medium text-[#171717]">학부모 <span class="text-[11.5px] text-gray-400" id="roleMemberCount">(30)</span></span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Tìm kiếm tên, 연락처 hoặc 팀명 (Full-width, đã bỏ dropdown chọn team) -->
+          <div class="relative flex-shrink-0">
+            <input type="text" id="unifiedUserSearchInput" oninput="onUnifiedUserSearch(this.value)"
+              placeholder="이름, 연락처 또는 팀명 검색"
+              class="w-full bg-white border border-[#E9E9E9] rounded-[6px] pl-8 pr-3 py-1.5 text-[12.5px] text-[#171717] focus:outline-none focus:border-[#1F5FBA] placeholder:text-[#CFCECE]" />
+            <svg class="w-3.5 h-3.5 text-gray-400 absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none"
+              fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+
+          <!-- Danh sách thành viên (Checklist container mở rộng tràn đầy chiều cao) -->
+          <div class="bg-white rounded-[8px] border border-[#E9E9E9] overflow-hidden flex-1 flex flex-col min-h-0">
+            <div id="unifiedUserChecklistWrapper" class="flex-1 flex flex-col min-h-0">
+              <!-- Render tự động qua JS: Split hoặc Single Tree Menu -->
+            </div>
+          </div>
+
+          <div class="text-[11.5px] text-[#636363] px-1 flex items-center gap-1.5 flex-shrink-0">
+            <svg class="w-3.5 h-3.5 text-[#1F5FBA] flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>역할을 선택하면 대상자가 자동 표시되며, 개별 체크를 해제하여 발송 대상을 조정할 수 있습니다.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer Drawer -->
+    <div class="px-4 py-3.5 bg-white border-t border-[#E9E9E9] flex items-center justify-center gap-3 flex-shrink-0">
+      <button type="button" onclick="closeDrawer()"
+        class="w-[180px] py-2 bg-white border border-[#B8B8B8] hover:bg-gray-50 text-[#313131] rounded-[6px] font-semibold text-[14px] transition cursor-pointer text-center">
+        취소
+      </button>
+      <button type="button" onclick="saveNotice()" id="drawerSubmitBtn"
+        class="w-[180px] py-2 bg-[#0047AB] hover:bg-[#003B8F] text-white rounded-[6px] font-semibold text-[14px] shadow-sm transition cursor-pointer text-center">
+        확인
+      </button>
+    </div>
+  </div>
+
+  <!-- ================= MODAL XEM CHI TIẾT (PREVIEW POPUP) ================= -->
+  <div id="previewModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div onclick="closePreviewModal()" class="fixed inset-0 bg-[rgba(49,49,49,0.40)] backdrop-blur-[3px]"></div>
+    <div
+      class="relative bg-white rounded-[14px] shadow-2xl w-full max-w-[550px] overflow-hidden border border-[#E9E9E9] flex flex-col z-10">
+      <div class="px-4 py-2.5 bg-[#E9E9E9] flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span id="previewBadge"></span>
+          <span class="text-[15px] font-semibold text-[#171717]">공지 사항</span>
+        </div>
+        <button onclick="closePreviewModal()" class="text-[#171717] hover:opacity-70 p-1 cursor-pointer">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <div class="p-5 max-h-[440px] overflow-y-auto custom-scroll space-y-3">
+        <h3 id="previewTitle" class="text-[16px] font-bold text-[#003B8F] leading-snug"></h3>
+        <div class="text-[12px] text-gray-400 pb-2 border-b border-[#F3F3F3]" id="previewDate"></div>
+        <div id="previewContent" class="text-[13.5px] text-[#171717] leading-relaxed space-y-2"></div>
+      </div>
+      <div class="px-4 py-3 bg-white border-t border-[#E9E9E9] flex justify-center">
+        <button onclick="closePreviewModal()"
+          class="w-[180px] py-2 bg-[#0047AB] hover:bg-[#003B8F] text-white text-[14px] font-semibold rounded-[6px] shadow-sm transition cursor-pointer">
+          확인
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL QUẢN LÝ LOẠI ================= -->
+  <div id="typeManagerModal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4">
+    <div onclick="closeTypeManagerModal()" class="fixed inset-0 bg-[rgba(49,49,49,0.40)] backdrop-blur-[3px]"></div>
+    <div
+      class="relative bg-white rounded-[14px] shadow-2xl w-full max-w-[450px] z-10 overflow-hidden border border-[#E9E9E9] flex flex-col">
+      <div class="px-4 py-2.5 bg-[#E9E9E9] flex items-center justify-between">
+        <span class="text-[16px] font-semibold text-[#171717]">공지 유형 관리</span>
+        <button onclick="closeTypeManagerModal()" class="text-[#171717] hover:opacity-70 p-1 cursor-pointer">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <div class="p-4 space-y-3 bg-white">
+        <p class="text-[12.5px] text-[#636363]">
+          등록할 공지 유형을 추가, 수정, 삭제할 수 있습니다.
+        </p>
+
+        <!-- Danh sách 유형 hiện có -->
+        <div id="typeManagerList" class="space-y-1.5 max-h-[220px] overflow-y-auto custom-scroll pr-1">
+        </div>
+
+        <!-- Thêm mới 유형 -->
+        <div class="pt-2 border-t border-[#F3F3F3]">
+          <label class="block text-[12.5px] font-semibold text-[#171717] mb-1">새 유형 추가:</label>
+          <div class="flex gap-2">
+            <input type="text" id="newTypeInput" placeholder="새 유형 이름을 입력하세요"
+              onkeyup="if (event.key === 'Enter') addNoticeType();"
+              class="flex-1 bg-white border border-[#E9E9E9] rounded-[6px] px-3 py-1.5 text-[13px] text-[#171717] focus:outline-none focus:border-[#1F5FBA] placeholder:text-[#CFCECE]" />
+            <button onclick="addNoticeType()"
+              class="bg-[#0047AB] hover:bg-[#003B8F] text-white px-4 py-1.5 rounded-[6px] text-[13px] font-semibold transition cursor-pointer">
+              추가
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="px-4 py-3 border-t border-[#E9E9E9] bg-white flex justify-center">
+        <button onclick="closeTypeManagerModal()"
+          class="w-[140px] py-2 bg-white border border-[#B8B8B8] hover:bg-gray-50 text-[#313131] text-[13.5px] font-semibold rounded-[6px] transition cursor-pointer">
+          닫기
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= JAVASCRIPT ================= -->
+  <script>
+    // ===== 1. MASTER DATA =====
+    let noticeTypes = ["점검", "휴무", "일반", "긴급"];
+
+    const teamsList = [
+      { id: "t1", name: "Seoul Tigers" },
+      { id: "t2", name: "FC Gangnam United" },
+      { id: "t3", name: "ABCD Team" },
+      { id: "t4", name: "Busan Dragons" },
+      { id: "t5", name: "Incheon Warriors" },
+      { id: "t6", name: "Daegu FC Academy" },
+      { id: "t7", name: "Suwon Bluewings Youth" },
+      { id: "t8", name: "Gwangju FC U-12" },
+      { id: "t9", name: "Ulsan HD Youth" },
+      { id: "t10", name: "Jeju United Academy" },
+    ];
+
+    const masterUsers = [];
+
+    // 1. Quản trị viên (5 người)
+    const adminNames = ["홍길동", "김관리", "이운영", "박시스템", "최보안"];
+    adminNames.forEach((name, i) => {
+      masterUsers.push({
+        id: `adm_${i + 1}`,
+        name: name,
+        role: "관리자",
+        teamId: "all",
+        teamName: "",
+        phone: `010-100${i + 1}-200${i + 1}`,
+      });
+    });
+
+    // 2. Giám sát viên / 감독자 (Mỗi team đúng 1 감독자)
+    const leaderBaseNames = [
+      "Marcus Thompson", "Liam Gallagher", "정태호", "이지현", "강수호",
+      "박지우", "김감독", "박코치", "최성환", "윤진우",
+    ];
+    teamsList.forEach((team, idx) => {
+      masterUsers.push({
+        id: `lead_${idx + 1}`,
+        name: leaderBaseNames[idx] || `감독자 ${idx + 1}`,
+        role: "감독자",
+        teamId: team.id,
+        teamName: team.name,
+        phone: `010-${2000 + (idx + 1) * 33}-${String(3000 + idx + 1).padStart(4, "0")}`,
+      });
+    });
+
+    // 3. Phụ huynh / 학부모 (30 người: 3 người / 1 team)
+    const parentBaseNames = [
+      "Hwang Minji", "김동준", "Sofia Martinez", "최민서", "Mia Chen",
+      "이서준", "한유진", "윤소희", "조예은", "오지호",
+      "배수진", "신동혁", "유하은", "고현우", "문채원",
+    ];
+    for (let i = 1; i <= 30; i++) {
+      const team = teamsList[(i - 1) % teamsList.length];
+      const baseName = parentBaseNames[(i - 1) % parentBaseNames.length];
+      const name = i <= parentBaseNames.length ? baseName : `${baseName} ${Math.floor((i - 1) / parentBaseNames.length) + 1}`;
+      masterUsers.push({
+        id: `mem_${i}`,
+        name: name,
+        role: "학부모",
+        teamId: team.id,
+        teamName: team.name,
+        phone: `010-${4000 + (i % 900)}-${String(5000 + i).padStart(4, "0")}`,
+      });
+    }
+
+    let notices = [
+      {
+        id: "NOT-004",
+        type: "긴급",
+        title: "긴급 서버 긴급 패치 작업 안내",
+        content:
+          "<p>안정적인 서비스 제공을 위해 긴급 패치 작업이 진행될 예정입니다.<br>작업 시간 동안 일시적인 접속 지연이 발생할 수 있으니 양해 부탁드립니다.</p><p><br></p><p><strong>■ 작업 시간:</strong> 2026년 10월 12일 16:00 ~ 16:30 (30분간)<br><strong>■ 영향 범위:</strong> 전체 시스템 주문 및 디자인 조회</p>",
+        targetType: "ROLE",
+        targetDisplay: "전체",
+        targetDetails: ["전체 대상 (총 45명: 관리자 5, 감독자 10, 학부모 30)"],
+        targetUserIds: masterUsers.map((u) => u.id),
+        createdAt: "2026.10.12",
+        creator: "홍길동",
+        status: true,
+        isRead: false,
+      },
+      {
+        id: "NOT-003",
+        type: "점검",
+        title: "정기 시스템 정밀 점검 사전 안내",
+        content:
+          "<p>안녕하세요. <strong>SportsRAB</strong> 관리팀입니다.</p><p><br></p><p>시스템 성능 향상 및 보안 업데이트를 위한 정기 점검이 아래와 같이 진행됩니다.<br>점검 시간 동안에는 서비스 이용이 제한되오니 업무에 참고하시기 바랍니다.</p><p><br></p><p>1. 점검 일시: 2026년 10월 15일(목) 02:00 ~ 06:00 (4시간)<br>2. 점검 대상: SportsRAB CMS 및 모바일 앱 전 기능<br>3. 점검 내용: 데이터베이스 인덱스 최적화 및 서버 보안 패치</p>",
+        targetType: "ROLE",
+        targetDisplay: "감독자 전체 (10명)",
+        targetDetails: masterUsers
+          .filter((u) => u.role === "감독자")
+          .map((u) => `[${u.role}] ${u.name}${u.teamName ? ` - ${u.teamName}` : ""} - ${u.phone}`),
+        targetUserIds: masterUsers.filter((u) => u.role === "감독자").map((u) => u.id),
+        createdAt: "2026.10.11",
+        creator: "김관리",
+        status: true,
+        isRead: false,
+      },
+      {
+        id: "NOT-002",
+        type: "휴무",
+        title: "추석 연휴 기간 고객센터 휴무 및 제작/배송 일정 공지",
+        content:
+          "<p>추석 황금연휴 기간 동안의 본사 휴무 일정 및 유니폼 제작/배송 마감 일정을 안내해 드립니다.</p><p><br></p><p>- 연휴 기간: 2026.10.15 ~ 2026.10.18<br>- 주문 마감: 2026.10.13 18:00 이전 발주 건에 한해 연휴 전 순차 출고</p>",
+        targetType: "ROLE",
+        targetDisplay: "감독자 8명 (일부)",
+        targetDetails: masterUsers
+          .filter((u) => u.role === "감독자")
+          .slice(0, 8)
+          .map((u) => `[${u.role}] ${u.name}${u.teamName ? ` - ${u.teamName}` : ""} - ${u.phone}`),
+        targetUserIds: masterUsers
+          .filter((u) => u.role === "감독자")
+          .slice(0, 8)
+          .map((u) => u.id),
+        createdAt: "2026.10.08",
+        creator: "홍길동",
+        status: false,
+        isRead: true,
+      },
+      {
+        id: "NOT-001",
+        type: "일반",
+        title: "가을 시즌 커스텀 유니폼 카탈로그 업데이트",
+        content:
+          "<p>새로운 2026 가을 시즌 기능성 유니폼 및 패딩 조끼 샘플이 시스템에 업데이트되었습니다.<br>디자인 목록 관리 메뉴에서 신규 라인업을 확인하실 수 있습니다.</p>",
+        targetType: "ROLE",
+        targetDisplay: "개별 지정 (2명)",
+        targetDetails: [
+          "[감독자] Marcus Thompson - Seoul Tigers - 010-2033-3001",
+          "[학부모] Hwang Minji - Seoul Tigers - 010-4001-5001",
+        ],
+        targetUserIds: ["lead_1", "mem_1"],
+        createdAt: "2026.10.01",
+        creator: "이운영",
+        status: false,
+        isRead: true,
+      },
+    ];
+
+    // ===== 2. STATE TRONG DRAWER (UNIFIED) =====
+    let selectedUserIds = new Set();
+    let roleFilters = { "관리자": true, "감독자": true, "학부모": true };
+    let unifiedTeamFilter = "ALL";
+    let unifiedSearchKeyword = "";
+    let drawerActiveStatus = true;
+    let editingTypeIndex = null;
+
+    // ===== 3. UTILITIES =====
+    function getTypeBadgeHTML(type) {
+      return `<span class="inline-flex items-center justify-center px-2.5 py-0.5 rounded-[4px] text-[12px] font-normal text-[#333333] border border-[#7C7C7C] bg-white min-w-[64px] leading-normal select-none whitespace-nowrap">${type}</span>`;
+    }
+
+    function getDateOnly(createdAt) {
+      return createdAt.split(" ")[0];
+    }
+
+    function stripHtml(html) {
+      const tmp = document.createElement("DIV");
+      tmp.innerHTML = html;
+      return tmp.textContent || tmp.innerText || "";
+    }
+
+    // Quy ước hiển thị Tooltip: tối đa 5 người đầu tiên, nếu > 5 thì tóm tắt "...외 N명"
+    function getTargetTooltipHTML(item) {
+      if (!item.targetDetails || item.targetDetails.length === 0) {
+        return `<span class="text-[#171717]">${item.targetDisplay || ""}</span>`;
+      }
+      if (item.targetDetails.length === 1) {
+        return `<span class="text-[#171717]">${item.targetDetails[0]}</span>`;
+      }
+      const maxItems = 5;
+      const displayItems = item.targetDetails.slice(0, maxItems);
+      let html = displayItems.map((d) => `<div class="truncate">${d}</div>`).join("");
+      if (item.targetDetails.length > maxItems) {
+        const remainCount = item.targetDetails.length - maxItems;
+        html += `<div class="mt-1.5 pt-1 border-t border-[#CFCECE] text-[#636363] font-medium">...외 ${remainCount}명</div>`;
+      }
+      return html;
+    }
+
+    // Quy ước chuẩn tạo text cột "게시 대상" và danh sách targetDetails
+    function computeTargetDisplayAndDetails(selectedIds) {
+      const selectedUsers = masterUsers.filter((u) => selectedIds.has(u.id));
+      const selectedCount = selectedUsers.length;
+      const totalCount = masterUsers.length;
+
+      if (selectedCount === 0) {
+        return {
+          targetDisplay: "미지정 (0명)",
+          targetDetails: ["지정된 대상이 없습니다."],
+        };
+      }
+
+      const adminTotal = masterUsers.filter((u) => u.role === "관리자").length;
+      const leaderTotal = masterUsers.filter((u) => u.role === "감독자").length;
+      const parentTotal = masterUsers.filter((u) => u.role === "학부모").length;
+
+      const adminSelected = selectedUsers.filter((u) => u.role === "관리자").length;
+      const leaderSelected = selectedUsers.filter((u) => u.role === "감독자").length;
+      const parentSelected = selectedUsers.filter((u) => u.role === "학부모").length;
+
+      // 1. Toàn bộ hệ thống
+      if (selectedCount === totalCount) {
+        return {
+          targetDisplay: "전체",
+          targetDetails: [
+            `전체 대상 (총 ${totalCount}명: 관리자 ${adminTotal}, 감독자 ${leaderTotal}, 학부모 ${parentTotal})`,
+          ],
+        };
+      }
+
+      const userDetails = selectedUsers.map(
+        (u) => `[${u.role}] ${u.name}${u.teamName ? ` - ${u.teamName}` : ""} - ${u.phone}`,
+      );
+
+      // 2. Toàn bộ 1 hoặc kết hợp vai trò (Full role selection)
+      // Chỉ chọn quản trị viên
+      if (adminSelected > 0 && leaderSelected === 0 && parentSelected === 0) {
+        return {
+          targetDisplay:
+            adminSelected === adminTotal
+              ? `관리자 전체 (${adminTotal}명)`
+              : `관리자 ${adminSelected}명 (일부)`,
+          targetDetails: userDetails,
+        };
+      }
+      // Chỉ chọn giám sát viên
+      if (leaderSelected > 0 && adminSelected === 0 && parentSelected === 0) {
+        return {
+          targetDisplay:
+            leaderSelected === leaderTotal
+              ? `감독자 전체 (${leaderTotal}명)`
+              : `감독자 ${leaderSelected}명 (일부)`,
+          targetDetails: userDetails,
+        };
+      }
+      // Chỉ chọn phụ huynh
+      if (parentSelected > 0 && adminSelected === 0 && leaderSelected === 0) {
+        return {
+          targetDisplay:
+            parentSelected === parentTotal
+              ? `학부모 전체 (${parentTotal}명)`
+              : `학부모 ${parentSelected}명 (일부)`,
+          targetDetails: userDetails,
+        };
+      }
+
+      // Kết hợp trọn vẹn các vai trò
+      if (
+        adminSelected === adminTotal &&
+        leaderSelected === leaderTotal &&
+        parentSelected === 0
+      ) {
+        return {
+          targetDisplay: `관리자 + 감독자 (${adminSelected + leaderSelected}명)`,
+          targetDetails: userDetails,
+        };
+      }
+      if (
+        adminSelected === adminTotal &&
+        parentSelected === parentTotal &&
+        leaderSelected === 0
+      ) {
+        return {
+          targetDisplay: `관리자 + 학부모 (${adminSelected + parentSelected}명)`,
+          targetDetails: userDetails,
+        };
+      }
+      if (
+        leaderSelected === leaderTotal &&
+        parentSelected === parentTotal &&
+        adminSelected === 0
+      ) {
+        return {
+          targetDisplay: `감독자 + 학부모 (${leaderSelected + parentSelected}명)`,
+          targetDetails: userDetails,
+        };
+      }
+
+      // 3. Theo Đội bóng (Toàn bộ 1 hoặc nhiều đội bóng)
+      if (adminSelected === 0) {
+        const fullySelectedTeams = [];
+        let isOnlyFullTeams = true;
+
+        teamsList.forEach((team) => {
+          const teamAll = masterUsers.filter((u) => u.teamId === team.id);
+          const teamSelected = selectedUsers.filter((u) => u.teamId === team.id);
+          if (teamSelected.length > 0) {
+            if (teamSelected.length === teamAll.length) {
+              fullySelectedTeams.push(team);
+            } else {
+              isOnlyFullTeams = false;
+            }
+          }
+        });
+
+        if (isOnlyFullTeams && fullySelectedTeams.length > 0) {
+          if (fullySelectedTeams.length === 1) {
+            return {
+              targetDisplay: `팀: ${fullySelectedTeams[0].name} (${selectedCount}명)`,
+              targetDetails: userDetails,
+            };
+          } else {
+            return {
+              targetDisplay: `팀: ${fullySelectedTeams[0].name} 외 ${fullySelectedTeams.length - 1}개 팀 (총 ${selectedCount}명)`,
+              targetDetails: userDetails,
+            };
+          }
+        }
+      }
+
+      // 4. Trường hợp còn lại: Chỉ định lẻ / Hỗn hợp (Phương án A)
+      return {
+        targetDisplay: `개별 지정 (${selectedCount}명)`,
+        targetDetails: userDetails,
+      };
+    }
+
+    // ===== 4. RENDER BẢNG CHÍNH =====
+    function renderTable(data = notices) {
+      const tbody = document.getElementById("noticeTableBody");
+      const emptyState = document.getElementById("noDataRow");
+      document.getElementById("totalCountDisplay").innerText =
+        `총 ${data.length}건`;
+
+      tbody.innerHTML = "";
+      if (data.length === 0) {
+        emptyState.classList.remove("hidden");
+        return;
+      }
+      emptyState.classList.add("hidden");
+
+      data.forEach((item, index) => {
+        const tr = document.createElement("tr");
+        tr.className =
+          "hover:bg-[#F8FAFC] transition border-b border-[#F3F3F3] text-[#171717]";
+
+        let actionButtonHTML = item.status
+          ? `<button onclick="openDrawer(true, '${item.id}')" class="text-gray-500 hover:text-[#0047AB] p-1 transition cursor-pointer" title="수정">
+               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+             </button>`
+          : `<button onclick="deleteNotice('${item.id}')" class="text-gray-500 hover:text-red-600 p-1 transition cursor-pointer" title="삭제">
+               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+             </button>`;
+
+        const targetTooltipHTML = getTargetTooltipHTML(item);
+
+        tr.innerHTML = `
+          <td class="py-2.5 px-3 text-center text-gray-500 border-r border-[#F3F3F3]">${index + 1}</td>
+          <td class="py-2.5 px-3 font-normal border-r border-[#F3F3F3] text-[#171717]"><span>${item.id}</span></td>
+          <td class="py-2.5 px-2 text-center border-r border-[#F3F3F3]">${getTypeBadgeHTML(item.type)}</td>
+          <td class="py-2.5 px-3 border-r border-[#F3F3F3]">
+            <span onclick="openPreviewModal('${item.id}')" class="cursor-pointer text-[#003B8F] hover:underline transition font-normal line-clamp-1">${item.title}</span>
+          </td>
+          <td class="py-2.5 px-3 border-r border-[#F3F3F3]">
+            <div class="relative group inline-block max-w-[230px]">
+              <span class="text-[#171717] truncate block cursor-default font-normal">${item.targetDisplay}</span>
+              <!-- Tooltip: Hiển thị ở trên, background màu xám, text màu đen -->
+              <div class="hidden group-hover:block absolute bottom-full left-0 mb-1.5 w-max max-w-[360px] px-3 py-2 bg-[#E9E9E9] text-[#171717] border border-[#CFCECE] text-[11.5px] rounded-[6px] shadow-lg z-30 leading-relaxed pointer-events-none">
+                ${targetTooltipHTML}
+              </div>
+            </div>
+          </td>
+          <td class="py-2.5 px-3 text-[#171717] border-r border-[#F3F3F3]">${item.creator}</td>
+          <td class="py-2.5 px-3 text-gray-500 border-r border-[#F3F3F3] whitespace-nowrap">${getDateOnly(item.createdAt)}</td>
+          <td class="py-2.5 px-3 text-center border-r border-[#F3F3F3]">
+            <button onclick="toggleNoticeStatus('${item.id}')" class="relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${item.status ? "bg-[#1F5FBA]" : "bg-[#CFCECE]"}">
+              <span class="pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${item.status ? "translate-x-4" : "translate-x-0"}"></span>
+            </button>
+          </td>
+          <td class="py-2.5 px-3 text-center"><div class="flex items-center justify-center">${actionButtonHTML}</div></td>
+        `;
+        tbody.appendChild(tr);
+      });
+      renderBellList();
+    }
+
+    function toggleNoticeStatus(id) {
+      const item = notices.find((n) => n.id === id);
+      if (item) {
+        item.status = !item.status;
+        renderTable();
+      }
+    }
+
+    function deleteNotice(id) {
+      if (confirm(`공지 (${id})를 삭제하시겠습니까?`)) {
+        notices = notices.filter((n) => n.id !== id);
+        renderTable();
+      }
+    }
+
+    // ===== 5. QUẢN LÝ LOẠI (유형 관리) =====
+    function renderTypeManagerList() {
+      const container = document.getElementById("typeManagerList");
+      container.innerHTML = "";
+
+      noticeTypes.forEach((t, idx) => {
+        const div = document.createElement("div");
+        div.className =
+          "flex items-center justify-between px-3 py-2 bg-[#FAFAFA] border border-[#E9E9E9] rounded-[6px] text-[13px]";
+
+        if (editingTypeIndex === idx) {
+          div.innerHTML = `
+            <div class="flex items-center gap-2 flex-1 mr-2">
+              <input type="text" id="editTypeInput_${idx}" value="${t}" class="w-full bg-white border border-[#1F5FBA] rounded-[4px] px-2 py-1 text-[12.5px] focus:outline-none">
+            </div>
+            <div class="flex items-center gap-1.5 flex-shrink-0">
+              <button onclick="saveEditType(${idx})" class="text-[12px] bg-[#0047AB] text-white px-2.5 py-1 rounded-[4px] hover:bg-[#003B8F] font-semibold">저장</button>
+              <button onclick="cancelEditType()" class="text-[12px] bg-gray-200 text-gray-700 px-2 py-1 rounded-[4px] hover:bg-gray-300">취소</button>
+            </div>
+          `;
+        } else {
+          div.innerHTML = `
+            <div class="flex items-center gap-2">
+              ${getTypeBadgeHTML(t)}
+            </div>
+            <div class="flex items-center gap-1">
+              <button onclick="startEditType(${idx})" class="text-gray-400 hover:text-[#003B8F] p-1 transition cursor-pointer" title="이름 수정">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+              </button>
+              <button onclick="removeNoticeType(${idx})" class="text-gray-400 hover:text-red-500 p-1 transition cursor-pointer" title="삭제">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+              </button>
+            </div>
+          `;
+        }
+        container.appendChild(div);
+      });
+    }
+
+    function addNoticeType() {
+      const input = document.getElementById("newTypeInput");
+      const val = input.value.trim();
+      if (!val) {
+        alert("유형 이름을 입력해주세요.");
+        return;
+      }
+      if (noticeTypes.includes(val)) {
+        alert("이미 존재하는 유형입니다.");
+        return;
+      }
+      noticeTypes.push(val);
+      input.value = "";
+      syncAllTypeDropdowns();
+      renderTypeManagerList();
+    }
+
+    function startEditType(idx) {
+      editingTypeIndex = idx;
+      renderTypeManagerList();
+      setTimeout(() => {
+        const input = document.getElementById(`editTypeInput_${idx}`);
+        if (input) {
+          input.focus();
+          input.select();
+        }
+      }, 50);
+    }
+
+    function cancelEditType() {
+      editingTypeIndex = null;
+      renderTypeManagerList();
+    }
+
+    function saveEditType(idx) {
+      const input = document.getElementById(`editTypeInput_${idx}`);
+      const newVal = input.value.trim();
+      const oldVal = noticeTypes[idx];
+      if (!newVal) {
+        alert("유형 이름을 입력해주세요.");
+        return;
+      }
+      if (newVal !== oldVal && noticeTypes.includes(newVal)) {
+        alert("이미 존재하는 유형 이름입니다.");
+        return;
+      }
+      noticeTypes[idx] = newVal;
+      notices.forEach((n) => {
+        if (n.type === oldVal) n.type = newVal;
+      });
+      editingTypeIndex = null;
+      syncAllTypeDropdowns();
+      renderTypeManagerList();
+      renderTable();
+    }
+
+    function removeNoticeType(idx) {
+      if (noticeTypes.length <= 1) {
+        alert("최소 1개 이상의 유형이 존재해야 합니다.");
+        return;
+      }
+      const typeName = noticeTypes[idx];
+      if (confirm(`'${typeName}' 유형을 삭제하시겠습니까?`)) {
+        noticeTypes.splice(idx, 1);
+        syncAllTypeDropdowns();
+        renderTypeManagerList();
+      }
+    }
+
+    function openTypeManagerModal() {
+      editingTypeIndex = null;
+      renderTypeManagerList();
+      document.getElementById("typeManagerModal").classList.remove("hidden");
+    }
+
+    function closeTypeManagerModal() {
+      document.getElementById("typeManagerModal").classList.add("hidden");
+    }
+
+    function syncAllTypeDropdowns() {
+      const drawerSel = document.getElementById("drawerTypeSelect");
+      const curDrawerVal = drawerSel ? drawerSel.value : "";
+      if (drawerSel) {
+        drawerSel.innerHTML = "";
+        noticeTypes.forEach((t) => {
+          const opt = document.createElement("option");
+          opt.value = t;
+          opt.text = t;
+          if (t === curDrawerVal) opt.selected = true;
+          drawerSel.appendChild(opt);
+        });
+      }
+
+      const filterSel = document.getElementById("filterType");
+      const curFilterVal = filterSel ? filterSel.value : "ALL";
+      if (filterSel) {
+        filterSel.innerHTML = '<option value="ALL">전체</option>';
+        noticeTypes.forEach((t) => {
+          const opt = document.createElement("option");
+          opt.value = t;
+          opt.text = t;
+          if (t === curFilterVal) opt.selected = true;
+          filterSel.appendChild(opt);
+        });
+      }
+    }
+
+    // ===== 6. DRAWER =====
+    let quillEditor = null;
+
+    function initQuill() {
+      if (quillEditor) return;
+      quillEditor = new Quill("#quillEditor", {
+        theme: "snow",
+        modules: {
+          toolbar: [
+            ["bold", "italic", "underline"],
+            [{ color: [] }, { background: [] }],
+            [{ align: [] }],
+            [{ list: "ordered" }, { list: "bullet" }],
+            ["clean"],
+          ],
+        },
+        placeholder:
+          "공지 상세 내용을 입력하세요. (볼드, 언더라인, 컬러, 정렬 지원)",
+      });
+
+      document
+        .getElementById("drawerTitleInput")
+        .addEventListener("input", updateNotifPreview);
+      quillEditor.on("text-change", updateNotifPreview);
+    }
+
+    function updateNotifPreview() {
+      const type = document.getElementById("drawerTypeSelect")?.value || "점검";
+      const title =
+        document.getElementById("drawerTitleInput")?.value.trim() ||
+        "(제목이 여기에 표시됩니다)";
+
+      const previewType = document.getElementById("previewNotifType");
+      if (previewType) previewType.textContent = type;
+
+      const previewTitle = document.getElementById("previewNotifTitle");
+      if (previewTitle) previewTitle.textContent = title;
+    }
+
+    function toggleDrawerStatus() {
+      drawerActiveStatus = !drawerActiveStatus;
+      updateDrawerStatusUI();
+    }
+
+    function updateDrawerStatusUI() {
+      const toggle = document.getElementById("drawerStatusToggle");
+      const ball = document.getElementById("drawerStatusBall");
+      if (!toggle || !ball) return;
+
+      if (drawerActiveStatus) {
+        toggle.className =
+          "relative inline-flex h-5 w-10 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none bg-[#1F5FBA]";
+        ball.className =
+          "pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out translate-x-5";
+      } else {
+        toggle.className =
+          "relative inline-flex h-5 w-10 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none bg-[#CFCECE]";
+        ball.className =
+          "pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out translate-x-0";
+      }
+    }
+
+    // ===== 7. UNIFIED TARGET SELECTION (GỘP TAB + TREE MENU) =====
+    // Mặc định không xổ ra thành viên trong team — chỉ hiển thị tên team.
+    let expandedTeamIds = new Set();
+
+    function populateUnifiedTeamOptions() {
+      const select = document.getElementById("unifiedTeamSelect");
+      if (!select) return;
+      select.innerHTML = '<option value="ALL">전체</option>';
+      teamsList.forEach((t) => {
+        const opt = document.createElement("option");
+        opt.value = t.id;
+        opt.textContent = t.name;
+        select.appendChild(opt);
+      });
+    }
+
+    function toggleUnifiedAllRoles(isChecked) {
+      ["관리자", "감독자", "학부모"].forEach((role) => {
+        roleFilters[role] = isChecked;
+      });
+      document.getElementById("roleAdminCheckbox").checked = isChecked;
+      document.getElementById("roleLeaderCheckbox").checked = isChecked;
+      document.getElementById("roleMemberCheckbox").checked = isChecked;
+
+      if (isChecked) {
+        masterUsers.forEach((u) => selectedUserIds.add(u.id));
+      } else {
+        selectedUserIds.clear();
+      }
+
+      renderUnifiedUserChecklist();
+      updateTargetSelectedSummary();
+    }
+
+    function onRoleFilterChange(role, isChecked) {
+      roleFilters[role] = isChecked;
+
+      const allChecked = ["관리자", "감독자", "학부모"].every(
+        (r) => roleFilters[r],
+      );
+      document.getElementById("unifiedRoleAll").checked = allChecked;
+
+      // Khi tick hoặc untick vai trò, tự động thêm/bớt các user thuộc vai trò đó
+      masterUsers.forEach((u) => {
+        if (u.role === role) {
+          if (isChecked) {
+            selectedUserIds.add(u.id);
+          } else {
+            selectedUserIds.delete(u.id);
+          }
+        }
+      });
+
+      renderUnifiedUserChecklist();
+      updateTargetSelectedSummary();
+    }
+
+    function onUnifiedTeamFilterChange(teamId) {
+      unifiedTeamFilter = teamId;
+      renderUnifiedUserChecklist();
+    }
+
+    function onUnifiedUserSearch(val) {
+      unifiedSearchKeyword = val.toLowerCase().trim();
+      if (unifiedSearchKeyword) {
+        // Tự động mở rộng tất cả các team khi tìm kiếm
+        teamsList.forEach((t) => expandedTeamIds.add(t.id));
+      }
+      renderUnifiedUserChecklist();
+    }
+
+    function getFilteredUsers() {
+      return masterUsers.filter((u) => {
+        if (!roleFilters[u.role]) return false;
+        if (unifiedTeamFilter !== "ALL" && u.teamId !== unifiedTeamFilter)
+          return false;
+        if (unifiedSearchKeyword) {
+          const matchName = u.name.toLowerCase().includes(unifiedSearchKeyword);
+          const matchPhone = u.phone.includes(unifiedSearchKeyword);
+          const matchTeam = u.teamName
+            .toLowerCase()
+            .includes(unifiedSearchKeyword);
+          if (!matchName && !matchPhone && !matchTeam) return false;
+        }
+        return true;
+      });
+    }
+
+    function toggleTeamExpand(teamId) {
+      if (expandedTeamIds.has(teamId)) {
+        expandedTeamIds.delete(teamId);
+      } else {
+        expandedTeamIds.add(teamId);
+      }
+      renderUnifiedUserChecklist();
+    }
+
+    function toggleExpandAllTeams() {
+      const filtered = getFilteredUsers();
+      const activeTeams = teamsList.filter((team) =>
+        filtered.some(
+          (u) =>
+            u.teamId === team.id &&
+            (u.role === "감독자" || u.role === "학부모"),
+        ),
+      );
+
+      const allExpanded =
+        activeTeams.length > 0 &&
+        activeTeams.every((t) => expandedTeamIds.has(t.id));
+
+      if (allExpanded) {
+        // Thu gọn tất cả
+        activeTeams.forEach((t) => expandedTeamIds.delete(t.id));
+      } else {
+        // Mở rộng tất cả
+        activeTeams.forEach((t) => expandedTeamIds.add(t.id));
+      }
+      renderUnifiedUserChecklist();
+    }
+
+    function toggleTeamAllUsers(teamId, isChecked) {
+      const filtered = getFilteredUsers();
+      const teamMembers = filtered.filter(
+        (u) => u.teamId === teamId && (u.role === "감독자" || u.role === "학부모"),
+      );
+      teamMembers.forEach((u) => {
+        if (isChecked) {
+          selectedUserIds.add(u.id);
+        } else {
+          selectedUserIds.delete(u.id);
+        }
+      });
+      renderUnifiedUserChecklist();
+      updateTargetSelectedSummary();
+    }
+
+    function toggleAllAdmins(isChecked) {
+      const filtered = getFilteredUsers();
+      const admins = filtered.filter((u) => u.role === "관리자");
+      admins.forEach((u) => {
+        if (isChecked) {
+          selectedUserIds.add(u.id);
+        } else {
+          selectedUserIds.delete(u.id);
+        }
+      });
+      renderUnifiedUserChecklist();
+      updateTargetSelectedSummary();
+    }
+
+    function toggleAllTeamUsers(isChecked) {
+      const filtered = getFilteredUsers();
+      const teamUsers = filtered.filter((u) => u.role !== "관리자");
+      teamUsers.forEach((u) => {
+        if (isChecked) {
+          selectedUserIds.add(u.id);
+        } else {
+          selectedUserIds.delete(u.id);
+        }
+      });
+      renderUnifiedUserChecklist();
+      updateTargetSelectedSummary();
+    }
+
+    function toggleSingleUser(userId, isChecked) {
+      if (isChecked) {
+        selectedUserIds.add(userId);
+      } else {
+        selectedUserIds.delete(userId);
+      }
+      renderUnifiedUserChecklist();
+      updateTargetSelectedSummary();
+    }
+
+    function selectAllFilteredUsers() {
+      const filtered = getFilteredUsers();
+      filtered.forEach((u) => selectedUserIds.add(u.id));
+      renderUnifiedUserChecklist();
+      updateTargetSelectedSummary();
+    }
+
+    function unselectAllFilteredUsers() {
+      const filtered = getFilteredUsers();
+      filtered.forEach((u) => selectedUserIds.delete(u.id));
+      renderUnifiedUserChecklist();
+      updateTargetSelectedSummary();
+    }
+
+    // Helper render Tree Menu cho 감독자 & 학부모
+    // 1. Tên leader nằm chung dòng với tên team (bên phải Tên team) khi có tick 감독자. Khi chỉ tick 학부모 thì không hiển thị leader.
+    // 2. Không còn nút 접기/펼치기 lặp lại ở từng team, chỉ cần click vào dòng team là đóng/mở.
+    function renderTeamTreeHTML(teamUsers, isFullWidth = false) {
+      if (teamUsers.length === 0) {
+        return '<div class="py-6 text-center text-gray-400 text-[12px]">일치하는 대상자가 없습니다.</div>';
+      }
+
+      const displayedTeams = teamsList.filter((team) =>
+        teamUsers.some((u) => u.teamId === team.id),
+      );
+
+      if (displayedTeams.length === 0) {
+        return '<div class="py-6 text-center text-gray-400 text-[12px]">일치하는 대상자가 없습니다.</div>';
+      }
+
+      const showLeader = Boolean(roleFilters["감독자"]);
+      const showParents = Boolean(roleFilters["학부모"]);
+
+      return displayedTeams
+        .map((team) => {
+          // Lấy leader của team này
+          const teamLeader = masterUsers.find(
+            (u) => u.teamId === team.id && u.role === "감독자",
+          );
+
+          // Danh sách thành viên cần hiển thị trong team
+          const allTeamMembers = teamUsers.filter((u) => u.teamId === team.id);
+          // Danh sách con (parents) để xổ ra khi click team
+          const childMembers = showParents
+            ? allTeamMembers.filter((u) => u.role === "학부모")
+            : [];
+
+          const selectedMembers = allTeamMembers.filter((u) =>
+            selectedUserIds.has(u.id),
+          );
+          const isAllTeamSelected =
+            allTeamMembers.length > 0 &&
+            selectedMembers.length === allTeamMembers.length;
+          const isExpanded = expandedTeamIds.has(team.id);
+
+          const isLeaderSelected =
+            teamLeader && selectedUserIds.has(teamLeader.id);
+
+          return `
+            <div class="team-group">
+              <!-- Team Header Row: Click vào dòng để mở/đóng team -->
+              <div onclick="${childMembers.length > 0 ? `toggleTeamExpand('${team.id}')` : ""}"
+                class="px-3 py-2 bg-[#F8FAFC] hover:bg-gray-100/90 border-b border-[#E9E9E9] flex items-center justify-between ${childMembers.length > 0 ? "cursor-pointer" : "cursor-default"} select-none transition">
+                <div class="flex items-center gap-2 min-w-0 flex-1">
+                  <!-- 1. Checkbox chọn cả team (hoặc chọn leader nếu chỉ tick leader) -->
+                  <input type="checkbox" onchange="toggleTeamAllUsers('${team.id}', this.checked)" onclick="event.stopPropagation()"
+                    ${isAllTeamSelected ? "checked" : ""}
+                    class="w-3.5 h-3.5 rounded text-[#1F5FBA] focus:ring-0 cursor-pointer flex-shrink-0" />
+
+                  <!-- 2. Mũi tên đóng/mở (chỉ hiển thị khi có thành viên phụ huynh để xổ) -->
+                  ${
+                    childMembers.length > 0
+                      ? `
+                    <button type="button" onclick="event.stopPropagation(); toggleTeamExpand('${team.id}')"
+                      class="w-4 h-4 flex items-center justify-center text-gray-500 hover:text-gray-800 p-0 rounded transition flex-shrink-0">
+                      <svg class="w-3.5 h-3.5 transform transition-transform ${isExpanded ? "rotate-90" : ""}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                      </svg>
+                    </button>
+                  `
+                      : '<div class="w-2 flex-shrink-0"></div>'
+                  }
+
+                  <!-- 3. Tên Team -->
+                  <span class="font-bold text-[13px] text-[#171717] truncate ${childMembers.length > 0 ? "hover:text-[#003B8F]" : ""}">
+                    ${team.name}
+                  </span>
+
+                  <!-- 4. Tên Leader (감독자) hiển thị dạng Inline Text tối giản ngay sau tên Team -->
+                  ${
+                    showLeader && teamLeader
+                      ? `
+                    <span onclick="event.stopPropagation(); toggleSingleUser('${teamLeader.id}', ${!isLeaderSelected})"
+                      title="클릭하여 감독자 선택/해제"
+                      class="text-[12px] truncate flex-shrink-0 cursor-pointer transition select-none ${
+                        isLeaderSelected
+                          ? "text-[#475569] hover:text-[#003B8F]"
+                          : "text-gray-400 line-through"
+                      }">
+                      <span class="text-gray-300 font-bold mx-0.5">·</span>
+                      <span class="text-[11px] text-gray-400">감독:</span>
+                      <strong class="font-medium ${isLeaderSelected ? "text-[#1E293B]" : "text-gray-400"}">${teamLeader.name}</strong>
+                      <span class="text-[11px] font-mono text-gray-400">(${teamLeader.phone})</span>
+                    </span>
+                  `
+                      : ""
+                  }
+                </div>
+
+                <!-- 5. Badge tổng số lượng đã chọn trong team (chuyển sang góc phải để cân đối dòng) -->
+                <span class="text-[11px] text-[#003B8F] font-semibold bg-[#DCEBFB] px-2 py-0.5 rounded flex-shrink-0 mr-1">
+                  ${selectedMembers.length}/${allTeamMembers.length}명
+                </span>
+              </div>
+
+              <!-- Danh sách thành viên con (학부모) xổ ra khi team được mở -->
+              ${
+                childMembers.length > 0 && isExpanded
+                  ? `
+                <div class="divide-y divide-[#F3F3F3] bg-white">
+                  ${childMembers
+                    .map((u) => {
+                      const isChecked = selectedUserIds.has(u.id);
+                      return `
+                        <label class="pl-9 pr-3 py-1.5 flex items-center justify-between hover:bg-blue-50/20 cursor-pointer transition text-[12px]">
+                          <div class="flex items-center gap-2 min-w-0 flex-1">
+                            <span class="text-gray-300 font-mono text-[13px] select-none flex-shrink-0 -mr-0.5">└</span>
+                            <input type="checkbox" onchange="toggleSingleUser('${u.id}', this.checked)" ${isChecked ? "checked" : ""}
+                              class="w-3.5 h-3.5 rounded text-[#1F5FBA] focus:ring-0 cursor-pointer flex-shrink-0" />
+                            <span class="font-medium text-[#171717] truncate">${u.name}</span>
+                          </div>
+                          <div class="flex items-center gap-4 pr-2 flex-shrink-0">
+                            <div class="w-[60px] flex justify-center flex-shrink-0">
+                              <span class="text-[10.5px] px-1.5 py-0.2 rounded border bg-orange-50 text-orange-700 border-orange-200 font-medium">학부모</span>
+                            </div>
+                            <span class="w-[105px] text-center text-[11.5px] text-[#636363] font-mono flex-shrink-0">${u.phone}</span>
+                          </div>
+                        </label>
+                      `;
+                    })
+                    .join("")}
+                </div>
+              `
+                  : ""
+              }
+            </div>
+          `;
+        })
+        .join("");
+    }
+
+    function renderUnifiedUserChecklist() {
+      const wrapper = document.getElementById("unifiedUserChecklistWrapper");
+      if (!wrapper) return;
+
+      // Lưu scroll position của các container trước khi render lại
+      const scrollMap = [];
+      wrapper.querySelectorAll(".overflow-y-auto").forEach((el, idx) => {
+        scrollMap[idx] = el.scrollTop;
+      });
+
+      const filtered = getFilteredUsers();
+
+      // Kiểm tra trạng thái các vai trò được tick
+      const hasAdmin = Boolean(roleFilters["관리자"]);
+      const hasTeamRoles = Boolean(roleFilters["감독자"] || roleFilters["학부모"]);
+
+      const adminUsers = filtered.filter((u) => u.role === "관리자");
+      const teamUsers = filtered.filter(
+        (u) => u.role === "감독자" || u.role === "학부모",
+      );
+
+      const adminSelectedCount = adminUsers.filter((u) =>
+        selectedUserIds.has(u.id),
+      ).length;
+      const teamUsersSelectedCount = teamUsers.filter((u) =>
+        selectedUserIds.has(u.id),
+      ).length;
+
+      const allAdminsSelected =
+        adminUsers.length > 0 && adminSelectedCount === adminUsers.length;
+      const allTeamUsersSelected =
+        teamUsers.length > 0 && teamUsersSelectedCount === teamUsers.length;
+
+      const displayedTeamsForExpand = teamsList.filter((team) =>
+        teamUsers.some((u) => u.teamId === team.id),
+      );
+
+      if (!hasAdmin && !hasTeamRoles) {
+        wrapper.innerHTML = `
+          <div class="flex-1 flex items-center justify-center p-6 text-gray-400 text-[12.5px]">
+            선택된 역할이 없습니다. 상단의 역할을 선택해주세요.
+          </div>
+        `;
+        return;
+      }
+
+      if (filtered.length === 0) {
+        wrapper.innerHTML = `
+          <div class="flex-1 flex items-center justify-center p-6 text-gray-400 text-[12.5px]">
+            선택된 조건에 일치하는 대상자가 없습니다.
+          </div>
+        `;
+        return;
+      }
+
+      // TRƯỜNG HỢP 1: Có tick 관리자 VÀ có tick vai trò đội (감독자 hoặc 학부모 hoặc cả hai)
+      // -> Chia 2 cột: Bên trái là 관리자, bên phải là 감독자/학부모 Tree Menu
+      if (hasAdmin && hasTeamRoles) {
+        wrapper.innerHTML = `
+          <div class="flex-1 flex min-h-0 divide-x divide-[#E9E9E9]">
+            <!-- CỘT TRÁI: DANH SÁCH 관리자 RIÊNG (Không hiển thị badge 관리자) -->
+            <div class="w-[28%] flex flex-col min-h-0 bg-white">
+              <div class="px-3 py-2 bg-[#F8FAFC] border-b border-[#E9E9E9] flex items-center justify-between text-[12px] flex-shrink-0">
+                <label class="flex items-center gap-1.5 cursor-pointer font-semibold text-[#171717] min-w-0 truncate">
+                  <input type="checkbox" id="checkAllAdmins" onchange="toggleAllAdmins(this.checked)"
+                    ${allAdminsSelected ? "checked" : ""}
+                    class="w-3.5 h-3.5 rounded text-[#1F5FBA] focus:ring-0 cursor-pointer flex-shrink-0" />
+                  <span class="truncate">관리자</span>
+                </label>
+                <span class="text-[11px] text-[#003B8F] font-semibold bg-[#DCEBFB] px-1.5 py-0.2 rounded flex-shrink-0">
+                  ${adminSelectedCount}/${adminUsers.length}명
+                </span>
+              </div>
+              <div class="flex-1 overflow-y-auto divide-y divide-[#F3F3F3] custom-scroll">
+                ${adminUsers
+                  .map(
+                    (u) => `
+                  <label class="px-3 py-2 flex items-center justify-between hover:bg-gray-50 cursor-pointer transition text-[12px]">
+                    <div class="flex items-center gap-2 min-w-0">
+                      <input type="checkbox" onchange="toggleSingleUser('${u.id}', this.checked)" ${selectedUserIds.has(u.id) ? "checked" : ""}
+                        class="w-3.5 h-3.5 rounded text-[#1F5FBA] focus:ring-0 cursor-pointer flex-shrink-0" />
+                      <span class="font-medium text-[#171717] truncate">${u.name}</span>
+                    </div>
+                    <span class="text-[11px] text-[#636363] flex-shrink-0 font-mono">${u.phone}</span>
+                  </label>
+                `,
+                  )
+                  .join("")}
+              </div>
+            </div>
+
+            <!-- CỘT PHẢI: DANH SÁCH 감독자 / 학부모 THEO TREE MENU -->
+            <div class="w-[72%] flex flex-col min-h-0 bg-white">
+              <!-- Header cột Tree Menu: Bên trái giữ nguyên 팀명/팀원, bên phải bổ sung nút 펼치기/접기 tất cả team -->
+              <div class="px-3 py-2 bg-[#F8FAFC] border-b border-[#E9E9E9] flex items-center justify-between text-[11.5px] font-semibold text-[#636363] flex-shrink-0">
+                <div class="flex items-center gap-1.5 min-w-0">
+                  <input type="checkbox" id="checkAllTeamUsers" onchange="toggleAllTeamUsers(this.checked)"
+                    ${allTeamUsersSelected ? "checked" : ""}
+                    class="w-3.5 h-3.5 rounded text-[#1F5FBA] focus:ring-0 cursor-pointer flex-shrink-0" />
+                  <span class="text-[#171717] font-semibold truncate">팀명 / 팀원 (${teamUsersSelectedCount}/${teamUsers.length}명)</span>
+                </div>
+                <!-- Nút 펼치기/접기 tất cả team nằm bên phải -->
+                ${
+                  roleFilters["학부모"]
+                    ? `
+                  <button type="button" onclick="toggleExpandAllTeams()"
+                    class="px-2 py-0.5 text-[11px] font-semibold bg-white hover:bg-blue-50 text-[#003B8F] border border-[#CBD5E1] hover:border-[#003B8F] rounded-[5px] transition flex items-center gap-1 cursor-pointer shadow-2xs flex-shrink-0">
+                    <span>${
+                      displayedTeamsForExpand.length > 0 &&
+                      displayedTeamsForExpand.every((t) => expandedTeamIds.has(t.id))
+                        ? "전체 접기 ▲"
+                        : "전체 펼치기 ▼"
+                    }</span>
+                  </button>
+                `
+                    : ""
+                }
+              </div>
+              <div class="flex-1 overflow-y-auto custom-scroll divide-y divide-[#E9E9E9]">
+                ${renderTeamTreeHTML(teamUsers, false)}
+              </div>
+            </div>
+          </div>
+        `;
+      }
+      // TRƯỜNG HỢP 2: CHỈ TICK 관리자 RIÊNG (Không tick vai trò đội)
+      // -> Hiển thị danh sách 관리자 toàn phần (full-width), không chia cột
+      else if (hasAdmin && !hasTeamRoles) {
+        wrapper.innerHTML = `
+          <div class="flex-1 flex flex-col min-h-0 bg-white">
+            <div class="px-3 py-2 bg-[#F8FAFC] border-b border-[#E9E9E9] flex items-center justify-between text-[12px] flex-shrink-0">
+              <label class="flex items-center gap-2 cursor-pointer font-semibold text-[#171717]">
+                <input type="checkbox" id="checkAllAdmins" onchange="toggleAllAdmins(this.checked)"
+                  ${allAdminsSelected ? "checked" : ""}
+                  class="w-4 h-4 rounded text-[#1F5FBA] focus:ring-0 cursor-pointer" />
+                <span>관리자 전체 선택 (${adminSelectedCount}/${adminUsers.length}명)</span>
+              </label>
+              <div class="flex items-center gap-2">
+                <button type="button" onclick="selectAllFilteredUsers()" class="text-[11.5px] text-[#003B8F] hover:underline cursor-pointer font-medium">전체 선택</button>
+                <span class="text-gray-300">|</span>
+                <button type="button" onclick="unselectAllFilteredUsers()" class="text-[11.5px] text-gray-500 hover:text-red-600 hover:underline cursor-pointer font-medium">전체 해제</button>
+              </div>
+            </div>
+            <div class="flex-1 overflow-y-auto divide-y divide-[#F3F3F3] custom-scroll">
+              ${adminUsers
+                .map(
+                  (u) => `
+                <label class="px-3 py-2 flex items-center justify-between hover:bg-gray-50 cursor-pointer transition text-[12.5px]">
+                  <div class="flex items-center gap-2.5 min-w-0">
+                    <input type="checkbox" onchange="toggleSingleUser('${u.id}', this.checked)" ${selectedUserIds.has(u.id) ? "checked" : ""}
+                      class="w-4 h-4 rounded text-[#1F5FBA] focus:ring-0 cursor-pointer flex-shrink-0" />
+                    <span class="w-6 h-6 rounded-full bg-[#E9E9E9] text-[#171717] font-bold text-[10px] flex items-center justify-center flex-shrink-0">
+                      ${u.name.charAt(0)}
+                    </span>
+                    <span class="font-medium text-[#171717] truncate">${u.name}</span>
+                  </div>
+                  <span class="text-[12px] text-[#636363] flex-shrink-0 font-mono">${u.phone}</span>
+                </label>
+              `,
+                )
+                .join("")}
+            </div>
+          </div>
+        `;
+      }
+      // TRƯỜNG HỢP 3: CHỈ TICK 감독자 / 학부모 (Không tick 관리자)
+      // -> Hiển thị Tree Menu toàn phần (full-width), không chia cột
+      else {
+        wrapper.innerHTML = `
+          <div class="flex-1 flex flex-col min-h-0 bg-white">
+            <div class="px-3 py-2 bg-[#F8FAFC] border-b border-[#E9E9E9] flex items-center justify-between text-[12px] font-semibold text-[#636363] flex-shrink-0">
+              <div class="flex items-center gap-2 min-w-0">
+                <input type="checkbox" id="checkAllTeamUsers" onchange="toggleAllTeamUsers(this.checked)"
+                  ${allTeamUsersSelected ? "checked" : ""}
+                  class="w-4 h-4 rounded text-[#1F5FBA] focus:ring-0 cursor-pointer flex-shrink-0" />
+                <span class="text-[#171717] font-semibold truncate">팀명 / 대상자 (${teamUsersSelectedCount}/${teamUsers.length}명)</span>
+                <div class="flex items-center gap-1.5 ml-2 text-[11.5px] text-gray-400 font-normal">
+                  <button type="button" onclick="selectAllFilteredUsers()" class="hover:text-[#003B8F] hover:underline cursor-pointer font-medium">전체 선택</button>
+                  <span>|</span>
+                  <button type="button" onclick="unselectAllFilteredUsers()" class="hover:text-red-600 hover:underline cursor-pointer font-medium">전체 해제</button>
+                </div>
+              </div>
+              <!-- Nút 펼치기/접기 tất cả team nằm bên phải -->
+              ${
+                roleFilters["학부모"]
+                  ? `
+                <button type="button" onclick="toggleExpandAllTeams()"
+                  class="px-2.5 py-1 text-[11.5px] font-semibold bg-white hover:bg-blue-50 text-[#003B8F] border border-[#CBD5E1] hover:border-[#003B8F] rounded-[5px] transition flex items-center gap-1 cursor-pointer shadow-2xs flex-shrink-0">
+                  <span>${
+                    displayedTeamsForExpand.length > 0 &&
+                    displayedTeamsForExpand.every((t) => expandedTeamIds.has(t.id))
+                      ? "전체 접기 ▲"
+                      : "전체 펼치기 ▼"
+                  }</span>
+                </button>
+              `
+                  : ""
+              }
+            </div>
+            <div class="flex-1 overflow-y-auto custom-scroll divide-y divide-[#E9E9E9]">
+              ${renderTeamTreeHTML(teamUsers, true)}
+            </div>
+          </div>
+        `;
+      }
+
+      // Khôi phục scroll position
+      wrapper.querySelectorAll(".overflow-y-auto").forEach((el, idx) => {
+        if (scrollMap[idx] !== undefined) el.scrollTop = scrollMap[idx];
+      });
+    }
+
+    function updateTargetSelectedSummary() {
+      const badge = document.getElementById("targetSelectedSummaryBadge");
+      if (!badge) return;
+
+      const totalCount = masterUsers.length;
+      const selectedCount = selectedUserIds.size;
+
+      const leaderTotal = masterUsers.filter((u) => u.role === "감독자").length;
+      const leaderSelected = masterUsers.filter(
+        (u) => u.role === "감독자" && selectedUserIds.has(u.id),
+      ).length;
+
+      const adminTotal = masterUsers.filter((u) => u.role === "관리자").length;
+      const adminSelected = masterUsers.filter(
+        (u) => u.role === "관리자" && selectedUserIds.has(u.id),
+      ).length;
+
+      const parentTotal = masterUsers.filter((u) => u.role === "학부모").length;
+      const parentSelected = masterUsers.filter(
+        (u) => u.role === "학부모" && selectedUserIds.has(u.id),
+      ).length;
+
+      const adminCountEl = document.getElementById("roleAdminCount");
+      if (adminCountEl) adminCountEl.textContent = `(${adminTotal})`;
+      const leaderCountEl = document.getElementById("roleLeaderCount");
+      if (leaderCountEl) leaderCountEl.textContent = `(${leaderTotal})`;
+      const parentCountEl = document.getElementById("roleMemberCount");
+      if (parentCountEl) parentCountEl.textContent = `(${parentTotal})`;
+
+      if (selectedCount === totalCount) {
+        badge.textContent = `총 ${totalCount}명 중 ${selectedCount}명 선택됨 (전체)`;
+      } else if (
+        leaderSelected > 0 &&
+        adminSelected === 0 &&
+        parentSelected === 0
+      ) {
+        if (leaderSelected === leaderTotal) {
+          badge.textContent = `감독자 전체 ${leaderSelected}명 선택됨`;
+        } else {
+          badge.textContent = `감독자 ${leaderSelected}명 선택됨 (총 ${leaderTotal}명 중)`;
+        }
+      } else if (
+        adminSelected > 0 &&
+        leaderSelected === 0 &&
+        parentSelected === 0
+      ) {
+        badge.textContent = `관리자 ${adminSelected}명 선택됨 (총 ${adminTotal}명 중)`;
+      } else if (
+        parentSelected > 0 &&
+        adminSelected === 0 &&
+        leaderSelected === 0
+      ) {
+        badge.textContent = `학부모 ${parentSelected}명 선택됨 (총 ${parentTotal}명 중)`;
+      } else {
+        badge.textContent = `총 ${totalCount}명 중 ${selectedCount}명 선택됨`;
+      }
+    }
+
+    // ===== 8. OPEN / CLOSE DRAWER =====
+    function openDrawer(isEdit = false, id = null) {
+      const overlay = document.getElementById("drawerOverlay");
+      const panel = document.getElementById("drawerPanel");
+      overlay.classList.remove("hidden");
+      panel.classList.remove("translate-x-[calc(100%+32px)]");
+
+      initQuill();
+      syncAllTypeDropdowns();
+      populateUnifiedTeamOptions();
+
+      // Reset team filter & search keyword
+      unifiedTeamFilter = "ALL";
+      unifiedSearchKeyword = "";
+      const teamSel = document.getElementById("unifiedTeamSelect");
+      if (teamSel) teamSel.value = "ALL";
+      const searchInp = document.getElementById("unifiedUserSearchInput");
+      if (searchInp) searchInp.value = "";
+
+      // Mặc định không xổ ra thành viên trong team (chỉ hiển thị tên team)
+      expandedTeamIds = new Set();
+
+      if (isEdit && id) {
+        const item = notices.find((n) => n.id === id);
+        if (!item) return;
+
+        document.getElementById("drawerTitle").innerText = "공지 정보 수정";
+        document.getElementById("editNoticeId").value = item.id;
+        document.getElementById("drawerTitleInput").value = item.title;
+        document.getElementById("drawerTypeSelect").value = item.type;
+
+        drawerActiveStatus = item.status;
+        updateDrawerStatusUI();
+
+        if (quillEditor) {
+          quillEditor.root.innerHTML = item.content;
+        }
+
+        selectedUserIds = new Set();
+        if (item.targetUserIds && item.targetUserIds.length > 0) {
+          item.targetUserIds.forEach((uid) => selectedUserIds.add(uid));
+        } else {
+          if (item.targetDisplay === "전체") {
+            masterUsers.forEach((u) => selectedUserIds.add(u.id));
+          } else if (item.targetDisplay.includes("감독자")) {
+            masterUsers
+              .filter((u) => u.role === "감독자")
+              .slice(0, 8)
+              .forEach((u) => selectedUserIds.add(u.id));
+          } else {
+            masterUsers.slice(0, 2).forEach((u) => selectedUserIds.add(u.id));
+          }
+        }
+
+        const hasAdmin = masterUsers.some(
+          (u) => u.role === "관리자" && selectedUserIds.has(u.id),
+        );
+        const hasLeader = masterUsers.some(
+          (u) => u.role === "감독자" && selectedUserIds.has(u.id),
+        );
+        const hasParent = masterUsers.some(
+          (u) => u.role === "학부모" && selectedUserIds.has(u.id),
+        );
+
+        roleFilters["관리자"] = hasAdmin || (!hasAdmin && !hasLeader && !hasParent);
+        roleFilters["감독자"] = hasLeader;
+        roleFilters["학부모"] = hasParent;
+
+        document.getElementById("roleAdminCheckbox").checked =
+          roleFilters["관리자"];
+        document.getElementById("roleLeaderCheckbox").checked =
+          roleFilters["감독자"];
+        document.getElementById("roleMemberCheckbox").checked =
+          roleFilters["학부모"];
+        document.getElementById("unifiedRoleAll").checked =
+          roleFilters["관리자"] &&
+          roleFilters["감독자"] &&
+          roleFilters["학부모"];
+
+        renderUnifiedUserChecklist();
+        updateTargetSelectedSummary();
+        updateNotifPreview();
+      } else {
+        document.getElementById("drawerTitle").innerText = "새 공지 추가";
+        document.getElementById("editNoticeId").value = "";
+        document.getElementById("drawerTitleInput").value = "";
+        if (quillEditor) quillEditor.root.innerHTML = "";
+        document.getElementById("drawerTypeSelect").selectedIndex = 0;
+
+        drawerActiveStatus = true;
+        updateDrawerStatusUI();
+
+        ["관리자", "감독자", "학부모"].forEach((r) => (roleFilters[r] = true));
+        document.getElementById("roleAdminCheckbox").checked = true;
+        document.getElementById("roleLeaderCheckbox").checked = true;
+        document.getElementById("roleMemberCheckbox").checked = true;
+        document.getElementById("unifiedRoleAll").checked = true;
+
+        selectedUserIds = new Set(masterUsers.map((u) => u.id));
+
+        renderUnifiedUserChecklist();
+        updateTargetSelectedSummary();
+        updateNotifPreview();
+      }
+    }
+
+    function closeDrawer() {
+      const panel = document.getElementById("drawerPanel");
+      panel.classList.add("translate-x-[calc(100%+32px)]");
+      setTimeout(
+        () =>
+          document.getElementById("drawerOverlay").classList.add("hidden"),
+        200,
+      );
+    }
+
+    // ===== 9. LƯU CÔNG BÁO =====
+    function saveNotice() {
+      const titleInput = document
+        .getElementById("drawerTitleInput")
+        .value.trim();
+      const contentHtml = quillEditor
+        ? quillEditor.root.innerHTML.trim()
+        : "";
+      const contentText = quillEditor ? quillEditor.getText().trim() : "";
+      const editId = document.getElementById("editNoticeId").value;
+
+      if (!titleInput) {
+        alert("공지사항 제목을 입력해주세요.");
+        return;
+      }
+      if (!contentText) {
+        alert("공지사항 내용을 입력해주세요.");
+        return;
+      }
+      if (selectedUserIds.size === 0) {
+        alert("최소 1명 이상의 대상을 선택해주세요.");
+        return;
+      }
+
+      const selectedType = document.getElementById("drawerTypeSelect").value;
+      const selectedUsers = masterUsers.filter((u) =>
+        selectedUserIds.has(u.id),
+      );
+
+      // Tính toán 게시 대상 và targetDetails theo quy ước chuẩn mới
+      const targetInfo = computeTargetDisplayAndDetails(selectedUserIds);
+      const targetDisplay = targetInfo.targetDisplay;
+      const targetDetails = targetInfo.targetDetails;
+
+      if (editId) {
+        const idx = notices.findIndex((n) => n.id === editId);
+        if (idx !== -1) {
+          notices[idx].title = titleInput;
+          notices[idx].content = contentHtml;
+          notices[idx].type = selectedType;
+          notices[idx].targetType = "ROLE";
+          notices[idx].targetDisplay = targetDisplay;
+          notices[idx].targetDetails = targetDetails;
+          notices[idx].targetUserIds = Array.from(selectedUserIds);
+          notices[idx].status = drawerActiveStatus;
+          notices[idx].isRead = false;
+        }
+      } else {
+        const newId = `NOT-00${notices.length + 1}`;
+        notices.unshift({
+          id: newId,
+          type: selectedType,
+          title: titleInput,
+          content: contentHtml,
+          targetType: "ROLE",
+          targetDisplay,
+          targetDetails,
+          targetUserIds: Array.from(selectedUserIds),
+          createdAt: "2026.10.19 08:30",
+          creator: "홍길동",
+          status: drawerActiveStatus,
+          isRead: false,
+        });
+      }
+
+      closeDrawer();
+      renderTable();
+      alert("공지 사항이 성공적으로 저장되었습니다.");
+    }
+
+    // ===== 10. BELL DROPDOWN NOTIFICATIONS =====
+    function toggleBellDropdown() {
+      const drop = document.getElementById("bellDropdown");
+      drop.classList.toggle("hidden");
+    }
+
+    function renderBellList() {
+      const list = document.getElementById("bellNotificationList");
+      const badge = document.getElementById("bellBadge");
+      const activeNotices = notices.filter((n) => n.status);
+      const unreadCount = activeNotices.filter((n) => !n.isRead).length;
+
+      if (unreadCount > 0) {
+        badge.innerText = unreadCount;
+        badge.classList.remove("hidden");
+      } else {
+        badge.classList.add("hidden");
+      }
+
+      list.innerHTML = "";
+      if (activeNotices.length === 0) {
+        list.innerHTML =
+          '<div class="p-6 text-center text-gray-400 text-[12.5px]">새로운 공지 사항이 없습니다.</div>';
+        return;
+      }
+
+      activeNotices.forEach((item) => {
+        const itemDiv = document.createElement("div");
+        itemDiv.className = `p-3 flex items-start gap-3 hover:bg-gray-50 transition cursor-pointer ${item.isRead ? "opacity-60 bg-white" : "bg-[#F2F8FF]/40"}`;
+        itemDiv.onclick = () => {
+          item.isRead = true;
+          renderBellList();
+          openPreviewModal(item.id);
+        };
+
+        const shortContent = stripHtml(item.content);
+
+        itemDiv.innerHTML = `
+          <div class="w-9 h-9 rounded-[8px] bg-[#DCEBFB] flex items-center justify-center flex-shrink-0 text-[#1F5FBA] mt-0.5">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+            </svg>
+          </div>
+          <div class="flex-1 min-w-0">
+            <!-- Dòng 1: text 공지 사항 -->
+            <div class="flex items-center justify-between">
+              <p class="font-bold text-[12px] text-[#171717]">공지 사항</p>
+              <span class="text-[10.5px] text-gray-400">${getDateOnly(item.createdAt)}</span>
+            </div>
+            <!-- Dòng 2: loại 유형 (vẫn giữ nguyên test màu xanh dương) -->
+            <p class="text-[12px] text-[#003B8F] font-semibold truncate mt-0.5">${item.type}</p>
+            <!-- Dòng 3: 제목 -->
+            <p class="text-[12px] text-[#171717] font-medium truncate mt-0.5">${item.title}</p>
+          </div>
+        `;
+        list.appendChild(itemDiv);
+      });
+    }
+
+    function markAllNotificationsAsRead() {
+      notices.forEach((n) => (n.isRead = true));
+      renderBellList();
+    }
+
+    // Đóng dropdown chuông khi click ra ngoài
+    document.addEventListener("click", (e) => {
+      const bellBtn = document.getElementById("bellBtn");
+      const bellDrop = document.getElementById("bellDropdown");
+      if (
+        bellBtn &&
+        bellDrop &&
+        !bellBtn.contains(e.target) &&
+        !bellDrop.contains(e.target)
+      ) {
+        bellDrop.classList.add("hidden");
+      }
+    });
+
+    // ===== 11. PREVIEW POPUP =====
+    function openPreviewModal(id) {
+      const item = notices.find((n) => n.id === id);
+      if (!item) return;
+
+      document.getElementById("previewBadge").innerHTML = getTypeBadgeHTML(
+        item.type,
+      );
+      document.getElementById("previewTitle").innerText = item.title;
+      document.getElementById("previewDate").innerText =
+        `등록일: ${item.createdAt} | 등록자: ${item.creator}`;
+      document.getElementById("previewContent").innerHTML = item.content;
+
+      document.getElementById("previewModal").classList.remove("hidden");
+    }
+
+    function closePreviewModal() {
+      document.getElementById("previewModal").classList.add("hidden");
+    }
+
+    // ===== 12. FILTER BAR LOGIC =====
+    function applyFilters() {
+      const type = document.getElementById("filterType").value;
+      const targetEl = document.getElementById("filterTarget");
+      const target = targetEl ? targetEl.value : "ALL";
+      const status = document.getElementById("filterStatus").value;
+      const keyword = document
+        .getElementById("filterKeyword")
+        .value.toLowerCase()
+        .trim();
+
+      const filtered = notices.filter((item) => {
+        if (type !== "ALL" && item.type !== type) return false;
+        if (target !== "ALL" && item.targetType !== target) return false;
+        if (status === "ON" && !item.status) return false;
+        if (status === "OFF" && item.status) return false;
+
+        if (keyword) {
+          const matchTitle = item.title.toLowerCase().includes(keyword);
+          const matchContent = item.content.toLowerCase().includes(keyword);
+          const matchTarget = item.targetDisplay
+            .toLowerCase()
+            .includes(keyword);
+          if (!matchTitle && !matchContent && !matchTarget) return false;
+        }
+        return true;
+      });
+
+      renderTable(filtered);
+    }
+
+    function resetFilters() {
+      document.getElementById("filterType").value = "ALL";
+      const targetEl = document.getElementById("filterTarget");
+      if (targetEl) targetEl.value = "ALL";
+      document.getElementById("filterStatus").value = "ALL";
+      document.getElementById("filterKeyword").value = "";
+      document.getElementById("filterDate").value = "";
+      renderTable(notices);
+    }
+
+    // ===== INIT =====
+    window.addEventListener("DOMContentLoaded", () => {
+      syncAllTypeDropdowns();
+      renderTable(notices);
+    });
+  </script>
+</body>
+
+</html>
