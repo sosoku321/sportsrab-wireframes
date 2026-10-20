@@ -285,7 +285,7 @@
         <div class="flex items-center gap-2">
           <span class="text-[#636363] font-medium whitespace-nowrap">등록일</span>
           <div class="relative flex items-center">
-            <input type="text" id="filterDate" placeholder="2026.10.01 - 2026.10.12"
+            <input type="text" id="filterDate" placeholder="yyyy.mm.dd - yyyy.mm.dd"
               class="border border-[#E9E9E9] rounded-[6px] px-3 py-1.5 text-[#171717] w-[205px] focus:outline-none focus:border-[#1F5FBA] text-[13px]" />
             <svg class="w-4 h-4 text-[#CFCECE] absolute right-2.5 pointer-events-none" fill="none" stroke="currentColor"
               stroke-width="2" viewBox="0 0 24 24">
@@ -301,17 +301,6 @@
           <select id="filterType" onchange="applyFilters()"
             class="border border-[#E9E9E9] rounded-[6px] px-2.5 py-1.5 text-[#171717] bg-white focus:outline-none focus:border-[#1F5FBA] cursor-pointer">
             <option value="ALL">전체</option>
-          </select>
-        </div>
-
-        <!-- 4. 활성 상태 -->
-        <div class="flex items-center gap-2">
-          <span class="text-[#636363] font-medium whitespace-nowrap">활성 상태</span>
-          <select id="filterStatus" onchange="applyFilters()"
-            class="border border-[#E9E9E9] rounded-[6px] px-2.5 py-1.5 text-[#171717] bg-white focus:outline-none focus:border-[#1F5FBA] cursor-pointer">
-            <option value="ALL">전체</option>
-            <option value="ON">활성</option>
-            <option value="OFF">비활성</option>
           </select>
         </div>
 
@@ -451,7 +440,6 @@
     <!-- Header Drawer -->
     <div class="px-4 py-2.5 bg-[#E9E9E9] flex items-center justify-between flex-shrink-0">
       <span id="drawerTitle" class="text-[16px] font-semibold text-[#171717]">새 공지 추가</span>
-        <span class="ml-2.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-blue-50 text-[#003B8F] border border-blue-200">Phương án 1: Interactive Tag Chip</span>
       <button onclick="closeDrawer()" class="text-[#171717] hover:opacity-70 transition p-1 cursor-pointer" title="닫기">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
