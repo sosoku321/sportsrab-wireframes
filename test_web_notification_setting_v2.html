@@ -98,6 +98,14 @@
       font-style: normal;
       left: 12px;
     }
+
+    * {
+      -webkit-user-select: text !important;
+      -moz-user-select: text !important;
+      -ms-user-select: text !important;
+      user-select: text !important;
+    }
+  </style>
   </style>
 </head>
 
@@ -495,8 +503,10 @@
               </div>
               <button type="button" onclick="openTypeManagerModal()"
                 class="px-3 py-2 bg-white border border-[#E9E9E9] hover:border-[#003B8F] text-[#171717] hover:text-[#003B8F] rounded-[6px] text-[13px] font-medium flex items-center gap-1.5 transition whitespace-nowrap cursor-pointer shadow-sm">
-                <svg class="w-3.5 h-3.5 text-gray-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                <svg class="w-3.5 h-3.5 text-gray-500" fill="none" stroke="currentColor" stroke-width="2"
+                  viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                   <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
                 <span>유형 관리</span>
@@ -506,14 +516,16 @@
 
           <!-- 2. 제목 -->
           <div>
-            <label class="text-[13.5px] font-medium text-[#636363] block mb-1.5">제목 <span class="text-[#EF4444]">*</span> :</label>
+            <label class="text-[13.5px] font-medium text-[#636363] block mb-1.5">제목 <span
+                class="text-[#EF4444]">*</span> :</label>
             <input type="text" id="drawerTitleInput" placeholder="공지사항 제목을 입력하세요"
               class="w-full bg-white border border-[#E9E9E9] rounded-[6px] px-3 py-2 text-[14px] text-[#171717] focus:outline-none focus:border-[#1F5FBA] placeholder:text-[#CFCECE]" />
           </div>
 
           <!-- 3. 내용 (Quill Rich Text Editor) -->
           <div class="flex-1 flex flex-col min-h-0">
-            <label class="text-[13.5px] font-medium text-[#636363] block mb-1.5">내용 <span class="text-[#EF4444]">*</span> :</label>
+            <label class="text-[13.5px] font-medium text-[#636363] block mb-1.5">내용 <span
+                class="text-[#EF4444]">*</span> :</label>
             <div id="quillEditor" class="flex-1"></div>
           </div>
         </div>
@@ -549,20 +561,26 @@
               </label>
             </div>
             <div class="grid grid-cols-3 gap-2">
-              <label class="flex items-center gap-2 p-1.5 rounded-[6px] hover:bg-gray-50 border border-transparent hover:border-[#E9E9E9] cursor-pointer transition">
+              <label
+                class="flex items-center gap-2 p-1.5 rounded-[6px] hover:bg-gray-50 border border-transparent hover:border-[#E9E9E9] cursor-pointer transition">
                 <input type="checkbox" id="roleAdminCheckbox" onchange="onRoleFilterChange('관리자', this.checked)"
                   class="w-4 h-4 rounded text-[#1F5FBA] focus:ring-0 cursor-pointer" />
-                <span class="text-[13px] font-medium text-[#171717]">관리자 <span class="text-[11.5px] text-gray-400" id="roleAdminCount">(5)</span></span>
+                <span class="text-[13px] font-medium text-[#171717]">관리자 <span class="text-[11.5px] text-gray-400"
+                    id="roleAdminCount">(5)</span></span>
               </label>
-              <label class="flex items-center gap-2 p-1.5 rounded-[6px] hover:bg-gray-50 border border-transparent hover:border-[#E9E9E9] cursor-pointer transition">
+              <label
+                class="flex items-center gap-2 p-1.5 rounded-[6px] hover:bg-gray-50 border border-transparent hover:border-[#E9E9E9] cursor-pointer transition">
                 <input type="checkbox" id="roleLeaderCheckbox" onchange="onRoleFilterChange('감독자', this.checked)"
                   class="w-4 h-4 rounded text-[#1F5FBA] focus:ring-0 cursor-pointer" />
-                <span class="text-[13px] font-medium text-[#171717]">감독자 <span class="text-[11.5px] text-gray-400" id="roleLeaderCount">(10)</span></span>
+                <span class="text-[13px] font-medium text-[#171717]">감독자 <span class="text-[11.5px] text-gray-400"
+                    id="roleLeaderCount">(10)</span></span>
               </label>
-              <label class="flex items-center gap-2 p-1.5 rounded-[6px] hover:bg-gray-50 border border-transparent hover:border-[#E9E9E9] cursor-pointer transition">
+              <label
+                class="flex items-center gap-2 p-1.5 rounded-[6px] hover:bg-gray-50 border border-transparent hover:border-[#E9E9E9] cursor-pointer transition">
                 <input type="checkbox" id="roleMemberCheckbox" onchange="onRoleFilterChange('학부모', this.checked)"
                   class="w-4 h-4 rounded text-[#1F5FBA] focus:ring-0 cursor-pointer" />
-                <span class="text-[13px] font-medium text-[#171717]">학부모 <span class="text-[11.5px] text-gray-400" id="roleMemberCount">(30)</span></span>
+                <span class="text-[13px] font-medium text-[#171717]">학부모 <span class="text-[11.5px] text-gray-400"
+                    id="roleMemberCount">(30)</span></span>
               </label>
             </div>
           </div>
@@ -574,8 +592,7 @@
               class="w-full bg-white border border-[#E9E9E9] rounded-[6px] pl-8 pr-3 py-1.5 text-[12.5px] text-[#171717] focus:outline-none focus:border-[#1F5FBA] placeholder:text-[#CFCECE]" />
             <svg class="w-3.5 h-3.5 text-gray-400 absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none"
               fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
           </div>
 
@@ -587,8 +604,10 @@
           </div>
 
           <div class="text-[11.5px] text-[#636363] px-1 flex items-center gap-1.5 flex-shrink-0">
-            <svg class="w-3.5 h-3.5 text-[#1F5FBA] flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <svg class="w-3.5 h-3.5 text-[#1F5FBA] flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2"
+              viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <span>역할을 선택하면 대상자가 자동 표시되며, 개별 체크를 해제하여 발송 대상을 조정할 수 있습니다.</span>
           </div>
@@ -1533,9 +1552,8 @@
                     class="w-3.5 h-3.5 rounded text-[#1F5FBA] focus:ring-0 cursor-pointer flex-shrink-0" />
 
                   <!-- 2. Mũi tên đóng/mở (chỉ hiển thị khi có thành viên phụ huynh để xổ) -->
-                  ${
-                    childMembers.length > 0
-                      ? `
+                  ${childMembers.length > 0
+              ? `
                     <button type="button" onclick="event.stopPropagation(); toggleTeamExpand('${team.id}')"
                       class="w-4 h-4 flex items-center justify-center text-gray-500 hover:text-gray-800 p-0 rounded transition flex-shrink-0">
                       <svg class="w-3.5 h-3.5 transform transition-transform ${isExpanded ? "rotate-90" : ""}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -1543,8 +1561,8 @@
                       </svg>
                     </button>
                   `
-                      : '<div class="w-2 flex-shrink-0"></div>'
-                  }
+              : '<div class="w-2 flex-shrink-0"></div>'
+            }
 
                   <!-- 3. Tên Team -->
                   <span class="font-bold text-[13px] text-[#171717] truncate ${childMembers.length > 0 ? "hover:text-[#003B8F]" : ""}">
@@ -1552,28 +1570,25 @@
                   </span>
 
                   <!-- 4. Tên Leader (감독자) hiển thị dạng Pill Chip thanh lịch ngay bên phải tên team khi có tick 감독자 -->
-                  ${
-                    showLeader && teamLeader
-                      ? `
+                  ${showLeader && teamLeader
+              ? `
                     <div onclick="event.stopPropagation(); toggleSingleUser('${teamLeader.id}', ${!isLeaderSelected})"
                       title="클릭하여 감독자 선택/해제"
-                      class="inline-flex items-center gap-1.5 ml-1 px-2.5 py-0.5 rounded-full text-[11.5px] transition flex-shrink-0 cursor-pointer select-none ${
-                        isLeaderSelected
-                          ? "bg-blue-50/90 text-[#003B8F] border border-blue-200/90 hover:bg-blue-100 font-medium shadow-2xs"
-                          : "bg-gray-100/90 text-gray-400 border border-gray-200 hover:bg-gray-200/80 line-through"
-                      }">
+                      class="inline-flex items-center gap-1.5 ml-1 px-2.5 py-0.5 rounded-full text-[11.5px] transition flex-shrink-0 cursor-pointer select-none ${isLeaderSelected
+                ? "bg-blue-50/90 text-[#003B8F] border border-blue-200/90 hover:bg-blue-100 font-medium shadow-2xs"
+                : "bg-gray-100/90 text-gray-400 border border-gray-200 hover:bg-gray-200/80 line-through"
+              }">
                       <span class="text-[10.5px] font-semibold ${isLeaderSelected ? "text-[#1F5FBA]" : "text-gray-400"}">감독</span>
                       <span class="font-medium">${teamLeader.name}</span>
                       <span class="text-[10.5px] font-mono opacity-80">${teamLeader.phone}</span>
-                      ${
-                        isLeaderSelected
-                          ? `<svg class="w-3 h-3 text-[#1F5FBA] ml-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>`
-                          : ""
-                      }
+                      ${isLeaderSelected
+                ? `<svg class="w-3 h-3 text-[#1F5FBA] ml-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>`
+                : ""
+              }
                     </div>
                   `
-                      : ""
-                  }
+              : ""
+            }
                 </div>
 
                 <!-- 5. Badge tổng số lượng đã chọn trong team (chuyển sang góc phải để cân đối dòng) -->
@@ -1583,14 +1598,13 @@
               </div>
 
               <!-- Danh sách thành viên con (학부모) xổ ra khi team được mở -->
-              ${
-                childMembers.length > 0 && isExpanded
-                  ? `
+              ${childMembers.length > 0 && isExpanded
+              ? `
                 <div class="divide-y divide-[#F3F3F3] bg-white">
                   ${childMembers
-                    .map((u) => {
-                      const isChecked = selectedUserIds.has(u.id);
-                      return `
+                .map((u) => {
+                  const isChecked = selectedUserIds.has(u.id);
+                  return `
                         <label class="pl-9 pr-3 py-1.5 flex items-center justify-between hover:bg-blue-50/20 cursor-pointer transition text-[12px]">
                           <div class="flex items-center gap-2 min-w-0 flex-1">
                             <span class="text-gray-300 font-mono text-[13px] select-none flex-shrink-0 -mr-0.5">└</span>
@@ -1606,12 +1620,12 @@
                           </div>
                         </label>
                       `;
-                    })
-                    .join("")}
+                })
+                .join("")}
                 </div>
               `
-                  : ""
-              }
+              : ""
+            }
             </div>
           `;
         })
@@ -1693,8 +1707,8 @@
               </div>
               <div class="flex-1 overflow-y-auto divide-y divide-[#F3F3F3] custom-scroll">
                 ${adminUsers
-                  .map(
-                    (u) => `
+            .map(
+              (u) => `
                   <label class="px-3 py-2 flex items-center justify-between hover:bg-gray-50 cursor-pointer transition text-[12px]">
                     <div class="flex items-center gap-2 min-w-0">
                       <input type="checkbox" onchange="toggleSingleUser('${u.id}', this.checked)" ${selectedUserIds.has(u.id) ? "checked" : ""}
@@ -1704,8 +1718,8 @@
                     <span class="text-[11px] text-[#636363] flex-shrink-0 font-mono">${u.phone}</span>
                   </label>
                 `,
-                  )
-                  .join("")}
+            )
+            .join("")}
               </div>
             </div>
 
@@ -1720,21 +1734,19 @@
                   <span class="text-[#171717] font-semibold truncate">팀명 / 팀원 (${teamUsersSelectedCount}/${teamUsers.length}명)</span>
                 </div>
                 <!-- Nút 펼치기/접기 tất cả team nằm bên phải -->
-                ${
-                  roleFilters["학부모"]
-                    ? `
+                ${roleFilters["학부모"]
+            ? `
                   <button type="button" onclick="toggleExpandAllTeams()"
                     class="px-2 py-0.5 text-[11px] font-semibold bg-white hover:bg-blue-50 text-[#003B8F] border border-[#CBD5E1] hover:border-[#003B8F] rounded-[5px] transition flex items-center gap-1 cursor-pointer shadow-2xs flex-shrink-0">
-                    <span>${
-                      displayedTeamsForExpand.length > 0 &&
-                      displayedTeamsForExpand.every((t) => expandedTeamIds.has(t.id))
-                        ? "전체 접기 ▲"
-                        : "전체 펼치기 ▼"
-                    }</span>
+                    <span>${displayedTeamsForExpand.length > 0 &&
+              displayedTeamsForExpand.every((t) => expandedTeamIds.has(t.id))
+              ? "전체 접기 ▲"
+              : "전체 펼치기 ▼"
+            }</span>
                   </button>
                 `
-                    : ""
-                }
+            : ""
+          }
               </div>
               <div class="flex-1 overflow-y-auto custom-scroll divide-y divide-[#E9E9E9]">
                 ${renderTeamTreeHTML(teamUsers, false)}
@@ -1763,8 +1775,8 @@
             </div>
             <div class="flex-1 overflow-y-auto divide-y divide-[#F3F3F3] custom-scroll">
               ${adminUsers
-                .map(
-                  (u) => `
+            .map(
+              (u) => `
                 <label class="px-3 py-2 flex items-center justify-between hover:bg-gray-50 cursor-pointer transition text-[12.5px]">
                   <div class="flex items-center gap-2.5 min-w-0">
                     <input type="checkbox" onchange="toggleSingleUser('${u.id}', this.checked)" ${selectedUserIds.has(u.id) ? "checked" : ""}
@@ -1777,8 +1789,8 @@
                   <span class="text-[12px] text-[#636363] flex-shrink-0 font-mono">${u.phone}</span>
                 </label>
               `,
-                )
-                .join("")}
+            )
+            .join("")}
             </div>
           </div>
         `;
@@ -1801,21 +1813,19 @@
                 </div>
               </div>
               <!-- Nút 펼치기/접기 tất cả team nằm bên phải -->
-              ${
-                roleFilters["학부모"]
-                  ? `
+              ${roleFilters["학부모"]
+            ? `
                 <button type="button" onclick="toggleExpandAllTeams()"
                   class="px-2.5 py-1 text-[11.5px] font-semibold bg-white hover:bg-blue-50 text-[#003B8F] border border-[#CBD5E1] hover:border-[#003B8F] rounded-[5px] transition flex items-center gap-1 cursor-pointer shadow-2xs flex-shrink-0">
-                  <span>${
-                    displayedTeamsForExpand.length > 0 &&
-                    displayedTeamsForExpand.every((t) => expandedTeamIds.has(t.id))
-                      ? "전체 접기 ▲"
-                      : "전체 펼치기 ▼"
-                  }</span>
+                  <span>${displayedTeamsForExpand.length > 0 &&
+              displayedTeamsForExpand.every((t) => expandedTeamIds.has(t.id))
+              ? "전체 접기 ▲"
+              : "전체 펼치기 ▼"
+            }</span>
                 </button>
               `
-                  : ""
-              }
+            : ""
+          }
             </div>
             <div class="flex-1 overflow-y-auto custom-scroll divide-y divide-[#E9E9E9]">
               ${renderTeamTreeHTML(teamUsers, true)}
