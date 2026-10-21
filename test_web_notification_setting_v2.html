@@ -444,7 +444,7 @@
 
   <!-- ================= FLOATING MODAL DRAWER ================= -->
   <div id="drawerPanel"
-    class="fixed right-4 top-4 bottom-4 w-[1260px] max-w-[calc(100vw-32px)] bg-white z-50 rounded-[14px] shadow-2xl overflow-hidden flex flex-col translate-x-[calc(100%+32px)] transition-transform duration-300 ease-in-out border border-[#E9E9E9]">
+    class="fixed right-4 top-4 bottom-4 w-[1420px] max-w-[calc(100vw-32px)] bg-white z-50 rounded-[14px] shadow-2xl overflow-hidden flex flex-col translate-x-[calc(100%+32px)] transition-transform duration-300 ease-in-out border border-[#E9E9E9]">
     <!-- Header Drawer -->
     <div class="px-4 py-2.5 bg-[#E9E9E9] flex items-center justify-between flex-shrink-0">
       <span id="drawerTitle" class="text-[16px] font-semibold text-[#171717]">새 공지 추가</span>
@@ -460,7 +460,7 @@
       <input type="hidden" id="editNoticeId" />
 
       <!-- ===== CỘT TRÁI: THÔNG TIN CÔNG BÁO (유형, 제목, 내용) ===== -->
-      <div class="w-[36%] flex flex-col gap-3 overflow-hidden pr-1">
+      <div class="w-[32%] flex flex-col gap-3 overflow-hidden pr-1">
         <!-- Section Header: text 공지 사항 정보 bên trái, toggle switch bên phải -->
         <div class="flex items-center justify-between flex-shrink-0 h-[26px]">
           <div class="flex items-center gap-1.5 text-[#003B8F]">
@@ -532,7 +532,7 @@
       </div>
 
       <!-- ===== CỘT PHẢI: GỒM 게시 대상 설정 (GỘP TAB + TREE MENU) ===== -->
-      <div class="w-[64%] flex flex-col gap-3 overflow-hidden pl-1">
+      <div class="w-[68%] flex flex-col gap-3 overflow-hidden pl-1">
         <!-- Section Header -->
         <div class="flex items-center justify-between flex-shrink-0 h-[26px]">
           <div class="flex items-center gap-1.5 text-[#003B8F]">
@@ -1741,7 +1741,7 @@
         wrapper.innerHTML = `
           <div class="flex-1 flex min-h-0 divide-x divide-[#E9E9E9]">
             <!-- CỘT TRÁI: DANH SÁCH 관리자 & 공장 (Chung cột trái, có mũi tên đóng/mở) -->
-            <div class="w-[30%] flex flex-col min-h-0 bg-white">
+            <div class="w-[36%] flex flex-col min-h-0 bg-white">
               <div class="flex-1 overflow-y-auto divide-y divide-[#E9E9E9] custom-scroll">
                 <!-- KHỐI 1: 관리자 (chỉ hiển thị khi có tick 관리자) -->
                 ${
@@ -1850,7 +1850,7 @@
             </div>
 
             <!-- CỘT PHẢI: DANH SÁCH 감독자 / 학부모 THEO TREE MENU -->
-            <div class="w-[70%] flex flex-col min-h-0 bg-white">
+            <div class="w-[64%] flex flex-col min-h-0 bg-white">
               <!-- Header cột Tree Menu: Bên trái giữ nguyên 팀명/팀원, bên phải bổ sung nút 펼치기/접기 tất cả team -->
               <div class="px-3 py-2 bg-[#F8FAFC] border-b border-[#E9E9E9] flex items-center justify-between text-[11.5px] font-semibold text-[#636363] flex-shrink-0">
                 <div class="flex items-center gap-1.5 min-w-0">
@@ -1914,12 +1914,9 @@
                       .map(
                         (u) => `
                       <label class="px-3 py-2 flex items-center justify-between hover:bg-gray-50 cursor-pointer transition text-[12.5px]">
-                        <div class="flex items-center gap-2.5 min-w-0">
+                        <div class="flex items-center gap-2 min-w-0">
                           <input type="checkbox" onchange="toggleSingleUser('${u.id}', this.checked)" ${selectedUserIds.has(u.id) ? "checked" : ""}
                             class="w-4 h-4 rounded text-[#1F5FBA] focus:ring-0 cursor-pointer flex-shrink-0" />
-                          <span class="w-6 h-6 rounded-full bg-[#E9E9E9] text-[#171717] font-bold text-[10px] flex items-center justify-center flex-shrink-0">
-                            ${u.name.charAt(0)}
-                          </span>
                           <span class="font-medium text-[#171717] truncate">${u.name}</span>
                         </div>
                         <span class="text-[12px] text-[#636363] flex-shrink-0 font-mono">${u.phone}</span>
@@ -1944,12 +1941,9 @@
                       .map(
                         (u) => `
                       <label class="px-3 py-2 flex items-center justify-between hover:bg-gray-50 cursor-pointer transition text-[12.5px]">
-                        <div class="flex items-center gap-2.5 min-w-0">
+                        <div class="flex items-center gap-2 min-w-0">
                           <input type="checkbox" onchange="toggleSingleUser('${u.id}', this.checked)" ${selectedUserIds.has(u.id) ? "checked" : ""}
                             class="w-4 h-4 rounded text-[#1F5FBA] focus:ring-0 cursor-pointer flex-shrink-0" />
-                          <span class="w-6 h-6 rounded-full bg-amber-100 text-amber-800 font-bold text-[10px] flex items-center justify-center flex-shrink-0">
-                            🏭
-                          </span>
                           <span class="font-medium text-[#171717] truncate">${u.name}</span>
                         </div>
                         <span class="text-[12px] text-[#636363] flex-shrink-0 font-mono">${u.phone}</span>
