@@ -1327,8 +1327,21 @@
     // ===== 7. UNIFIED TARGET SELECTION (GỘP TAB + TREE MENU) =====
     // Mặc định không xổ ra thành viên trong team — chỉ hiển thị tên team.
     let expandedTeamIds = new Set();
-    let isAdminsExpanded = true;
-    let isFactoriesExpanded = true;
+    let isAdminsExpanded = false;
+    let isFactoriesExpanded = false;
+
+    function updateNonTeamExpandState() {
+      if (roleFilters["관리자"] && roleFilters["공장"]) {
+        isAdminsExpanded = false;
+        isFactoriesExpanded = false;
+      } else if (roleFilters["관리자"] && !roleFilters["공장"]) {
+        isAdminsExpanded = true;
+        isFactoriesExpanded = false;
+      } else if (!roleFilters["관리자"] && roleFilters["공장"]) {
+        isFactoriesExpanded = true;
+        isAdminsExpanded = false;
+      }
+    }
 
     function toggleAdminsExpand() {
       isAdminsExpanded = !isAdminsExpanded;
@@ -1337,6 +1350,13 @@
 
     function toggleFactoriesExpand() {
       isFactoriesExpanded = !isFactoriesExpanded;
+      renderUnifiedUserChecklist();
+    }
+
+    function toggleExpandAllNonTeam() {
+      const allExpanded = isAdminsExpanded && isFactoriesExpanded;
+      isAdminsExpanded = !allExpanded;
+      isFactoriesExpanded = !allExpanded;
       renderUnifiedUserChecklist();
     }
 
@@ -1364,6 +1384,7 @@
 
       if (isChecked) {
         masterUsers.forEach((u) => selectedUserIds.add(u.id));
+        updateNonTeamExpandState();
       } else {
         selectedUserIds.clear();
       }
@@ -1391,6 +1412,13 @@
         }
       });
 
+      // Tự động đóng/mở checklist 관리자 và 공장 theo quy tắc:
+      // - Nếu cả 2 cùng được tick -> mặc định đóng cả 2
+      // - Nếu chỉ 1 trong 2 được tick -> mặc định mở nhóm đó
+      if (role === "관리자" || role === "공장") {
+        updateNonTeamExpandState();
+      }
+
       renderUnifiedUserChecklist();
       updateTargetSelectedSummary();
     }
@@ -1407,6 +1435,8 @@
         teamsList.forEach((t) => expandedTeamIds.add(t.id));
         isAdminsExpanded = true;
         isFactoriesExpanded = true;
+      } else {
+        updateNonTeamExpandState();
       }
       renderUnifiedUserChecklist();
     }
@@ -1507,7 +1537,9 @@
 
     function toggleAllTeamUsers(isChecked) {
       const filtered = getFilteredUsers();
-      const teamUsers = filtered.filter((u) => u.role !== "관리자");
+      const teamUsers = filtered.filter(
+        (u) => u.role !== "관리자" && u.role !== "공장",
+      );
       teamUsers.forEach((u) => {
         if (isChecked) {
           selectedUserIds.add(u.id);
@@ -1775,7 +1807,7 @@
                         ${adminUsers
                           .map(
                             (u) => `
-                          <label class="px-3 py-2 flex items-center justify-between hover:bg-gray-50 cursor-pointer transition text-[12px]">
+                          <label class="pl-8 pr-3 py-2 flex items-center justify-between hover:bg-gray-50 cursor-pointer transition text-[12px]">
                             <div class="flex items-center gap-2 min-w-0">
                               <input type="checkbox" onchange="toggleSingleUser('${u.id}', this.checked)" ${selectedUserIds.has(u.id) ? "checked" : ""}
                                 class="w-3.5 h-3.5 rounded text-[#1F5FBA] focus:ring-0 cursor-pointer flex-shrink-0" />
@@ -1827,7 +1859,7 @@
                         ${factoryUsers
                           .map(
                             (u) => `
-                          <label class="px-3 py-2 flex items-center justify-between hover:bg-gray-50 cursor-pointer transition text-[12px]">
+                          <label class="pl-8 pr-3 py-2 flex items-center justify-between hover:bg-gray-50 cursor-pointer transition text-[12px]">
                             <div class="flex items-center gap-2 min-w-0">
                               <input type="checkbox" onchange="toggleSingleUser('${u.id}', this.checked)" ${selectedUserIds.has(u.id) ? "checked" : ""}
                                 class="w-3.5 h-3.5 rounded text-[#1F5FBA] focus:ring-0 cursor-pointer flex-shrink-0" />
@@ -1884,47 +1916,57 @@
         `;
       }
       // TRƯỜNG HỢP 2: CHỈ TICK VAI TRÒ NGOÀI ĐỘI (관리자 및/또는 공장 - Không tick vai trò đội)
-      // -> Hiển thị danh sách 관리자 & 공장 toàn phần (full-width), không chia cột
+      // -> Hiển thị danh sách 관리자 & 공장 toàn phần (full-width), không chia cột, có mũi tên đóng/mở
       else if (hasNonTeamRoles && !hasTeamRoles) {
         wrapper.innerHTML = `
           <div class="flex-1 flex flex-col min-h-0 bg-white">
-            <div class="px-3 py-2 bg-[#F8FAFC] border-b border-[#E9E9E9] flex items-center justify-between text-[12px] flex-shrink-0">
-              <label class="flex items-center gap-2 cursor-pointer font-semibold text-[#171717]">
-                <input type="checkbox" id="checkAllNonTeamUsers" onchange="selectAllFilteredUsers(this.checked)"
-                  ${nonTeamUsers.length > 0 && nonTeamSelectedCount === nonTeamUsers.length ? "checked" : ""}
-                  class="w-4 h-4 rounded text-[#1F5FBA] focus:ring-0 cursor-pointer" />
-                <span>관리자 / 공장 전체 선택 (${nonTeamSelectedCount}/${nonTeamUsers.length}명)</span>
-              </label>
-              <div class="flex items-center gap-2">
-                <button type="button" onclick="selectAllFilteredUsers(true)" class="text-[11.5px] text-[#003B8F] hover:underline cursor-pointer font-medium">전체 선택</button>
-                <span class="text-gray-300">|</span>
-                <button type="button" onclick="unselectAllFilteredUsers()" class="text-[11.5px] text-gray-500 hover:text-red-600 hover:underline cursor-pointer font-medium">전체 해제</button>
-              </div>
-            </div>
             <div class="flex-1 overflow-y-auto divide-y divide-[#E9E9E9] custom-scroll">
               ${
                 hasAdmin && adminUsers.length > 0
                   ? `
                 <div class="flex flex-col">
-                  <div class="px-3 py-1.5 bg-[#F1F5F9] border-b border-[#E9E9E9] flex items-center justify-between text-[12px] font-semibold text-[#1E293B]">
-                    <span>관리자 (${adminSelectedCount}/${adminUsers.length}명)</span>
+                  <!-- Header nhóm 관리자: Click vào dòng hoặc mũi tên để đóng/mở -->
+                  <div onclick="toggleAdminsExpand()"
+                    class="px-3 py-2 bg-[#F8FAFC] hover:bg-gray-100/90 border-b border-[#E9E9E9] flex items-center justify-between text-[12px] flex-shrink-0 sticky top-0 z-10 cursor-pointer select-none transition">
+                    <div class="flex items-center gap-1.5 min-w-0 flex-1">
+                      <input type="checkbox" id="checkAllAdminsFull" onchange="toggleAllAdmins(this.checked)" onclick="event.stopPropagation()"
+                        ${allAdminsSelected ? "checked" : ""}
+                        class="w-3.5 h-3.5 rounded text-[#1F5FBA] focus:ring-0 cursor-pointer flex-shrink-0" />
+                      <button type="button" onclick="event.stopPropagation(); toggleAdminsExpand()"
+                        class="w-4 h-4 flex items-center justify-center text-gray-500 hover:text-gray-800 p-0 rounded transition flex-shrink-0"
+                        title="${isAdminsExpanded ? "접기" : "펼치기"}">
+                        <svg class="w-3.5 h-3.5 transform transition-transform duration-200 ${isAdminsExpanded ? "rotate-90" : ""}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                        </svg>
+                      </button>
+                      <span class="font-semibold text-[#171717] truncate hover:text-[#003B8F]">관리자</span>
+                    </div>
+                    <span class="text-[11px] text-[#003B8F] font-semibold bg-[#DCEBFB] px-1.5 py-0.2 rounded flex-shrink-0 ml-1">
+                      ${adminSelectedCount}/${adminUsers.length}명
+                    </span>
                   </div>
-                  <div class="divide-y divide-[#F3F3F3]">
-                    ${adminUsers
-                      .map(
-                        (u) => `
-                      <label class="px-3 py-2 flex items-center justify-between hover:bg-gray-50 cursor-pointer transition text-[12.5px]">
-                        <div class="flex items-center gap-2 min-w-0">
-                          <input type="checkbox" onchange="toggleSingleUser('${u.id}', this.checked)" ${selectedUserIds.has(u.id) ? "checked" : ""}
-                            class="w-4 h-4 rounded text-[#1F5FBA] focus:ring-0 cursor-pointer flex-shrink-0" />
-                          <span class="font-medium text-[#171717] truncate">${u.name}</span>
-                        </div>
-                        <span class="text-[12px] text-[#636363] flex-shrink-0 font-mono">${u.phone}</span>
-                      </label>
-                    `,
-                      )
-                      .join("")}
-                  </div>
+                  ${
+                    isAdminsExpanded
+                      ? `
+                    <div class="divide-y divide-[#F3F3F3]">
+                      ${adminUsers
+                        .map(
+                          (u) => `
+                        <label class="pl-8 pr-3 py-2 flex items-center justify-between hover:bg-gray-50 cursor-pointer transition text-[12.5px]">
+                          <div class="flex items-center gap-2 min-w-0">
+                            <input type="checkbox" onchange="toggleSingleUser('${u.id}', this.checked)" ${selectedUserIds.has(u.id) ? "checked" : ""}
+                              class="w-3.5 h-3.5 rounded text-[#1F5FBA] focus:ring-0 cursor-pointer flex-shrink-0" />
+                            <span class="font-medium text-[#171717] truncate">${u.name}</span>
+                          </div>
+                          <span class="text-[12px] text-[#636363] flex-shrink-0 font-mono">${u.phone}</span>
+                        </label>
+                      `,
+                        )
+                        .join("")}
+                    </div>
+                  `
+                      : ""
+                  }
                 </div>
               `
                   : ""
@@ -1933,25 +1975,48 @@
                 hasFactory && factoryUsers.length > 0
                   ? `
                 <div class="flex flex-col">
-                  <div class="px-3 py-1.5 bg-[#F1F5F9] border-b border-[#E9E9E9] flex items-center justify-between text-[12px] font-semibold text-[#1E293B]">
-                    <span>공장 (${factorySelectedCount}/${factoryUsers.length}명)</span>
+                  <!-- Header nhóm 공장: Click vào dòng hoặc mũi tên để đóng/mở -->
+                  <div onclick="toggleFactoriesExpand()"
+                    class="px-3 py-2 bg-[#F8FAFC] hover:bg-gray-100/90 border-b border-[#E9E9E9] flex items-center justify-between text-[12px] flex-shrink-0 sticky top-0 z-10 cursor-pointer select-none transition">
+                    <div class="flex items-center gap-1.5 min-w-0 flex-1">
+                      <input type="checkbox" id="checkAllFactoriesFull" onchange="toggleAllFactories(this.checked)" onclick="event.stopPropagation()"
+                        ${allFactoriesSelected ? "checked" : ""}
+                        class="w-3.5 h-3.5 rounded text-[#1F5FBA] focus:ring-0 cursor-pointer flex-shrink-0" />
+                      <button type="button" onclick="event.stopPropagation(); toggleFactoriesExpand()"
+                        class="w-4 h-4 flex items-center justify-center text-gray-500 hover:text-gray-800 p-0 rounded transition flex-shrink-0"
+                        title="${isFactoriesExpanded ? "접기" : "펼치기"}">
+                        <svg class="w-3.5 h-3.5 transform transition-transform duration-200 ${isFactoriesExpanded ? "rotate-90" : ""}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                        </svg>
+                      </button>
+                      <span class="font-semibold text-[#171717] truncate hover:text-[#003B8F]">공장</span>
+                    </div>
+                    <span class="text-[11px] text-[#003B8F] font-semibold bg-[#DCEBFB] px-1.5 py-0.2 rounded flex-shrink-0 ml-1">
+                      ${factorySelectedCount}/${factoryUsers.length}명
+                    </span>
                   </div>
-                  <div class="divide-y divide-[#F3F3F3]">
-                    ${factoryUsers
-                      .map(
-                        (u) => `
-                      <label class="px-3 py-2 flex items-center justify-between hover:bg-gray-50 cursor-pointer transition text-[12.5px]">
-                        <div class="flex items-center gap-2 min-w-0">
-                          <input type="checkbox" onchange="toggleSingleUser('${u.id}', this.checked)" ${selectedUserIds.has(u.id) ? "checked" : ""}
-                            class="w-4 h-4 rounded text-[#1F5FBA] focus:ring-0 cursor-pointer flex-shrink-0" />
-                          <span class="font-medium text-[#171717] truncate">${u.name}</span>
-                        </div>
-                        <span class="text-[12px] text-[#636363] flex-shrink-0 font-mono">${u.phone}</span>
-                      </label>
-                    `,
-                      )
-                      .join("")}
-                  </div>
+                  ${
+                    isFactoriesExpanded
+                      ? `
+                    <div class="divide-y divide-[#F3F3F3]">
+                      ${factoryUsers
+                        .map(
+                          (u) => `
+                        <label class="pl-8 pr-3 py-2 flex items-center justify-between hover:bg-gray-50 cursor-pointer transition text-[12.5px]">
+                          <div class="flex items-center gap-2 min-w-0">
+                            <input type="checkbox" onchange="toggleSingleUser('${u.id}', this.checked)" ${selectedUserIds.has(u.id) ? "checked" : ""}
+                              class="w-3.5 h-3.5 rounded text-[#1F5FBA] focus:ring-0 cursor-pointer flex-shrink-0" />
+                            <span class="font-medium text-[#171717] truncate">${u.name}</span>
+                          </div>
+                          <span class="text-[12px] text-[#636363] flex-shrink-0 font-mono">${u.phone}</span>
+                        </label>
+                      `,
+                        )
+                        .join("")}
+                    </div>
+                  `
+                      : ""
+                  }
                 </div>
               `
                   : ""
@@ -2120,6 +2185,7 @@
           roleFilters["감독자"] &&
           roleFilters["학부모"];
 
+        updateNonTeamExpandState();
         renderUnifiedUserChecklist();
         updateTargetSelectedSummary();
         updateNotifPreview();
@@ -2143,6 +2209,7 @@
 
         selectedUserIds = new Set(masterUsers.map((u) => u.id));
 
+        updateNonTeamExpandState();
         renderUnifiedUserChecklist();
         updateTargetSelectedSummary();
         updateNotifPreview();
