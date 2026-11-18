@@ -1,237 +1,2461 @@
 <!DOCTYPE html>
-<html lang="ko">
-
+<html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SportsRAB CMS - Wireframe Portal</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Pretendard / Noto Sans KR -->
-    <link rel="stylesheet" as="style" crossorigin
-        href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
-    <style>
-        body {
-            font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Tiếng Hàn Sơ Cấp - Bài 1 (Hangeul)</title>
+  
+  <!-- Google Fonts: Noto Sans KR & Be Vietnam Pro -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Socket.io Client (Tùy chọn kết nối real-time mạng LAN) -->
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            kbg: '#FAF9F6',         /* Nền ngà ấm */
+            kcard: '#FFFFFF',       /* Thẻ trắng */
+            kborder: '#CBD5E1',     /* Viền xám mảnh */
+            ktext: '#1E293B',       /* Chữ xám than đậm */
+            knavy: '#1D4ED8',       /* Xanh navy */
+            knavydark: '#1E3A5F',   /* Xanh navy đậm */
+            korange: '#C2410C',     /* Cam đất */
+            ksoftblue: '#EFF6FF',
+            ksoftorange: '#FFF7ED',
+          },
+          fontFamily: {
+            sans: ['"Be Vietnam Pro"', 'sans-serif'],
+            kr: ['"Noto Sans KR"', '"Be Vietnam Pro"', 'sans-serif'],
+          },
+          boxShadow: {
+            card: '0 2px 8px -2px rgba(0, 0, 0, 0.05), 0 1px 4px -1px rgba(0, 0, 0, 0.03)',
+            elevated: '0 10px 25px -5px rgba(30, 41, 59, 0.08), 0 8px 10px -6px rgba(30, 41, 59, 0.05)',
+            box3d: '0 6px 0 #CBD5E1, 0 10px 15px rgba(0,0,0,0.06)',
+            box3dActive: '0 2px 0 #CBD5E1, 0 4px 6px rgba(0,0,0,0.06)',
+          }
         }
-    </style>
+      }
+    }
+  </script>
+
+  <style>
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-6px); }
+      40%, 80% { transform: translateX(6px); }
+    }
+    .shake-anim {
+      animation: shake 0.35s ease-in-out;
+    }
+
+    @keyframes popBounce {
+      0% { transform: scale(0.85); opacity: 0; }
+      70% { transform: scale(1.03); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .pop-anim {
+      animation: popBounce 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #certificate-printable, #certificate-printable * {
+        visibility: visible;
+      }
+      #certificate-printable {
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 90% !important;
+        max-width: 650px !important;
+        margin: 0 !important;
+        box-shadow: none !important;
+        border: 2px solid #1E293B !important;
+      }
+    }
+
+    canvas {
+      touch-action: none;
+    }
+  </style>
 </head>
+<body class="bg-kbg text-ktext font-sans min-h-screen flex flex-col antialiased selection:bg-knavy/10 selection:text-knavy">
 
-<body class="bg-slate-50 min-h-screen p-8 text-slate-800">
-
-    <div class="max-w-5xl mx-auto space-y-6">
-
-        <!-- Header Portal -->
-        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex justify-between items-center">
-            <div>
-                <div class="flex items-center gap-3">
-                    <span class="w-3 h-3 rounded-full bg-[#1F5FBA]"></span>
-                    <h1 class="text-2xl font-bold text-slate-900">SportsRAB CMS Wireframe Portal</h1>
-                </div>
-                <p class="text-sm text-slate-500 mt-1">Danh sách các màn hình Prototype & Wireframe tương tác (Cập nhật
-                    liên tục)</p>
+  <!-- ==================== HEADER & TOP NAVIGATION ==================== -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-kborder shadow-sm">
+    <div class="max-w-6xl mx-auto px-3 sm:px-6">
+      <div class="flex items-center justify-between h-16">
+        <!-- Logo & Brand -->
+        <div class="flex items-center space-x-2.5">
+          <div class="w-10 h-10 rounded-xl bg-knavydark flex items-center justify-center text-white font-kr font-black text-xl shadow-inner border border-knavy/20">
+            한
+          </div>
+          <div>
+            <div class="flex items-center space-x-1.5">
+              <span class="font-bold text-base sm:text-lg tracking-tight text-ktext">Hangeul Sơ Cấp</span>
+              <span class="inline-block text-[11px] font-semibold uppercase px-2 py-0.5 rounded-full bg-blue-100 text-knavy">Bài 1</span>
             </div>
-            <div class="text-right text-xs text-slate-400">
-                <span>Dự án: <strong>SportsRAB Admin</strong></span><br>
-                <span>BA: <strong>Nguyễn Châu Phúc Huy</strong></span>
-            </div>
+            <p class="text-xs text-slate-500 hidden sm:block">Giáo Trình Tiếng Hàn Sơ Cấp - Bài Giảng Tương Tác</p>
+          </div>
         </div>
 
-        <!-- Bảng danh sách màn hình -->
-        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-            <div class="p-4 bg-slate-100/70 border-b border-slate-200 flex justify-between items-center">
-                <h2 class="font-semibold text-slate-700">Màn hình Wireframe</h2>
-                <span class="text-xs font-medium px-2.5 py-1 rounded-full bg-blue-50 text-[#1F5FBA]">Tất cả màn
-                    hình</span>
-            </div>
-
-            <table class="w-full text-left text-sm">
-                <thead class="bg-slate-50 text-slate-500 uppercase text-xs border-b border-slate-200">
-                    <tr>
-                        <th class="py-3 px-4">STT</th>
-                        <th class="py-3 px-4">Tên màn hình (Tiếng Hàn)</th>
-                        <th class="py-3 px-4">Mô tả / Tên Tiếng Việt</th>
-                        <th class="py-3 px-4">Trạng thái</th>
-                        <th class="py-3 px-4 text-right">Thao tác</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-100">
-
-                    <tr class="hover:bg-slate-50/80 transition">
-                        <td class="py-3.5 px-4 font-mono text-slate-400">01</td>
-                        <td class="py-3.5 px-4 font-semibold text-slate-900">공지 사항 설정 (Web Notification Setting) ver 1</td>
-                        <td class="py-3.5 px-4 text-slate-600">Cài đặt setting hệ thống trên web</td>
-                        <td class="py-3.5 px-4">
-                            <span
-                                class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200">
-                                <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Đang Review
-                            </span>
-                        </td>
-                        <td class="py-3.5 px-4 text-right">
-                            <a href="./test_web_notification_setting_v2.html" target="_blank"
-                                class="inline-flex items-center gap-1 px-3 py-1.5 bg-[#1F5FBA] text-white rounded-lg text-xs font-medium hover:bg-blue-700 transition">
-                                Mở Xem ↗
-                            </a>
-                        </td>
-                    </tr>
-
-                    <tr class="hover:bg-slate-50/80 transition">
-                        <td class="py-3.5 px-4 font-mono text-slate-400">01</td>
-                        <td class="py-3.5 px-4 font-semibold text-slate-900">공지 사항 설정 (Web Notification Setting) ver 3</td>
-                        <td class="py-3.5 px-4 text-slate-600">Cài đặt setting hệ thống trên web</td>
-                        <td class="py-3.5 px-4">
-                            <span
-                                class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200">
-                                <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Đang Review
-                            </span>
-                        </td>
-                        <td class="py-3.5 px-4 text-right">
-                            <a href="./test_web_notification_setting_v2_option3.html" target="_blank"
-                                class="inline-flex items-center gap-1 px-3 py-1.5 bg-[#1F5FBA] text-white rounded-lg text-xs font-medium hover:bg-blue-700 transition">
-                                Mở Xem ↗
-                            </a>
-                        </td>
-                    </tr>
-
-                    <tr class="hover:bg-slate-50/80 transition">
-                        <td class="py-3.5 px-4 font-mono text-slate-400">01</td>
-                        <td class="py-3.5 px-4 font-semibold text-slate-900">공지 사항 설정 (App Notification)</td>
-                        <td class="py-3.5 px-4 text-slate-600">Cài đặt setting hệ thống trên app</td>
-                        <td class="py-3.5 px-4">
-                            <span
-                                class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200">
-                                <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Đang Review
-                            </span>
-                        </td>
-                        <td class="py-3.5 px-4 text-right">
-                            <a href="./app_notification_setting.html" target="_blank"
-                                class="inline-flex items-center gap-1 px-3 py-1.5 bg-[#1F5FBA] text-white rounded-lg text-xs font-medium hover:bg-blue-700 transition">
-                                Mở Xem ↗
-                            </a>
-                        </td>
-                    </tr>
-
-                    <tr class="hover:bg-slate-50/80 transition">
-                        <td class="py-3.5 px-4 font-mono text-slate-400">01</td>
-                        <td class="py-3.5 px-4 font-semibold text-slate-900">주문 확인 대기 (Order Awaiting)</td>
-                        <td class="py-3.5 px-4 text-slate-600">Danh sách đơn chờ xác nhận đặt hàng</td>
-                        <td class="py-3.5 px-4">
-                            <span
-                                class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200">
-                                <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Đang Review
-                            </span>
-                        </td>
-                        <td class="py-3.5 px-4 text-right">
-                            <a href="./don_cho_xac_nhan_admin.html" target="_blank"
-                                class="inline-flex items-center gap-1 px-3 py-1.5 bg-[#1F5FBA] text-white rounded-lg text-xs font-medium hover:bg-blue-700 transition">
-                                Mở Xem ↗
-                            </a>
-                        </td>
-                    </tr>
-
-                    <tr class="hover:bg-slate-50/80 transition">
-                        <td class="py-3.5 px-4 font-mono text-slate-400">01</td>
-                        <td class="py-3.5 px-4 font-semibold text-slate-900">마이페이지 (My Page Detail)</td>
-                        <td class="py-3.5 px-4 text-slate-600">Chi tiết My Page</td>
-                        <td class="py-3.5 px-4">
-                            <span
-                                class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200">
-                                <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Đang Review
-                            </span>
-                        </td>
-                        <td class="py-3.5 px-4 text-right">
-                            <a href="./chi_tiet_my_page_xuong.html" target="_blank"
-                                class="inline-flex items-center gap-1 px-3 py-1.5 bg-[#1F5FBA] text-white rounded-lg text-xs font-medium hover:bg-blue-700 transition">
-                                Mở Xem ↗
-                            </a>
-                        </td>
-                    </tr>
-
-                    <tr class="hover:bg-slate-50/80 transition">
-                        <td class="py-3.5 px-4 font-mono text-slate-400">01</td>
-                        <td class="py-3.5 px-4 font-semibold text-slate-900">마이페이지 수정 (Edit My Page)</td>
-                        <td class="py-3.5 px-4 text-slate-600">Chỉnh sửa My Page</td>
-                        <td class="py-3.5 px-4">
-                            <span
-                                class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200">
-                                <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Đang Review
-                            </span>
-                        </td>
-                        <td class="py-3.5 px-4 text-right">
-                            <a href="./sua_my_page_xuong.html" target="_blank"
-                                class="inline-flex items-center gap-1 px-3 py-1.5 bg-[#1F5FBA] text-white rounded-lg text-xs font-medium hover:bg-blue-700 transition">
-                                Mở Xem ↗
-                            </a>
-                        </td>
-                    </tr>
-
-                    <tr class="hover:bg-slate-50/80 transition">
-                        <td class="py-3.5 px-4 font-mono text-slate-400">01</td>
-                        <td class="py-3.5 px-4 font-semibold text-slate-900">알림 시스템 (System Notification)</td>
-                        <td class="py-3.5 px-4 text-slate-600">Hiển thị thông báo trong APP</td>
-                        <td class="py-3.5 px-4">
-                            <span
-                                class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200">
-                                <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Đang Review
-                            </span>
-                        </td>
-                        <td class="py-3.5 px-4 text-right">
-                            <a href="./app_notification_setting.html" target="_blank"
-                                class="inline-flex items-center gap-1 px-3 py-1.5 bg-[#1F5FBA] text-white rounded-lg text-xs font-medium hover:bg-blue-700 transition">
-                                Mở Xem ↗
-                            </a>
-                        </td>
-                    </tr>
-
-                    <!-- Màn hình 3 -->
-                    <tr class="hover:bg-slate-50/80 transition">
-                        <td class="py-3.5 px-4 font-mono text-slate-400">03</td>
-                        <td class="py-3.5 px-4 font-semibold text-slate-900">배너 관리</td>
-                        <td class="py-3.5 px-4 text-slate-600">Quản lý Banner quảng cáo</td>
-                        <td class="py-3.5 px-4">
-                            <span
-                                class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-600 border border-slate-200">
-                                <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span> Mới tạo
-                            </span>
-                        </td>
-                        <td class="py-3.5 px-4 text-right">
-                            <a href="./banner-management.html" target="_blank"
-                                class="inline-flex items-center gap-1 px-3 py-1.5 bg-[#1F5FBA] text-white rounded-lg text-xs font-medium hover:bg-blue-700 transition">
-                                Mở Xem ↗
-                            </a>
-                        </td>
-                    </tr>
-
-                    <!-- Màn hình 1 -->
-                    <tr class="hover:bg-slate-50/80 transition">
-                        <td class="py-3.5 px-4 font-mono text-slate-400">01</td>
-                        <td class="py-3.5 px-4 font-semibold text-slate-900">회원가입 (Leader)</td>
-                        <td class="py-3.5 px-4 text-slate-600">Trang đăng ký tài khoản Leader</td>
-                        <td class="py-3.5 px-4">
-                            <span
-                                class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
-                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Đã chốt
-                            </span>
-                        </td>
-                        <td class="py-3.5 px-4 text-right">
-                            <a href="./sign_up_leader.html" target="_blank"
-                                class="inline-flex items-center gap-1 px-3 py-1.5 bg-[#1F5FBA] text-white rounded-lg text-xs font-medium hover:bg-blue-700 transition">
-                                Mở Xem ↗
-                            </a>
-                        </td>
-                    </tr>
-
-                </tbody>
-            </table>
+        <!-- Role Badge & Mode Info -->
+        <div class="flex items-center gap-2">
+          <span id="header-role-badge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-xs text-slate-700 font-semibold">
+            <span>👨‍🏫</span> <span id="header-role-text">Chế độ lớp học</span>
+          </span>
         </div>
+      </div>
 
-        <!-- Footer -->
-        <div class="text-center text-xs text-slate-400 pt-4">
-            SportsRAB CMS Prototyping System • Powered by GitHub Pages
-        </div>
-
+      <!-- 4 Main Tabs Nav (Responsive: Vừa khít màn hình điện thoại 360px-412px không cần cuộn ngang) -->
+      <nav class="flex border-t border-slate-100 -mb-px overflow-x-auto no-scrollbar py-1">
+        <button id="nav-tab-1" onclick="switchMainTab(1)" class="tab-btn flex-1 min-w-[78px] sm:min-w-[110px] py-2 sm:py-2.5 px-1 sm:px-3 text-center border-b-2 border-knavy text-knavy font-bold text-[11px] sm:text-sm flex items-center justify-center gap-1 transition-all">
+          <span class="text-sm sm:text-base">📋</span>
+          <span class="truncate">Bảng Âm<span class="hidden sm:inline"> & Viết</span></span>
+        </button>
+        <button id="nav-tab-2" onclick="switchMainTab(2)" class="tab-btn flex-1 min-w-[78px] sm:min-w-[110px] py-2 sm:py-2.5 px-1 sm:px-3 text-center border-b-2 border-transparent text-slate-500 hover:text-ktext font-medium text-[11px] sm:text-sm flex items-center justify-center gap-1 transition-all">
+          <span class="text-sm sm:text-base">✍️</span>
+          <span class="truncate">Tập Viết<span class="hidden sm:inline"> Từ Vựng</span></span>
+        </button>
+        <button id="nav-tab-3" onclick="switchMainTab(3)" class="tab-btn flex-1 min-w-[78px] sm:min-w-[110px] py-2 sm:py-2.5 px-1 sm:px-3 text-center border-b-2 border-transparent text-slate-500 hover:text-ktext font-medium text-[11px] sm:text-sm flex items-center justify-center gap-1 transition-all">
+          <span class="text-sm sm:text-base">🎯</span>
+          <span class="truncate">Bingo 2 Đội</span>
+        </button>
+        <button id="nav-tab-4" onclick="switchMainTab(4)" class="tab-btn flex-1 min-w-[78px] sm:min-w-[110px] py-2 sm:py-2.5 px-1 sm:px-3 text-center border-b-2 border-transparent text-slate-500 hover:text-ktext font-medium text-[11px] sm:text-sm flex items-center justify-center gap-1 transition-all">
+          <span class="text-sm sm:text-base">⚡</span>
+          <span class="truncate">Phản Xạ<span class="hidden sm:inline"> Hangeul</span></span>
+        </button>
+      </nav>
     </div>
+  </header>
 
+  <!-- ==================== MAIN CONTENT CONTAINER ==================== -->
+  <main class="flex-grow max-w-6xl w-full mx-auto px-3 sm:px-6 py-4 sm:py-6">
+
+    <!-- ========================================================
+         TAB 1: BẢNG ÂM HANGEUL & TẬP VIẾT TỪNG CHỮ (KHỚP 100% SLIDE PPT)
+    ======================================================== -->
+    <section id="tab-content-1" class="space-y-6">
+      <div class="bg-blue-50/70 border border-blue-200 rounded-2xl p-3 sm:p-4 text-xs sm:text-sm text-knavy flex items-center justify-between gap-3 shadow-xs">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">💡</span>
+          <span><strong>Thứ tự chuẩn theo bài giảng Slide:</strong> Bấm vào bất kỳ nguyên âm hoặc phụ âm nào để <strong>bật ô kẻ ly tập viết ngay lập tức</strong>!</span>
+        </div>
+      </div>
+
+      <!-- NHÓM 1: 6 NGUYÊN ÂM CƠ BẢN ĐẦU TIÊN (SLIDE 3) -->
+      <div class="bg-white rounded-2xl border border-kborder p-4 sm:p-6 shadow-card space-y-3">
+        <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-5 bg-korange rounded-full"></span>
+            <h2 class="text-base sm:text-lg font-bold text-ktext">1. 6 Nguyên Âm Cơ Bản Đầu Tiên (Slide 3)</h2>
+          </div>
+          <span class="text-xs text-slate-500">ㅏ, ㅓ, ㅗ, ㅜ, ㅡ, ㅣ</span>
+        </div>
+        <div id="grid-vowels-basic-6" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2.5 sm:gap-3.5"></div>
+      </div>
+
+      <!-- NHÓM 2: 4 NGUYÊN ÂM MỞ RỘNG (SLIDE 4) -->
+      <div class="bg-white rounded-2xl border border-kborder p-4 sm:p-6 shadow-card space-y-3">
+        <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-5 bg-korange rounded-full"></span>
+            <h2 class="text-base sm:text-lg font-bold text-ktext">2. 4 Nguyên Âm Mở Rộng (+ âm "i/y") (Slide 4)</h2>
+          </div>
+          <span class="text-xs text-slate-500">ㅑ, ㅕ, ㅛ, ㅠ</span>
+        </div>
+        <div id="grid-vowels-expanded-4" class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3.5"></div>
+      </div>
+
+      <!-- NHÓM 3: PHỤ ÂM CƠ BẢN – NHÓM 1 (SLIDE 5) -->
+      <div class="bg-white rounded-2xl border border-kborder p-4 sm:p-6 shadow-card space-y-3">
+        <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-5 bg-knavy rounded-full"></span>
+            <h2 class="text-base sm:text-lg font-bold text-ktext">3. Phụ Âm Cơ Bản – Nhóm 1 (Slide 5)</h2>
+          </div>
+          <span class="text-xs text-slate-500">ㄱ, ㄴ, ㄷ, ㄹ, ㅁ</span>
+        </div>
+        <div id="grid-consonants-group1" class="grid grid-cols-2 sm:grid-cols-5 gap-2.5 sm:gap-3.5"></div>
+      </div>
+
+      <!-- NHÓM 4: PHỤ ÂM CƠ BẢN – NHÓM 2 (SLIDE 6) -->
+      <div class="bg-white rounded-2xl border border-kborder p-4 sm:p-6 shadow-card space-y-3">
+        <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-5 bg-knavy rounded-full"></span>
+            <h2 class="text-base sm:text-lg font-bold text-ktext">4. Phụ Âm Cơ Bản – Nhóm 2 (Slide 6)</h2>
+          </div>
+          <span class="text-xs text-slate-500">ㅂ, ㅅ, ㅇ, ㅈ, ㅎ</span>
+        </div>
+        <div id="grid-consonants-group2" class="grid grid-cols-2 sm:grid-cols-5 gap-2.5 sm:gap-3.5"></div>
+      </div>
+
+      <!-- NHÓM 5: 4 PHỤ ÂM BẬT HƠI (SLIDE 7) -->
+      <div class="bg-white rounded-2xl border border-kborder p-4 sm:p-6 shadow-card space-y-3">
+        <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-5 bg-amber-600 rounded-full"></span>
+            <h2 class="text-base sm:text-lg font-bold text-amber-800">5. 4 Phụ Âm Bật Hơi (격음) (Slide 7)</h2>
+          </div>
+          <span class="text-xs text-amber-700 bg-amber-50 px-2 py-0.5 rounded font-medium">Bật luồng hơi mạnh từ họng</span>
+        </div>
+        <div id="grid-consonants-aspirated" class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3.5"></div>
+      </div>
+
+      <!-- NHÓM 6: 5 PHỤ ÂM CĂNG (SLIDE 7-8) -->
+      <div class="bg-white rounded-2xl border border-kborder p-4 sm:p-6 shadow-card space-y-3">
+        <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-5 bg-rose-600 rounded-full"></span>
+            <h2 class="text-base sm:text-lg font-bold text-rose-800">6. 5 Phụ Âm Căng (농음) (Slide 7-8)</h2>
+          </div>
+          <span class="text-xs text-rose-700 bg-rose-50 px-2 py-0.5 rounded font-medium">Gồng cơ họng, đanh tiếng, không thoát hơi</span>
+        </div>
+        <div id="grid-consonants-tense" class="grid grid-cols-2 sm:grid-cols-5 gap-2.5 sm:gap-3.5"></div>
+      </div>
+
+    </section>
+
+
+    <!-- ========================================================
+         TAB 2: BẢNG TẬP VIẾT TỪ VỰNG HANGEUL (ĐẦY ĐỦ 6 TỪ SLIDE PPT)
+    ======================================================== -->
+    <section id="tab-content-2" class="hidden space-y-6">
+      <div class="bg-amber-50 border border-amber-200 rounded-2xl p-3.5 sm:p-4 text-center text-amber-900 shadow-sm flex flex-col sm:flex-row items-center justify-center gap-2">
+        <span class="text-xl">📐</span>
+        <span class="font-bold text-sm sm:text-base">Quy Tắc Vàng Bút Thuận Hangeul:</span>
+        <div class="flex items-center gap-3 text-xs sm:text-sm font-semibold">
+          <span class="bg-white px-2.5 py-1 rounded-lg border border-amber-300">1. Từ trên xuống dưới ↓</span>
+          <span class="bg-white px-2.5 py-1 rounded-lg border border-amber-300">2. Từ trái sang phải →</span>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl border border-kborder p-4 sm:p-6 shadow-card space-y-5">
+        <div class="space-y-3 pb-3 border-b border-slate-100">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <h2 class="text-base sm:text-lg font-bold text-ktext flex items-center gap-2">
+                <span>Luyện Viết 6 Từ Vựng Trọng Tâm</span>
+                <span class="text-xs bg-blue-100 text-knavy px-2 py-0.5 rounded-full font-semibold">Bài 1</span>
+              </h2>
+              <p class="text-xs text-slate-500">Chạm hoặc dùng chuột để tập tô chữ chuẩn nét trên ô kẻ ly tiếng Hàn</p>
+            </div>
+            
+            <button onclick="toggleCustomWordPanel()" class="self-start sm:self-auto px-3 py-1.5 rounded-xl border border-blue-200 bg-blue-50 hover:bg-blue-100 text-knavy font-bold text-xs flex items-center gap-1.5 transition-colors">
+              <span>✍️</span>
+              <span>Tự Nhập Từ Mới / Chia Sẻ Link</span>
+            </button>
+          </div>
+
+          <div id="vocab-pills-container" class="flex flex-wrap items-center gap-1.5 bg-slate-100 p-1.5 rounded-xl"></div>
+        </div>
+
+        <!-- Custom Word Panel -->
+        <div id="custom-word-panel" class="hidden bg-slate-50 border-2 border-dashed border-blue-300 rounded-2xl p-4 sm:p-5 space-y-4">
+          <div class="flex items-start justify-between">
+            <div class="space-y-0.5">
+              <h4 class="font-bold text-sm text-knavy flex items-center gap-1.5">
+                <span>👨‍🏫</span> Công Cụ Giáo Viên: Tự Tạo Từ Luyện Viết & Gửi Cho Học Viên
+              </h4>
+              <p class="text-xs text-slate-600">
+                Nhập bất kỳ từ tiếng Hàn nào (1, 2, 3 hoặc nhiều âm tiết). Hệ thống tự tạo ô kẻ ly và chữ mờ để học viên luyện viết trên điện thoại!
+              </p>
+            </div>
+            <button onclick="toggleCustomWordPanel()" class="text-slate-400 hover:text-slate-700 text-sm font-bold p-1">✕</button>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-12 gap-3">
+            <div class="sm:col-span-5">
+              <label class="block text-[11px] font-bold text-slate-600 mb-1">Từ tiếng Hàn (Hangeul):</label>
+              <input type="text" id="custom-word-input" placeholder="Ví dụ: 바나나, 친구, 학교..." class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:border-knavy focus:ring-1 focus:ring-knavy text-sm font-kr font-bold outline-none bg-white">
+            </div>
+            <div class="sm:col-span-4">
+              <label class="block text-[11px] font-bold text-slate-600 mb-1">Phiên âm / Nghĩa tiếng Việt:</label>
+              <input type="text" id="custom-meaning-input" placeholder="Ví dụ: [ba-na-na] • Quả chuối 🍌" class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:border-knavy focus:ring-1 focus:ring-knavy text-sm outline-none bg-white">
+            </div>
+            <div class="sm:col-span-3 flex items-end">
+              <button onclick="handleCreateCustomWord()" class="w-full py-2 px-3 rounded-xl bg-knavy hover:bg-blue-800 text-white font-bold text-xs shadow-sm transition-all flex items-center justify-center gap-1">
+                <span>➕ Tạo Ô Viết</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="pt-2 border-t border-slate-200 flex flex-wrap items-center justify-between gap-2">
+            <span class="text-xs text-slate-500">
+              💡 Bấm để lấy link bài tập gửi cho cả lớp mở trên điện thoại:
+            </span>
+            <button onclick="shareCurrentWordLink()" class="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm transition-all">
+              <span>🔗</span>
+              <span>Sao Chép Link / Hiện Mã QR Học Viên</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Active Word Info Card -->
+        <div class="bg-slate-50 rounded-xl p-3 sm:p-4 border border-slate-200 flex flex-wrap items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <span id="active-word-icon" class="text-3xl">🎤</span>
+            <div>
+              <div class="flex items-baseline gap-2">
+                <span id="active-word-korean" class="font-kr font-black text-2xl sm:text-3xl text-knavy">가수</span>
+                <span id="active-word-roman" class="text-xs sm:text-sm font-bold text-slate-600">[ka-su]</span>
+                <span id="active-word-meaning" class="text-xs sm:text-sm text-korange font-semibold">• Ca sĩ</span>
+              </div>
+              <p id="active-word-breakdown" class="text-xs text-slate-500 mt-0.5">Cấu tạo: 가 (ㄱ + ㅏ) • 수 (ㅅ + ㅜ)</p>
+            </div>
+          </div>
+
+          <button onclick="speakActivePracticeWord()" class="px-4 py-2 bg-white hover:bg-slate-100 border border-slate-300 rounded-xl text-xs sm:text-sm font-bold text-knavy flex items-center gap-1.5 shadow-sm active:scale-95 transition-all">
+            <svg class="w-4 h-4 text-knavy" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path></svg>
+            Nghe Phát Âm Từ
+          </button>
+        </div>
+
+        <div id="writing-canvases-container" class="flex flex-wrap items-center justify-center gap-4 sm:gap-6 py-2 min-h-[260px]"></div>
+
+        <!-- Controls -->
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 sm:p-4 flex flex-wrap items-center justify-between gap-4">
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-semibold text-slate-600 mr-1">Mực:</span>
+            <button onclick="setInkColor('#1E293B')" id="ink-btn-black" title="Đen mực" class="w-7 h-7 rounded-full bg-[#1E293B] ring-2 ring-offset-2 ring-slate-800 transition-transform scale-110"></button>
+            <button onclick="setInkColor('#1D4ED8')" id="ink-btn-navy" title="Xanh navy" class="w-7 h-7 rounded-full bg-[#1D4ED8] ring-0 ring-offset-2 ring-blue-600 transition-transform"></button>
+            <button onclick="setInkColor('#C2410C')" id="ink-btn-orange" title="Cam đất" class="w-7 h-7 rounded-full bg-[#C2410C] ring-0 ring-offset-2 ring-orange-600 transition-transform"></button>
+          </div>
+
+          <div class="flex items-center gap-1.5">
+            <span class="text-xs font-semibold text-slate-600 mr-1">Nét:</span>
+            <button onclick="setPenWidth(4)" id="stroke-btn-thin" class="px-2.5 py-1 text-xs rounded-lg border border-slate-300 font-medium hover:bg-white transition-colors">Mảnh</button>
+            <button onclick="setPenWidth(8)" id="stroke-btn-med" class="px-2.5 py-1 text-xs rounded-lg border border-knavy bg-white text-knavy font-bold shadow-xs transition-colors">Vừa</button>
+            <button onclick="setPenWidth(14)" id="stroke-btn-thick" class="px-2.5 py-1 text-xs rounded-lg border border-slate-300 font-medium hover:bg-white transition-colors">Đậm</button>
+          </div>
+
+          <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+            <button onclick="toggleWatermarkGuide()" id="toggle-guide-btn" class="px-3 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-xs font-medium text-slate-700 transition-all flex items-center gap-1">
+              <span>👁️</span> Ẩn/Hiện Chữ Mẫu
+            </button>
+            <button onclick="clearAllCanvases()" class="px-3.5 py-1.5 rounded-lg border border-rose-200 bg-rose-50 hover:bg-rose-100 text-xs font-bold text-rose-700 transition-all flex items-center gap-1">
+              <span>🧹</span> Xóa Viết Lại
+            </button>
+            <button onclick="nextPracticeWord()" class="px-4 py-1.5 rounded-lg bg-knavy hover:bg-blue-800 text-white text-xs font-bold transition-all flex items-center gap-1 shadow-sm">
+              Từ Tiếp Theo →
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ========================================================
+         TAB 3: TRÒ CHƠI BINGO ĐỐI KHÁNG 2 ĐỘI (CHẾ ĐỘ MÁY CHIẾU LỚP HỌC)
+         - Giáo viên chủ động đọc âm tiết từ bảng (không cần random)
+         - 2 Đội giơ tay giành quyền (Phím A: Đội Xanh, Phím L: Đội Cam)
+         - Chọn đúng: Chiếm ô + 1 điểm. Chọn sai: Mất lượt, quyền chuyển sang đội kia
+         - Cả 2 đội sai: Ô bị bỏ qua ✖️
+         - 9 âm tiết mới hoàn toàn, không trùng Slide 14: 바, 사, 도, 소, 차, 마, 키, 포, 하
+    ======================================================== -->
+    <section id="tab-content-3" class="space-y-6">
+      
+      <!-- Top Match Banner & Classroom Scoreboard -->
+      <div class="bg-white rounded-3xl border border-kborder p-4 sm:p-6 shadow-card space-y-4">
+        
+        <!-- Header row -->
+        <div class="flex flex-col sm:flex-row items-center justify-between pb-3 border-b border-slate-100 gap-3">
+          <div class="space-y-0.5 text-center sm:text-left">
+            <div class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-blue-50 text-knavy text-xs font-bold">
+              🎯 Game Ôn Tập: Bingo Đối Kháng Lớp Học
+            </div>
+            <h2 class="text-xl sm:text-2xl font-black text-ktext">Bingo Đối Kháng 2 Đội (3x3)</h2>
+            <p class="text-xs text-slate-500">Giáo viên phát âm • Học sinh giơ tay chọn ô • Nối 3 ô thẳng hàng để BINGO!</p>
+          </div>
+
+          <!-- Live Scoreboard -->
+          <div class="flex items-center gap-3">
+            <div id="score-card-blue" class="px-4 py-2 rounded-2xl bg-blue-50 border-2 border-knavy text-center transition-all">
+              <span class="block text-[11px] font-bold text-knavy uppercase tracking-wider">Đội Xanh 🔵</span>
+              <span id="bingo-score-blue" class="text-xl sm:text-2xl font-black text-knavy">0 ô</span>
+            </div>
+            <span class="font-black text-slate-300 text-lg">VS</span>
+            <div id="score-card-orange" class="px-4 py-2 rounded-2xl bg-orange-50 border-2 border-korange text-center transition-all">
+              <span class="block text-[11px] font-bold text-korange uppercase tracking-wider">Đội Cam 🟠</span>
+              <span id="bingo-score-orange" class="text-xl sm:text-2xl font-black text-korange">0 ô</span>
+            </div>
+            <div class="px-3 py-2 rounded-xl bg-slate-100 border border-slate-300 text-center text-slate-500">
+              <span class="block text-[10px] font-bold uppercase">Bị bỏ</span>
+              <span id="bingo-score-discarded" class="text-base font-bold">0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Classroom Status Console (Máy chiếu chiếu rõ ràng) -->
+        <div id="bingo-status-box" class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white rounded-2xl p-4 sm:p-5 shadow-md space-y-2">
+          <div class="flex items-center justify-between text-xs text-amber-300 font-semibold border-b border-white/10 pb-2">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span id="bingo-round-label" class="tracking-wide uppercase">LƯỢT CHƠI MỚI</span>
+            </div>
+            <span class="text-slate-400 text-[11px] hidden sm:inline">Phím tắt: A (Đội Xanh) • L (Đội Cam) • 1 (Đúng) • 2 (Sai)</span>
+          </div>
+
+          <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-1">
+            <div class="space-y-1 text-center sm:text-left">
+              <h3 id="bingo-announcement" class="text-base sm:text-lg font-bold text-amber-200">
+                👨‍🏫 Giáo viên phát âm 1 từ bất kỳ trên bảng • Học sinh giơ tay giành quyền!
+              </h3>
+              <p id="bingo-subtext" class="text-xs text-slate-300">
+                Bấm nút hoặc phím tắt bên dưới để trao quyền trả lời cho đội giơ tay nhanh nhất.
+              </p>
+            </div>
+
+            <!-- Current Active Team Pill -->
+            <div id="bingo-active-team-pill" class="hidden px-4 py-2 rounded-xl text-center font-bold text-sm bg-white/10 border border-white/20 whitespace-nowrap">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- 2 BIG HAND-RAISE / BUZZER BUTTONS FOR TEACHER OR STUDENTS -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+          <!-- Blue Hand Button -->
+          <button id="buzzer-blue-btn" onclick="grantTurnToTeam('blue')" class="p-3.5 sm:p-4 rounded-2xl bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold text-sm sm:text-base shadow-md shadow-blue-500/20 border-2 border-blue-400 flex items-center justify-between transition-all">
+            <div class="flex items-center gap-3">
+              <span class="text-2xl">🙋‍♂️</span>
+              <div class="text-left">
+                <div class="font-black text-base sm:text-lg leading-tight">ĐỘI XANH GIƠ TAY</div>
+                <div class="text-[11px] font-normal text-blue-200">Bấm nút hoặc gõ phím A</div>
+              </div>
+            </div>
+            <span class="text-xs bg-white/20 px-2.5 py-1 rounded-lg">Chọn Đội Xanh</span>
+          </button>
+
+          <!-- Orange Hand Button -->
+          <button id="buzzer-orange-btn" onclick="grantTurnToTeam('orange')" class="p-3.5 sm:p-4 rounded-2xl bg-orange-600 hover:bg-orange-700 active:scale-95 text-white font-bold text-sm sm:text-base shadow-md shadow-orange-500/20 border-2 border-orange-400 flex items-center justify-between transition-all">
+            <div class="flex items-center gap-3">
+              <span class="text-2xl">🙋‍♀️</span>
+              <div class="text-left">
+                <div class="font-black text-base sm:text-lg leading-tight">ĐỘI CAM GIƠ TAY</div>
+                <div class="text-[11px] font-normal text-orange-200">Bấm nút hoặc gõ phím L</div>
+              </div>
+            </div>
+            <span class="text-xs bg-white/20 px-2.5 py-1 rounded-lg">Chọn Đội Cam</span>
+          </button>
+        </div>
+
+        <!-- CELL SELECTION CONFIRMATION BAR (Hiện lên khi học sinh bấm chọn ô) -->
+        <div id="bingo-confirm-bar" class="hidden bg-amber-50 border-2 border-amber-400 rounded-2xl p-4 shadow-md transition-all">
+          <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div class="flex items-center gap-3 text-center sm:text-left">
+              <div class="w-12 h-12 rounded-xl bg-amber-500 text-white flex items-center justify-center font-kr font-black text-2xl shadow-sm">
+                <span id="confirm-cell-syl">바</span>
+              </div>
+              <div>
+                <div class="text-xs font-semibold text-amber-900 uppercase tracking-wider">
+                  <span id="confirm-team-name">Đội Xanh</span> đang chọn ô: <strong id="confirm-cell-coords" class="text-amber-800">Hàng 1 - Cột 1</strong>
+                </div>
+                <div class="text-sm font-bold text-amber-950">
+                  Học sinh đọc/chọn có đúng với từ giáo viên vừa phát âm không?
+                </div>
+              </div>
+            </div>
+
+            <!-- Action buttons: Right / Wrong -->
+            <div class="flex items-center gap-2 w-full sm:w-auto">
+              <button onclick="confirmBingoCellResult(true)" class="flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-sm shadow-sm flex items-center justify-center gap-1.5 active:scale-95 transition-all">
+                <span>✅</span> ĐÚNG (Phím 1)
+              </button>
+              <button onclick="confirmBingoCellResult(false)" class="flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-black text-sm shadow-sm flex items-center justify-center gap-1.5 active:scale-95 transition-all">
+                <span>❌</span> SAI (Phím 2)
+              </button>
+              <button onclick="cancelBingoCellSelection()" class="px-3 py-2.5 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-semibold transition-all">
+                Hủy
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3x3 BINGO BATTLE BOARD (Slide 14 Layout Style - New 9 Syllables) -->
+        <div class="pt-2 max-w-xl mx-auto space-y-2">
+          <!-- Column Headers -->
+          <div class="grid grid-cols-4 gap-2 text-center text-xs font-bold text-slate-600">
+            <div class="p-1 rounded-lg bg-slate-200/60 font-black text-knavy flex items-center justify-center">BINGO</div>
+            <div class="p-1 rounded-lg bg-blue-50 text-knavy border border-blue-200 font-bold">CỘT 1</div>
+            <div class="p-1 rounded-lg bg-blue-50 text-knavy border border-blue-200 font-bold">CỘT 2</div>
+            <div class="p-1 rounded-lg bg-blue-50 text-knavy border border-blue-200 font-bold">CỘT 3</div>
+          </div>
+
+          <!-- Board Rows with Row Labels -->
+          <div id="bingo-grid-board" class="space-y-2.5 p-3 bg-slate-100 rounded-3xl border border-slate-300">
+            <!-- Rendered by JS: 3 rows x (1 row header + 3 cells) -->
+          </div>
+        </div>
+
+        <!-- Bottom Controls & Rules -->
+        <div class="pt-3 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-slate-100">
+          <div class="text-xs text-slate-500 max-w-xl">
+            <strong>Quy tắc lớp học:</strong> 
+            1. Giáo viên phát âm 1 từ. 
+            2. Đội giơ tay nhanh nhất được chọn ô. 
+            3. Nếu đúng → Chiếm ô + 1 điểm. Nếu sai → Mất lượt, quyền trả lời chuyển sang đội kia. 
+            4. Nếu cả 2 đội đều sai → Ô bị bỏ ✖️. Nối được 3 ô thẳng hàng trước sẽ thắng BINGO!
+          </div>
+          
+          <div class="flex items-center gap-2">
+            <button onclick="discardSelectedOrCurrentCell()" class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs transition-colors flex items-center gap-1.5 whitespace-nowrap">
+              <span>✖️</span> Bỏ Qua Ô Này
+            </button>
+            <button onclick="resetBingoGame()" class="px-4 py-2 rounded-xl bg-knavydark hover:bg-slate-800 text-white font-bold text-xs transition-colors flex items-center gap-1.5 whitespace-nowrap shadow-sm">
+              <span>🔄</span> Ván Mới
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ========================================================
+         TAB 4: THỬ THÁCH PHẢN XẠ & SỬA BÀI CHI TIẾT
+         - Tên tiếng Hàn hiển thị đầy đủ Họ + Tên (Không bị mất họ)
+         - Bỏ 2 nút Sao chép & In/Lưu thẻ
+         - Chỉ cấp 합격 nếu đúng từ 4/6 câu trở lên!
+    ======================================================== -->
+    <section id="tab-content-4" class="hidden space-y-6">
+      
+      <!-- SCREEN 1: START SCREEN (Nhập tên & Giới thiệu) -->
+      <div id="quiz-start-screen" class="max-w-xl mx-auto bg-white rounded-3xl border border-kborder p-6 sm:p-8 shadow-card text-center space-y-6">
+        <div class="w-16 h-16 bg-blue-50 text-knavy rounded-2xl mx-auto flex items-center justify-center text-3xl shadow-inner border border-blue-100">
+          ⚡
+        </div>
+        
+        <div class="space-y-2">
+          <span class="text-xs font-bold tracking-widest text-korange uppercase bg-orange-50 px-3 py-1 rounded-full border border-orange-200">
+            스피드 퀴즈 • Thử Thách Phản Xạ Hangeul
+          </span>
+          <h2 class="text-2xl sm:text-3xl font-black text-ktext">Thử Thách Phản Xạ Bài 1</h2>
+          <p class="text-xs sm:text-sm text-slate-600 max-w-md mx-auto">
+            Không giới hạn thời gian! Tự do làm bài và cùng giáo viên chữa bài qua 3 chặng: <strong>Nghe âm</strong> → <strong>Ghép từ vựng</strong> → <strong>Phản xạ chào hỏi</strong>.
+          </p>
+        </div>
+
+        <div class="text-left bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3">
+          <label for="learner-fullname-input" class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+            👤 Nhập Họ và tên tiếng Việt của bạn:
+          </label>
+          <input 
+            type="text" 
+            id="learner-fullname-input" 
+            placeholder="Nhập họ và tên của bạn" 
+            value=""
+            class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-knavy focus:ring-2 focus:ring-blue-100 text-sm font-semibold text-ktext outline-none transition-all shadow-inner bg-white"
+          />
+          <p class="text-[11px] text-slate-500">
+            * Cần đạt từ <strong>4/6 câu trở lên</strong> để nhận chứng nhận hoàn thành <strong>합격 (ĐẠT)</strong>.
+          </p>
+        </div>
+
+        <button onclick="startQuiz()" class="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-blue-700 to-indigo-700 hover:from-blue-800 hover:to-indigo-800 text-white font-black text-base shadow-lg shadow-blue-500/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+          <span>Bắt Đầu Làm Bài Thử Thách</span>
+          <span>🚀</span>
+        </button>
+      </div>
+
+      <!-- SCREEN 2: ACTIVE QUIZ SCREEN (Không đếm ngược áp lực) -->
+      <div id="quiz-active-screen" class="hidden max-w-2xl mx-auto space-y-4">
+        <div class="bg-white rounded-2xl border border-kborder p-4 shadow-sm space-y-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span id="quiz-stage-badge" class="text-xs font-bold px-2.5 py-1 rounded-full bg-blue-50 text-knavy border border-blue-200">
+                Chặng 1: Nghe âm chọn chữ
+              </span>
+              <span id="quiz-step-counter" class="text-xs text-slate-500 font-semibold">
+                Câu 1 / 6
+              </span>
+            </div>
+            <div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 text-slate-700 border border-slate-200 text-xs font-medium">
+              <span>⏳</span> <span>Làm bài thong thả & Sửa bài</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Question Container Card -->
+        <div id="quiz-question-card" class="bg-white rounded-3xl border border-kborder p-5 sm:p-7 shadow-card space-y-5">
+          <div id="quiz-dynamic-body"></div>
+          <div id="quiz-feedback-box" class="hidden p-3.5 rounded-2xl border text-xs sm:text-sm font-medium transition-all"></div>
+          <div id="quiz-next-container" class="hidden flex justify-end">
+            <button onclick="advanceToNextQuestion()" class="px-5 py-2.5 rounded-xl bg-knavy text-white text-xs sm:text-sm font-bold shadow-md hover:bg-blue-800 transition-all flex items-center gap-2">
+              <span>Câu tiếp theo</span>
+              <span>→</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCREEN 3: RESULT SCREEN & KOREAN NAME ID CERTIFICATE & BẢNG SỬA BÀI -->
+      <div id="quiz-result-screen" class="hidden max-w-3xl mx-auto space-y-6">
+        
+        <div class="text-center space-y-2">
+          <div id="quiz-result-icon" class="inline-flex items-center justify-center w-14 h-14 bg-amber-100 text-amber-700 rounded-2xl text-3xl pop-anim">
+            🎉
+          </div>
+          <h2 id="quiz-result-title" class="text-2xl sm:text-3xl font-black text-ktext">Kết Quả Đánh Giá Hangeul</h2>
+          <p id="quiz-summary-line" class="text-xs sm:text-sm text-slate-600 max-w-md mx-auto">
+            Xem kết quả chứng nhận và đối chiếu bảng chữa bài chi tiết bên dưới.
+          </p>
+        </div>
+
+        <!-- THE HANGEUL ID CERTIFICATE CARD -->
+        <div id="certificate-printable" class="bg-gradient-to-b from-slate-50 to-white rounded-3xl border-2 border-slate-300 p-6 sm:p-8 shadow-elevated relative overflow-hidden space-y-6">
+          <div id="cert-watermark" class="absolute -right-6 -bottom-6 w-36 h-36 border-4 border-rose-200/40 rounded-full flex items-center justify-center pointer-events-none rotate-12">
+            <span id="cert-watermark-text" class="font-kr font-black text-6xl text-rose-300/30">합격</span>
+          </div>
+
+          <!-- Certificate Header -->
+          <div class="flex items-center justify-between border-b-2 border-slate-200 pb-4">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-knavy text-white flex items-center justify-center font-kr font-bold text-lg">
+                한
+              </div>
+              <div>
+                <h4 id="cert-card-title" class="font-extrabold text-sm sm:text-base text-ktext tracking-wide uppercase">Chứng Nhận Nhập Môn Hangeul</h4>
+                <p id="cert-card-subtitle" class="text-[11px] text-slate-500 font-kr">한글 첫걸음 수료증 • Khóa Học Tiếng Hàn Sơ Cấp</p>
+              </div>
+            </div>
+
+            <!-- Stamp container: Thay đổi theo ĐẠT (합격) hoặc CHƯA ĐẠT (재도전) -->
+            <div id="cert-stamp-box">
+              <div class="w-14 h-14 border-2 border-rose-600 text-rose-600 rounded-lg flex flex-col items-center justify-center font-kr text-[11px] font-black leading-tight rotate-3 shadow-xs">
+                <span>한국어</span>
+                <span>합격</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Student Name Section: HIỂN THỊ ĐẦY ĐỦ CẢ HỌ VÀ TÊN TIẾNG HÀN -->
+          <div class="bg-white rounded-2xl p-5 border border-slate-200 text-center space-y-3 shadow-xs">
+            <span class="text-[11px] font-bold tracking-wider text-slate-500 uppercase">Họ và tên tiếng Hàn đầy đủ của bạn (한국어 성명):</span>
+            
+            <div class="flex items-center justify-center gap-3">
+              <h3 id="cert-korean-name" class="font-kr font-black text-2xl sm:text-3xl text-knavy tracking-wide">
+                응우옌 쩌우 푹 후이
+              </h3>
+              <button onclick="speakKoreanName()" title="Nghe phát âm toàn bộ Họ và Tên tiếng Hàn" class="p-2 rounded-full bg-blue-50 hover:bg-blue-100 text-knavy transition-all active:scale-90">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path></svg>
+              </button>
+            </div>
+
+            <p id="cert-vietnamese-name" class="text-sm font-semibold text-slate-700">
+              Học viên: <span class="text-ktext font-bold">Nguyễn Châu Phúc Huy</span>
+            </p>
+            <p id="cert-transliteration-note" class="text-xs text-slate-500 italic">
+              Phiên âm chuẩn: [Nguyễn Châu Phúc Huy]
+            </p>
+          </div>
+
+          <!-- Stats Grid -->
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 sm:gap-3 text-center">
+            <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+              <span class="block text-[11px] text-slate-500 font-medium">Điểm số</span>
+              <span id="cert-score" class="font-black text-base sm:text-lg text-emerald-600">4 / 6</span>
+            </div>
+            <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+              <span class="block text-[11px] text-slate-500 font-medium">Tỷ lệ đúng</span>
+              <span id="cert-accuracy" class="font-black text-base sm:text-lg text-knavy">67%</span>
+            </div>
+            <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 col-span-2 sm:col-span-1">
+              <span class="block text-[11px] text-slate-500 font-medium">Đánh giá</span>
+              <span id="cert-rank" class="font-black text-base sm:text-lg text-blue-600">ĐẠT (합격) 🌟</span>
+            </div>
+          </div>
+
+          <!-- Card Footer -->
+          <div class="flex items-center justify-between text-[11px] text-slate-400 pt-2 border-t border-slate-100">
+            <span>Ngày cấp: <span id="cert-date">19/11/2026</span></span>
+            <span>Mã định danh: <span id="cert-code">HG-2026-982</span></span>
+          </div>
+        </div>
+
+        <!-- Action Button: CHỈ GIỮ LẠI NÚT LÀM LẠI BÀI -->
+        <div class="flex justify-center">
+          <button onclick="startQuiz()" class="py-3 px-8 rounded-xl bg-knavy hover:bg-blue-800 text-white font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2">
+            <span>🔄</span> Làm Lại Bài Thử Thách
+          </button>
+        </div>
+
+        <!-- BẢNG LỊCH SỬ BÀI LÀM & CHỮA BÀI CHI TIẾT -->
+        <div class="bg-white rounded-3xl border border-kborder p-5 sm:p-7 shadow-card space-y-4">
+          <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
+            <div>
+              <h3 class="font-black text-lg text-ktext flex items-center gap-2">
+                <span>📝</span> Lịch Sử Bài Làm & Chữa Bài Chi Tiết
+              </h3>
+              <p class="text-xs text-slate-500">Đối chiếu câu trả lời của bạn và xem ghi chú phát âm của giáo viên để khắc phục:</p>
+            </div>
+          </div>
+          <div id="quiz-review-history-container" class="space-y-3.5"></div>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="mt-auto border-t border-slate-200 bg-white py-4 text-center text-xs text-slate-500">
+    <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+      <div class="flex items-center gap-1.5 font-medium">
+        <span>🇰🇷 Ứng Dụng Giảng Dạy Tiếng Hàn Sơ Cấp (Bài 1)</span>
+      </div>
+      <div class="text-[11px] text-slate-400">
+        HTML5 • Tailwind CSS • Web Audio API • Real-Time Broadcast Ready
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========================================================
+       MODAL: TẬP VIẾT CHỮ CÁI ĐƠN (TAB 1 BẢNG ÂM)
+  ======================================================== -->
+  <div id="single-letter-write-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden transition-opacity duration-200">
+    <div class="bg-white rounded-3xl border border-kborder max-w-sm sm:max-w-md w-full p-4 sm:p-6 shadow-2xl relative pop-anim text-center space-y-4 max-h-[92vh] overflow-y-auto">
+      <button onclick="closeSingleLetterWriteModal()" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition-colors">
+        ✕
+      </button>
+
+      <div class="space-y-1">
+        <span id="letter-modal-group" class="text-xs font-bold px-3 py-1 rounded-full bg-blue-50 text-knavy border border-blue-200">
+          Tập viết chữ cái
+        </span>
+        <div class="flex items-center justify-center gap-3 pt-2">
+          <span id="letter-modal-char" class="font-kr font-black text-6xl text-knavy leading-none">ㅏ</span>
+          <span id="letter-modal-sound" class="text-2xl font-black text-korange">[a]</span>
+        </div>
+      </div>
+
+      <div class="flex justify-center py-1">
+        <div class="relative bg-white rounded-2xl border-2 border-slate-300 shadow-sm overflow-hidden select-none" style="width: 240px; height: 240px;">
+          <svg class="absolute inset-0 w-full h-full pointer-events-none opacity-40" viewBox="0 0 240 240">
+            <line x1="120" y1="0" x2="120" y2="240" stroke="#94A3B8" stroke-width="1.5" stroke-dasharray="4,4" />
+            <line x1="0" y1="120" x2="240" y2="120" stroke="#94A3B8" stroke-width="1.5" stroke-dasharray="4,4" />
+            <rect x="24" y="24" width="192" height="192" fill="none" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="2,2" />
+          </svg>
+          <div id="letter-guide-watermark" class="absolute inset-0 flex items-center justify-center font-kr font-black text-slate-200 text-[130px] pointer-events-none select-none transition-opacity duration-200">
+            ㅏ
+          </div>
+          <canvas id="letter-paint-canvas" width="240" height="240" class="absolute inset-0 w-full h-full cursor-crosshair"></canvas>
+        </div>
+      </div>
+
+      <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200 space-y-3">
+        <div class="flex items-center justify-between text-xs font-semibold text-slate-600">
+          <div class="flex items-center gap-1.5">
+            <span>Mực:</span>
+            <button onclick="setSingleLetterInk('#1E293B')" id="single-ink-black" class="w-6 h-6 rounded-full bg-[#1E293B] ring-2 ring-offset-1 ring-slate-800"></button>
+            <button onclick="setSingleLetterInk('#1D4ED8')" id="single-ink-navy" class="w-6 h-6 rounded-full bg-[#1D4ED8] ring-0 ring-offset-1 ring-blue-600"></button>
+            <button onclick="setSingleLetterInk('#C2410C')" id="single-ink-orange" class="w-6 h-6 rounded-full bg-[#C2410C] ring-0 ring-offset-1 ring-orange-600"></button>
+          </div>
+          <div class="flex items-center gap-1">
+            <button onclick="toggleSingleLetterWatermark()" class="px-2.5 py-1 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-[11px] font-medium text-slate-700">
+              👁️ Chữ mẫu
+            </button>
+            <button onclick="clearSingleLetterCanvas()" class="px-2.5 py-1 rounded-lg border border-rose-200 bg-rose-50 hover:bg-rose-100 text-[11px] font-bold text-rose-700">
+              🧹 Xóa
+            </button>
+          </div>
+        </div>
+        <p class="text-[11px] text-slate-500 italic">
+          Quy tắc bút thuận: 1. Từ trên xuống dưới ↓ • 2. Từ trái sang phải →
+        </p>
+      </div>
+
+      <button onclick="closeSingleLetterWriteModal()" class="w-full py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition-colors">
+        Đóng
+      </button>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       MODAL: CHIA SẺ LIÊN KẾT / MÃ QR CHO HỌC VIÊN
+  ======================================================== -->
+  <div id="share-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden transition-opacity duration-200">
+    <div class="bg-white rounded-3xl border border-kborder max-w-sm sm:max-w-md w-full p-6 sm:p-7 shadow-2xl relative pop-anim text-center space-y-4">
+      <button onclick="closeShareModal()" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition-colors">
+        ✕
+      </button>
+
+      <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl mx-auto flex items-center justify-center text-2xl border border-emerald-100">
+        🔗
+      </div>
+
+      <div class="space-y-1">
+        <h3 class="text-lg font-black text-ktext">Chia Sẻ Bài Luyện Viết Cho Học Viên</h3>
+        <p class="text-xs text-slate-500">
+          Chiếu mã QR này lên bảng hoặc gửi link để học viên mở thẳng bài tập viết từ trên điện thoại:
+        </p>
+      </div>
+
+      <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 inline-block mx-auto">
+        <img id="share-qr-image" src="" alt="Mã QR luyện viết" class="w-48 h-48 mx-auto rounded-lg shadow-xs" onerror="this.src=''; this.alt='Không thể tải QR online, hãy dùng link bên dưới.';">
+      </div>
+
+      <div class="flex items-center gap-2 bg-slate-100 p-2 rounded-xl border border-slate-200">
+        <input type="text" id="share-link-input" readonly class="bg-transparent text-xs text-slate-700 flex-1 outline-none px-2 truncate font-mono">
+        <button onclick="copyShareLinkInput()" class="px-3 py-1.5 rounded-lg bg-knavy text-white text-xs font-bold whitespace-nowrap hover:bg-blue-800 transition-colors">
+          Sao Chép
+        </button>
+      </div>
+
+      <button onclick="closeShareModal()" class="w-full py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-colors">
+        Đóng
+      </button>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+
+  <!-- ========================================================
+       JAVASCRIPT LOGIC (BROADCASTCHANNEL + SOCKET.IO READY)
+  ======================================================== -->
+  <script>
+    /* =====================================================================
+       1. WEB AUDIO API SYNTHESIZER
+       ===================================================================== */
+    let audioContext = null;
+
+    function getAudioCtx() {
+      if (!audioContext) {
+        const AudioCtxClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioCtxClass) audioContext = new AudioCtxClass();
+      }
+      if (audioContext && audioContext.state === 'suspended') {
+        audioContext.resume();
+      }
+      return audioContext;
+    }
+
+    function playDing() {
+      try {
+        const ctx = getAudioCtx();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+        const osc1 = ctx.createOscillator();
+        const gain1 = ctx.createGain();
+        osc1.type = 'sine';
+        osc1.frequency.setValueAtTime(1046.5, now);
+        osc1.frequency.exponentialRampToValueAtTime(1318.5, now + 0.08);
+        gain1.gain.setValueAtTime(0.3, now);
+        gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+        osc1.connect(gain1);
+        gain1.connect(ctx.destination);
+        osc1.start(now);
+        osc1.stop(now + 0.45);
+      } catch (e) {}
+    }
+
+    function playBoop() {
+      try {
+        const ctx = getAudioCtx();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(260, now);
+        osc.frequency.linearRampToValueAtTime(180, now + 0.25);
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.28);
+      } catch (e) {}
+    }
+
+    function playBuzzerSound() {
+      try {
+        const ctx = getAudioCtx();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(800, now);
+        osc.frequency.exponentialRampToValueAtTime(1200, now + 0.06);
+        gain.gain.setValueAtTime(0.35, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.25);
+      } catch (e) {}
+    }
+
+    function playFanfare() {
+      try {
+        const ctx = getAudioCtx();
+        if (!ctx) return;
+        const notes = [523.25, 659.25, 783.99, 1046.50];
+        notes.forEach((freq, idx) => {
+          const now = ctx.currentTime + idx * 0.1;
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, now);
+          gain.gain.setValueAtTime(0.25, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.5);
+        });
+      } catch (e) {}
+    }
+
+    /* Web Speech API (Đọc Họ và Tên tiếng Hàn đầy đủ) */
+    let koreanVoice = null;
+    function initSpeechSynthesis() {
+      if (!('speechSynthesis' in window)) return;
+      function pickVoice() {
+        const voices = window.speechSynthesis.getVoices();
+        koreanVoice = voices.find(v => v.lang === 'ko-KR' || v.lang === 'ko_KR' || v.lang.startsWith('ko')) || null;
+      }
+      pickVoice();
+      if (window.speechSynthesis.onvoiceschanged !== undefined) {
+        window.speechSynthesis.onvoiceschanged = pickVoice;
+      }
+    }
+
+    function speakKorean(text, rate = 0.85) {
+      if (!('speechSynthesis' in window)) return;
+      try {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'ko-KR';
+        utterance.rate = rate;
+        if (koreanVoice) utterance.voice = koreanVoice;
+        window.speechSynthesis.speak(utterance);
+      } catch (err) {}
+    }
+
+
+    /* =====================================================================
+       2. TAB 1: BẢNG CHỮ CÁI (KHỚP 100% SLIDE PPT & TẬP VIẾT TỪNG CHỮ)
+       ===================================================================== */
+    const VOWELS_BASIC_6 = [
+      { char: 'ㅏ', sound: '[a]', group: '6 Nguyên âm cơ bản (Slide 3)' },
+      { char: 'ㅓ', sound: '[o]', group: '6 Nguyên âm cơ bản (Slide 3)' },
+      { char: 'ㅗ', sound: '[ô]', group: '6 Nguyên âm cơ bản (Slide 3)' },
+      { char: 'ㅜ', sound: '[u]', group: '6 Nguyên âm cơ bản (Slide 3)' },
+      { char: 'ㅡ', sound: '[ư]', group: '6 Nguyên âm cơ bản (Slide 3)' },
+      { char: 'ㅣ', sound: '[i]', group: '6 Nguyên âm cơ bản (Slide 3)' },
+    ];
+
+    const VOWELS_EXPANDED_4 = [
+      { char: 'ㅑ', sound: '[ya]', group: '4 Nguyên âm mở rộng (Slide 4)' },
+      { char: 'ㅕ', sound: '[yo]', group: '4 Nguyên âm mở rộng (Slide 4)' },
+      { char: 'ㅛ', sound: '[yô]', group: '4 Nguyên âm mở rộng (Slide 4)' },
+      { char: 'ㅠ', sound: '[yu]', group: '4 Nguyên âm mở rộng (Slide 4)' },
+    ];
+
+    const CONSONANTS_GROUP_1 = [
+      { char: 'ㄱ', sound: '[k / g]', group: 'Phụ âm cơ bản - Nhóm 1 (Slide 5)' },
+      { char: 'ㄴ', sound: '[n]', group: 'Phụ âm cơ bản - Nhóm 1 (Slide 5)' },
+      { char: 'ㄷ', sound: '[t / d]', group: 'Phụ âm cơ bản - Nhóm 1 (Slide 5)' },
+      { char: 'ㄹ', sound: '[r / l]', group: 'Phụ âm cơ bản - Nhóm 1 (Slide 5)' },
+      { char: 'ㅁ', sound: '[m]', group: 'Phụ âm cơ bản - Nhóm 1 (Slide 5)' },
+    ];
+
+    const CONSONANTS_GROUP_2 = [
+      { char: 'ㅂ', sound: '[p / b]', group: 'Phụ âm cơ bản - Nhóm 2 (Slide 6)' },
+      { char: 'ㅅ', sound: '[s]', group: 'Phụ âm cơ bản - Nhóm 2 (Slide 6)' },
+      { char: 'ㅇ', sound: '[âm câm / ng]', group: 'Phụ âm cơ bản - Nhóm 2 (Slide 6)' },
+      { char: 'ㅈ', sound: '[ch / j]', group: 'Phụ âm cơ bản - Nhóm 2 (Slide 6)' },
+      { char: 'ㅎ', sound: '[h]', group: 'Phụ âm cơ bản - Nhóm 2 (Slide 6)' },
+    ];
+
+    const CONSONANTS_ASPIRATED_4 = [
+      { char: 'ㅋ', sound: '[kh]', group: '4 Phụ âm bật hơi (Slide 7)' },
+      { char: 'ㅌ', sound: '[th]', group: '4 Phụ âm bật hơi (Slide 7)' },
+      { char: 'ㅍ', sound: '[ph]', group: '4 Phụ âm bật hơi (Slide 7)' },
+      { char: 'ㅊ', sound: '[chh]', group: '4 Phụ âm bật hơi (Slide 7)' },
+    ];
+
+    const CONSONANTS_TENSE_5 = [
+      { char: 'ㄲ', sound: '[kk]', group: '5 Phụ âm căng (Slide 7-8)' },
+      { char: 'ㄸ', sound: '[tt]', group: '5 Phụ âm căng (Slide 7-8)' },
+      { char: 'ㅃ', sound: '[pp]', group: '5 Phụ âm căng (Slide 7-8)' },
+      { char: 'ㅆ', sound: '[ss]', group: '5 Phụ âm căng (Slide 7-8)' },
+      { char: 'ㅉ', sound: '[tch]', group: '5 Phụ âm căng (Slide 7-8)' },
+    ];
+
+    function renderTab1Alphabet() {
+      document.getElementById('grid-vowels-basic-6').innerHTML = VOWELS_BASIC_6.map(item => createAlphabetCardHTML(item, 'korange')).join('');
+      document.getElementById('grid-vowels-expanded-4').innerHTML = VOWELS_EXPANDED_4.map(item => createAlphabetCardHTML(item, 'korange')).join('');
+      document.getElementById('grid-consonants-group1').innerHTML = CONSONANTS_GROUP_1.map(item => createAlphabetCardHTML(item, 'knavy')).join('');
+      document.getElementById('grid-consonants-group2').innerHTML = CONSONANTS_GROUP_2.map(item => createAlphabetCardHTML(item, 'knavy')).join('');
+      document.getElementById('grid-consonants-aspirated').innerHTML = CONSONANTS_ASPIRATED_4.map(item => createAlphabetCardHTML(item, 'amber-700')).join('');
+      document.getElementById('grid-consonants-tense').innerHTML = CONSONANTS_TENSE_5.map(item => createAlphabetCardHTML(item, 'rose-700')).join('');
+    }
+
+    function createAlphabetCardHTML(item, themeColor) {
+      return `
+        <button onclick="openSingleLetterWriteModal('${item.char}', '${item.sound}', '${item.group}')" class="group relative bg-white hover:bg-slate-50 border-2 border-slate-200 hover:border-${themeColor} p-3 sm:p-4 rounded-2xl flex flex-col items-center justify-center transition-all duration-150 shadow-sm hover:shadow-md active:scale-95">
+          <span class="font-kr font-black text-4xl sm:text-5xl text-ktext group-hover:text-knavy transition-colors leading-tight select-none my-1">${item.char}</span>
+          <span class="text-xs sm:text-sm font-bold text-${themeColor}">${item.sound}</span>
+          <span class="text-[10px] text-slate-400 group-hover:text-slate-600 mt-1 flex items-center gap-0.5">
+            <span>✍️</span> Tập viết
+          </span>
+        </button>
+      `;
+    }
+
+    let singleLetterCanvas, singleLetterCtx;
+    let singleLetterInk = '#1E293B';
+    let singleLetterShowWatermark = true;
+    let currentInkColor = '#1E293B';
+
+    // Xử lý màn hình Retina / High-DPI để nét mực cực nét trên điện thoại
+    function setupHighDPI(canvas, ctx, width, height) {
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      canvas.style.width = width + 'px';
+      canvas.style.height = height + 'px';
+      ctx.scale(dpr, dpr);
+    }
+
+    // Gắn sự kiện cảm ứng chạm (Touch) và chuột mượt mà, chống giật cuộn trang trên mobile
+    function bindCanvasEvents(canvas, ctx) {
+      let isDrawing = false;
+      let lastX = 0;
+      let lastY = 0;
+
+      function getPos(e) {
+        const rect = canvas.getBoundingClientRect();
+        let clientX = 0, clientY = 0;
+        if (e.touches && e.touches.length > 0) {
+          clientX = e.touches[0].clientX;
+          clientY = e.touches[0].clientY;
+        } else if (e.changedTouches && e.changedTouches.length > 0) {
+          clientX = e.changedTouches[0].clientX;
+          clientY = e.changedTouches[0].clientY;
+        } else {
+          clientX = e.clientX;
+          clientY = e.clientY;
+        }
+        return {
+          x: clientX - rect.left,
+          y: clientY - rect.top
+        };
+      }
+
+      function startDraw(e) {
+        isDrawing = true;
+        const pos = getPos(e);
+        lastX = pos.x;
+        lastY = pos.y;
+        
+        ctx.beginPath();
+        ctx.arc(lastX, lastY, (currentPenWidth || 6) / 2, 0, Math.PI * 2);
+        ctx.fillStyle = currentInkColor || '#1E293B';
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.moveTo(lastX, lastY);
+      }
+
+      function drawMove(e) {
+        if (!isDrawing) return;
+        const pos = getPos(e);
+
+        ctx.strokeStyle = currentInkColor || '#1E293B';
+        ctx.lineWidth = currentPenWidth || 6;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+
+        ctx.beginPath();
+        ctx.moveTo(lastX, lastY);
+        ctx.lineTo(pos.x, pos.y);
+        ctx.stroke();
+
+        lastX = pos.x;
+        lastY = pos.y;
+      }
+
+      function stopDraw() {
+        if (!isDrawing) return;
+        isDrawing = false;
+        ctx.closePath();
+      }
+
+      // Chuột máy tính
+      canvas.addEventListener('mousedown', (e) => {
+        e.preventDefault();
+        startDraw(e);
+      });
+      canvas.addEventListener('mousemove', (e) => {
+        if (isDrawing) drawMove(e);
+      });
+      canvas.addEventListener('mouseup', stopDraw);
+      canvas.addEventListener('mouseleave', stopDraw);
+
+      // Cảm ứng điện thoại (touchstart, touchmove, touchend với e.preventDefault)
+      canvas.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        startDraw(e);
+      }, { passive: false });
+
+      canvas.addEventListener('touchmove', (e) => {
+        e.preventDefault();
+        drawMove(e);
+      }, { passive: false });
+
+      canvas.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        stopDraw();
+      }, { passive: false });
+
+      canvas.addEventListener('touchcancel', (e) => {
+        e.preventDefault();
+        stopDraw();
+      }, { passive: false });
+    }
+
+    function initSingleLetterCanvas() {
+      singleLetterCanvas = document.getElementById('letter-paint-canvas');
+      if (!singleLetterCanvas) return;
+      singleLetterCtx = singleLetterCanvas.getContext('2d');
+      setupHighDPI(singleLetterCanvas, singleLetterCtx, 240, 240);
+      bindCanvasEvents(singleLetterCanvas, singleLetterCtx);
+    }
+
+    function openSingleLetterWriteModal(char, sound, group) {
+      document.getElementById('letter-modal-group').textContent = group;
+      document.getElementById('letter-modal-char').textContent = char;
+      document.getElementById('letter-modal-sound').textContent = sound;
+      document.getElementById('letter-guide-watermark').textContent = char;
+
+      if (!singleLetterCtx) initSingleLetterCanvas();
+      clearSingleLetterCanvas();
+
+      document.getElementById('single-letter-write-modal').classList.remove('hidden');
+    }
+
+    function closeSingleLetterWriteModal() {
+      document.getElementById('single-letter-write-modal').classList.add('hidden');
+    }
+
+    function clearSingleLetterCanvas() {
+      if (singleLetterCtx && singleLetterCanvas) {
+        singleLetterCtx.clearRect(0, 0, singleLetterCanvas.width, singleLetterCanvas.height);
+      }
+    }
+
+    function toggleSingleLetterWatermark() {
+      singleLetterShowWatermark = !singleLetterShowWatermark;
+      const el = document.getElementById('letter-guide-watermark');
+      el.style.opacity = singleLetterShowWatermark ? '1' : '0';
+    }
+
+    function setSingleLetterInk(color) {
+      singleLetterInk = color;
+      currentInkColor = color;
+      document.getElementById('single-ink-black').className = 'w-6 h-6 rounded-full bg-[#1E293B] transition-transform ' + (color === '#1E293B' ? 'ring-2 ring-offset-1 ring-slate-800 scale-110' : 'ring-0');
+      document.getElementById('single-ink-navy').className = 'w-6 h-6 rounded-full bg-[#1D4ED8] transition-transform ' + (color === '#1D4ED8' ? 'ring-2 ring-offset-1 ring-blue-600 scale-110' : 'ring-0');
+      document.getElementById('single-ink-orange').className = 'w-6 h-6 rounded-full bg-[#C2410C] transition-transform ' + (color === '#C2410C' ? 'ring-2 ring-offset-1 ring-orange-600 scale-110' : 'ring-0');
+    }
+
+
+    /* =====================================================================
+       3. TAB 2: TẬP VIẾT TỪ VỰNG HANGEUL (ĐẦY ĐỦ 6 TỪ KHỚP PPT)
+       ===================================================================== */
+    let practiceWords = [
+      { word: '가수', phonetic: '[ka-su]', meaning: 'Ca sĩ 🎤', icon: '🎤', breakdown: '가 (ㄱ + ㅏ) • 수 (ㅅ + ㅜ)' },
+      { word: '아버지', phonetic: '[a-bo-ji]', meaning: 'Bố / Cha 👨', icon: '👨', breakdown: '아 (ㅇ + ㅏ) • 버 (ㅂ + ㅓ) • 지 (ㅈ + ㅣ)' },
+      { word: '나무', phonetic: '[na-mu]', meaning: 'Cái cây 🌳', icon: '🌳', breakdown: '나 (ㄴ + ㅏ) • 무 (ㅁ + ㅜ)' },
+      { word: '우산', phonetic: '[u-san]', meaning: 'Cái ô / dù ☂️', icon: '☂️', breakdown: '우 (ㅇ + ㅜ) • 산 (ㅅ + ㅏ + ㄴ)' },
+      { word: '모자', phonetic: '[mô-ja]', meaning: 'Cái mũ / nón 🧢', icon: '🧢', breakdown: '모 (ㅁ + ㅗ) • 자 (ㅈ + ㅏ)' },
+      { word: '구두', phonetic: '[ku-đu]', meaning: 'Giày da 👞', icon: '👞', breakdown: '구 (ㄱ + ㅜ) • 두 (ㄷ + ㅜ)' }
+    ];
+
+    let currentPracticeWordIndex = 0;
+    let currentPenWidth = 8;
+    let showWatermark = true;
+    let dynamicCanvases = [];
+
+    function renderVocabPills() {
+      const container = document.getElementById('vocab-pills-container');
+      container.innerHTML = practiceWords.map((item, idx) => {
+        const isCurrent = idx === currentPracticeWordIndex;
+        const cls = isCurrent 
+          ? 'px-3 py-1.5 rounded-lg text-xs font-bold bg-white text-knavy shadow-sm border border-knavy/30'
+          : 'px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-ktext hover:bg-white/60';
+        return `
+          <button onclick="selectPracticeWord(${idx})" class="${cls}">
+            ${item.icon || '📝'} ${item.word}
+          </button>
+        `;
+      }).join('');
+    }
+
+    function selectPracticeWord(index) {
+      currentPracticeWordIndex = index;
+      renderVocabPills();
+      updatePracticeWordUI();
+    }
+
+    function updatePracticeWordUI() {
+      const item = practiceWords[currentPracticeWordIndex];
+      if (!item) return;
+
+      document.getElementById('active-word-icon').textContent = item.icon || '📝';
+      document.getElementById('active-word-korean').textContent = item.word;
+      document.getElementById('active-word-roman').textContent = item.phonetic || '';
+      document.getElementById('active-word-meaning').textContent = item.meaning ? `• ${item.meaning}` : '';
+      document.getElementById('active-word-breakdown').textContent = `Cấu tạo: ${item.breakdown || item.word}`;
+
+      renderDynamicWritingCanvases(item.word);
+    }
+
+    function renderDynamicWritingCanvases(word) {
+      const container = document.getElementById('writing-canvases-container');
+      container.innerHTML = '';
+      dynamicCanvases = [];
+
+      const syllables = Array.from(word);
+      const winW = window.innerWidth;
+      const isMobile = winW < 640;
+      
+      let boxSize = 240;
+      if (isMobile) {
+        const availableW = Math.max(270, winW - 56);
+        if (syllables.length >= 3) {
+          // Từ 3 âm tiết (như 아버지): ô vừa vặn để 2 ô đầu nằm cạnh nhau, ô 3 xuống dòng, không tràn viền
+          boxSize = Math.min(145, Math.floor((availableW - 16) / 2));
+        } else {
+          // Từ 2 âm tiết (như 가수, 나무): cả 2 ô nằm song song trên 1 hàng
+          boxSize = Math.min(160, Math.floor((availableW - 16) / 2));
+        }
+      } else {
+        boxSize = syllables.length >= 3 ? 200 : 240;
+      }
+
+      syllables.forEach((syl, idx) => {
+        const sylWrapper = document.createElement('div');
+        sylWrapper.className = 'flex flex-col items-center';
+
+        const label = document.createElement('div');
+        label.className = 'text-xs font-bold text-slate-600 mb-1.5 flex items-center gap-1';
+        label.innerHTML = `<span>Âm tiết ${idx + 1}:</span> <span class="text-knavy font-kr text-base font-black">${syl}</span>`;
+        sylWrapper.appendChild(label);
+
+        const box = document.createElement('div');
+        box.className = 'relative bg-white rounded-2xl border-2 border-slate-300 shadow-sm overflow-hidden select-none';
+        box.style.width = `${boxSize}px`;
+        box.style.height = `${boxSize}px`;
+
+        box.innerHTML = `
+          <svg class="absolute inset-0 w-full h-full pointer-events-none opacity-40" viewBox="0 0 ${boxSize} ${boxSize}">
+            <line x1="${boxSize / 2}" y1="0" x2="${boxSize / 2}" y2="${boxSize}" stroke="#94A3B8" stroke-width="1.5" stroke-dasharray="4,4" />
+            <line x1="0" y1="${boxSize / 2}" x2="${boxSize}" y2="${boxSize / 2}" stroke="#94A3B8" stroke-width="1.5" stroke-dasharray="4,4" />
+            <rect x="${boxSize * 0.1}" y="${boxSize * 0.1}" width="${boxSize * 0.8}" height="${boxSize * 0.8}" fill="none" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="2,2" />
+          </svg>
+          <div class="watermark-guide absolute inset-0 flex items-center justify-center font-kr font-black text-slate-200 pointer-events-none select-none transition-opacity duration-200" style="font-size: ${boxSize * 0.58}px; opacity: ${showWatermark ? 1 : 0};">
+            ${syl}
+          </div>
+          <canvas width="${boxSize}" height="${boxSize}" class="absolute inset-0 w-full h-full cursor-crosshair"></canvas>
+        `;
+
+        sylWrapper.appendChild(box);
+        container.appendChild(sylWrapper);
+
+        const canvas = box.querySelector('canvas');
+        const ctx = canvas.getContext('2d');
+        setupHighDPI(canvas, ctx, boxSize, boxSize);
+        bindCanvasEvents(canvas, ctx);
+
+        dynamicCanvases.push({ canvas, ctx, syl });
+      });
+    }
+
+    function clearAllCanvases() {
+      dynamicCanvases.forEach(item => {
+        item.ctx.clearRect(0, 0, item.canvas.width, item.canvas.height);
+      });
+    }
+
+    function toggleWatermarkGuide() {
+      showWatermark = !showWatermark;
+      const guides = document.querySelectorAll('.watermark-guide');
+      guides.forEach(g => {
+        g.style.opacity = showWatermark ? '1' : '0';
+      });
+    }
+
+    function nextPracticeWord() {
+      currentPracticeWordIndex = (currentPracticeWordIndex + 1) % practiceWords.length;
+      selectPracticeWord(currentPracticeWordIndex);
+    }
+
+    function setInkColor(color) {
+      currentInkColor = color;
+      const bBlack = document.getElementById('ink-btn-black');
+      const bNavy = document.getElementById('ink-btn-navy');
+      const bOrange = document.getElementById('ink-btn-orange');
+
+      bBlack.className = 'w-7 h-7 rounded-full bg-[#1E293B] transition-transform ' + (color === '#1E293B' ? 'ring-2 ring-offset-2 ring-slate-800 scale-110' : 'ring-0');
+      bNavy.className = 'w-7 h-7 rounded-full bg-[#1D4ED8] transition-transform ' + (color === '#1D4ED8' ? 'ring-2 ring-offset-2 ring-blue-600 scale-110' : 'ring-0');
+      bOrange.className = 'w-7 h-7 rounded-full bg-[#C2410C] transition-transform ' + (color === '#C2410C' ? 'ring-2 ring-offset-2 ring-orange-600 scale-110' : 'ring-0');
+    }
+
+    function setPenWidth(w) {
+      currentPenWidth = w;
+      document.getElementById('stroke-btn-thin').className = w === 4 ? 'px-2.5 py-1 text-xs rounded-lg border border-knavy bg-white text-knavy font-bold shadow-xs' : 'px-2.5 py-1 text-xs rounded-lg border border-slate-300 font-medium hover:bg-white';
+      document.getElementById('stroke-btn-med').className = w === 8 ? 'px-2.5 py-1 text-xs rounded-lg border border-knavy bg-white text-knavy font-bold shadow-xs' : 'px-2.5 py-1 text-xs rounded-lg border border-slate-300 font-medium hover:bg-white';
+      document.getElementById('stroke-btn-thick').className = w === 14 ? 'px-2.5 py-1 text-xs rounded-lg border border-knavy bg-white text-knavy font-bold shadow-xs' : 'px-2.5 py-1 text-xs rounded-lg border border-slate-300 font-medium hover:bg-white';
+    }
+
+    function speakActivePracticeWord() {
+      const item = practiceWords[currentPracticeWordIndex];
+      if (item) speakKorean(item.word);
+    }
+
+    function toggleCustomWordPanel() {
+      document.getElementById('custom-word-panel').classList.toggle('hidden');
+    }
+
+    function handleCreateCustomWord() {
+      const wordInput = document.getElementById('custom-word-input');
+      const meaningInput = document.getElementById('custom-meaning-input');
+      const word = wordInput.value.trim();
+      const meaning = meaningInput.value.trim() || 'Từ luyện viết mới';
+
+      if (!word) {
+        showToast('Vui lòng nhập từ tiếng Hàn!', 'warning');
+        return;
+      }
+
+      const newIndex = practiceWords.push({
+        word: word,
+        phonetic: '',
+        meaning: meaning,
+        icon: '✍️',
+        breakdown: Array.from(word).join(' + ')
+      }) - 1;
+
+      renderVocabPills();
+      selectPracticeWord(newIndex);
+      wordInput.value = '';
+      meaningInput.value = '';
+      showToast(`Đã tạo bài luyện viết cho: ${word}!`, 'success');
+    }
+
+    function shareCurrentWordLink() {
+      const currentWord = practiceWords[currentPracticeWordIndex];
+      const origin = window.location.origin;
+      const pathname = window.location.pathname;
+      const shareUrl = `${origin}${pathname}?word=${encodeURIComponent(currentWord.word)}&meaning=${encodeURIComponent(currentWord.meaning || '')}`;
+
+      const linkInput = document.getElementById('share-link-input');
+      linkInput.value = shareUrl;
+
+      const qrImg = document.getElementById('share-qr-image');
+      qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(shareUrl)}`;
+
+      document.getElementById('share-modal').classList.remove('hidden');
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(shareUrl).then(() => {
+          showToast('Đã sao chép link chia sẻ!', 'info');
+        }).catch(() => {});
+      }
+    }
+
+    function copyShareLinkInput() {
+      const linkInput = document.getElementById('share-link-input');
+      linkInput.select();
+      document.execCommand('copy');
+      showToast('Đã sao chép liên kết!', 'success');
+    }
+
+    function closeShareModal() {
+      document.getElementById('share-modal').classList.add('hidden');
+    }
+
+    function checkUrlForSharedWord() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const sharedWord = urlParams.get('word');
+      const sharedMeaning = urlParams.get('meaning');
+
+      if (sharedWord) {
+        const existingIdx = practiceWords.findIndex(w => w.word === sharedWord);
+        if (existingIdx !== -1) {
+          selectPracticeWord(existingIdx);
+        } else {
+          const newIdx = practiceWords.push({
+            word: sharedWord,
+            phonetic: '',
+            meaning: sharedMeaning || 'Từ vựng giáo viên giao',
+            icon: '📌',
+            breakdown: Array.from(sharedWord).join(' + ')
+          }) - 1;
+          renderVocabPills();
+          selectPracticeWord(newIdx);
+        }
+        switchMainTab(2);
+        showToast(`Đã tải từ giáo viên giao: ${sharedWord}`, 'info');
+      }
+    }
+
+
+    /* =====================================================================
+       4. TAB 3: TRÒ CHƠI BINGO ĐỐI KHÁNG 2 ĐỘI (CHẾ ĐỘ MÁY CHIẾU LỚP HỌC)
+       - Giáo viên đọc âm tiết bất kỳ trên bảng (không cần random)
+       - 2 Đội giơ tay (Phím A: Đội Xanh, Phím L: Đội Cam)
+       - Đúng (Phím 1): Chiếm ô + 1 điểm. Sai (Phím 2): Mất lượt, quyền chuyển sang đội kia
+       - Cả 2 đội sai: Ô bị bỏ qua ✖️
+       - 9 âm tiết mới hoàn toàn (Slide 14 có 가 모 우 나 지 수 버 구 무):
+         Hàng 1: 바, 사, 도
+         Hàng 2: 소, 차, 마
+         Hàng 3: 키, 포, 하
+       ===================================================================== */
+    const BINGO_CELLS_DATA = [
+      { id: 0, syl: '바', row: 1, col: 1 },
+      { id: 1, syl: '사', row: 1, col: 2 },
+      { id: 2, syl: '도', row: 1, col: 3 },
+      { id: 3, syl: '소', row: 2, col: 1 },
+      { id: 4, syl: '차', row: 2, col: 2 },
+      { id: 5, syl: '마', row: 2, col: 3 },
+      { id: 6, syl: '키', row: 3, col: 1 },
+      { id: 7, syl: '포', row: 3, col: 2 },
+      { id: 8, syl: '하', row: 3, col: 3 },
+    ];
+
+    let bingoState = {
+      grid: JSON.parse(JSON.stringify(BINGO_CELLS_DATA)).map(c => ({ ...c, owner: null, discarded: false })),
+      scores: { blue: 0, orange: 0, discarded: 0 },
+      activeTeam: null, // 'blue' hoặc 'orange'
+      failedTeams: new Set(),
+      pendingCell: null,
+      isGameOver: false,
+    };
+
+    function initBingoBoard() {
+      renderBingoBoard();
+      updateBingoScoreUI();
+    }
+
+    function renderBingoBoard() {
+      const container = document.getElementById('bingo-grid-board');
+      if (!container) return;
+
+      let html = '';
+      for (let r = 1; r <= 3; r++) {
+        const rowCells = bingoState.grid.filter(c => c.row === r);
+        html += `
+          <div class="grid grid-cols-4 gap-2 sm:gap-3 items-stretch">
+            <!-- Row Header -->
+            <div class="h-24 sm:h-28 rounded-2xl bg-blue-50/70 border border-blue-200 flex flex-col items-center justify-center font-bold text-knavy text-xs sm:text-sm shadow-xs select-none">
+              <span class="text-xs uppercase opacity-75">Dòng</span>
+              <span class="text-sm sm:text-base font-black">Hàng ${r}</span>
+            </div>
+        `;
+
+        rowCells.forEach((cell) => {
+          let cellCls = 'bg-white hover:bg-blue-50/40 text-ktext border-slate-300 shadow-sm hover:border-knavy/50 cursor-pointer';
+          let badgeHTML = `<span class="text-[9px] sm:text-[10px] font-semibold text-slate-400">H${cell.row}-C${cell.col}</span>`;
+
+          if (cell.owner === 'blue') {
+            cellCls = 'bg-blue-600 text-white border-blue-700 shadow-md ring-2 ring-blue-300 scale-[0.98]';
+            badgeHTML = `<span class="text-[8px] sm:text-[10px] bg-blue-800 text-white px-1 sm:px-2 py-0.5 rounded-full font-bold truncate">🔵 Xanh</span>`;
+          } else if (cell.owner === 'orange') {
+            cellCls = 'bg-orange-600 text-white border-orange-700 shadow-md ring-2 ring-orange-300 scale-[0.98]';
+            badgeHTML = `<span class="text-[8px] sm:text-[10px] bg-orange-800 text-white px-1 sm:px-2 py-0.5 rounded-full font-bold truncate">🟠 Cam</span>`;
+          } else if (cell.discarded) {
+            cellCls = 'bg-slate-200 text-slate-400 border-dashed border-slate-300 opacity-60 cursor-not-allowed';
+            badgeHTML = `<span class="text-[8px] sm:text-[10px] text-slate-500 font-bold">✖️ Bỏ</span>`;
+          } else if (bingoState.pendingCell && bingoState.pendingCell.id === cell.id) {
+            cellCls = 'bg-amber-100 text-amber-900 border-amber-400 ring-4 ring-amber-300 animate-pulse';
+            badgeHTML = `<span class="text-[8px] sm:text-[10px] bg-amber-600 text-white px-1 sm:px-2 py-0.5 rounded-full font-bold">Chọn...</span>`;
+          }
+
+          html += `
+            <button onclick="handleBingoCellClick(${cell.id})" ${cell.owner || cell.discarded ? 'disabled' : ''} class="h-20 sm:h-28 rounded-2xl border-2 p-1 sm:p-2 flex flex-col items-center justify-between transition-all active:scale-95 ${cellCls}">
+              ${badgeHTML}
+              <span class="font-kr font-black text-2xl sm:text-4xl md:text-5xl leading-tight select-none">${cell.syl}</span>
+              <span class="text-[9px] sm:text-[10px] opacity-75 font-semibold">Ô ${cell.id + 1}</span>
+            </button>
+          `;
+        });
+
+        html += `</div>`;
+      }
+
+      container.innerHTML = html;
+    }
+
+    function updateBingoScoreUI() {
+      const elBlue = document.getElementById('bingo-score-blue');
+      const elOrange = document.getElementById('bingo-score-orange');
+      const elDiscarded = document.getElementById('bingo-score-discarded');
+
+      if (elBlue) elBlue.textContent = `${bingoState.scores.blue} ô`;
+      if (elOrange) elOrange.textContent = `${bingoState.scores.orange} ô`;
+      if (elDiscarded) elDiscarded.textContent = bingoState.scores.discarded;
+    }
+
+    // Trao quyền cho đội giơ tay
+    function grantTurnToTeam(team) {
+      if (bingoState.isGameOver) return;
+      if (bingoState.failedTeams.has(team)) {
+        showToast(`Đội ${team === 'blue' ? 'Xanh' : 'Cam'} đã bị mất lượt ở âm này!`, 'warning');
+        return;
+      }
+
+      bingoState.activeTeam = team;
+      bingoState.pendingCell = null;
+      document.getElementById('bingo-confirm-bar').classList.add('hidden');
+      playBuzzerSound();
+
+      updateBingoTurnUIForTeam(team);
+      renderBingoBoard();
+    }
+
+    function updateBingoTurnUIForTeam(team) {
+      const teamName = team === 'blue' ? 'ĐỘI XANH 🔵' : 'ĐỘI CAM 🟠';
+      const roundLabel = document.getElementById('bingo-round-label');
+      const announcement = document.getElementById('bingo-announcement');
+      const subtext = document.getElementById('bingo-subtext');
+      const pill = document.getElementById('bingo-active-team-pill');
+      const scoreCardBlue = document.getElementById('score-card-blue');
+      const scoreCardOrange = document.getElementById('score-card-orange');
+
+      if (roundLabel) roundLabel.textContent = `🔔 ${teamName} ĐANG TRẢ LỜI`;
+      if (announcement) {
+        announcement.innerHTML = `<span class="${team === 'blue' ? 'text-blue-300' : 'text-orange-300'} font-black text-lg">${teamName} ĐÃ GIÀNH QUYỀN!</span>`;
+      }
+      if (subtext) {
+        subtext.textContent = `Học sinh đại diện ${teamName} hãy chạm hoặc nhấp vào ô trên bảng 3x3...`;
+      }
+
+      if (pill) {
+        pill.classList.remove('hidden');
+        if (team === 'blue') {
+          pill.className = 'px-4 py-2 rounded-xl text-center font-bold text-sm bg-blue-600 text-white border-2 border-blue-400 shadow-md animate-pulse whitespace-nowrap';
+          pill.textContent = '🔵 LƯỢT ĐỘI XANH';
+        } else {
+          pill.className = 'px-4 py-2 rounded-xl text-center font-bold text-sm bg-orange-600 text-white border-2 border-orange-400 shadow-md animate-pulse whitespace-nowrap';
+          pill.textContent = '🟠 LƯỢT ĐỘI CAM';
+        }
+      }
+
+      // Highlight active score card
+      if (scoreCardBlue && scoreCardOrange) {
+        if (team === 'blue') {
+          scoreCardBlue.classList.add('ring-4', 'ring-blue-400');
+          scoreCardOrange.classList.remove('ring-4', 'ring-orange-400');
+        } else {
+          scoreCardOrange.classList.add('ring-4', 'ring-orange-400');
+          scoreCardBlue.classList.remove('ring-4', 'ring-blue-400');
+        }
+      }
+    }
+
+    function resetBingoTurnUI(customAnnouncement) {
+      const roundLabel = document.getElementById('bingo-round-label');
+      const announcement = document.getElementById('bingo-announcement');
+      const subtext = document.getElementById('bingo-subtext');
+      const pill = document.getElementById('bingo-active-team-pill');
+      const scoreCardBlue = document.getElementById('score-card-blue');
+      const scoreCardOrange = document.getElementById('score-card-orange');
+
+      if (roundLabel) roundLabel.textContent = 'LƯỢT CHƠI MỚI';
+      if (announcement) announcement.textContent = customAnnouncement || '👨‍🏫 Giáo viên phát âm 1 từ bất kỳ trên bảng • Học sinh giơ tay giành quyền!';
+      if (subtext) subtext.textContent = 'Bấm nút hoặc phím tắt bên dưới để trao quyền trả lời cho đội giơ tay nhanh nhất.';
+      if (pill) pill.classList.add('hidden');
+
+      if (scoreCardBlue) scoreCardBlue.classList.remove('ring-4', 'ring-blue-400');
+      if (scoreCardOrange) scoreCardOrange.classList.remove('ring-4', 'ring-orange-400');
+    }
+
+    // Học sinh nhấp vào ô trên bảng 3x3
+    function handleBingoCellClick(cellId) {
+      if (bingoState.isGameOver) return;
+      const cell = bingoState.grid.find(c => c.id === cellId);
+      if (!cell || cell.owner || cell.discarded) return;
+
+      if (!bingoState.activeTeam) {
+        showToast('Vui lòng chọn đội giơ tay trước (bấm nút Đội Xanh / Đội Cam hoặc gõ phím A / L)!', 'info');
+        return;
+      }
+
+      bingoState.pendingCell = cell;
+
+      // Hiển thị thanh xác nhận kết quả
+      const confirmBar = document.getElementById('bingo-confirm-bar');
+      const confirmSyl = document.getElementById('confirm-cell-syl');
+      const confirmTeam = document.getElementById('confirm-team-name');
+      const confirmCoords = document.getElementById('confirm-cell-coords');
+
+      if (confirmSyl) confirmSyl.textContent = cell.syl;
+      if (confirmTeam) confirmTeam.textContent = bingoState.activeTeam === 'blue' ? 'Đội Xanh 🔵' : 'Đội Cam 🟠';
+      if (confirmCoords) confirmCoords.textContent = `Hàng ${cell.row} - Cột ${cell.col}`;
+
+      if (confirmBar) {
+        confirmBar.classList.remove('hidden');
+        confirmBar.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+
+      renderBingoBoard();
+    }
+
+    // Xác nhận kết quả Đúng / Sai từ giáo viên
+    function confirmBingoCellResult(isCorrect) {
+      if (!bingoState.pendingCell || !bingoState.activeTeam) return;
+
+      const cell = bingoState.pendingCell;
+      const team = bingoState.activeTeam;
+      const confirmBar = document.getElementById('bingo-confirm-bar');
+
+      if (isCorrect) {
+        // ĐÚNG: Chiếm ô + 1 điểm
+        cell.owner = team;
+        bingoState.scores[team]++;
+        playDing();
+        showToast(`Chính xác! ${team === 'blue' ? 'Đội Xanh' : 'Đội Cam'} đã chiếm ô "${cell.syl}"!`, 'success');
+
+        bingoState.pendingCell = null;
+        bingoState.activeTeam = null;
+        bingoState.failedTeams.clear();
+        if (confirmBar) confirmBar.classList.add('hidden');
+
+        renderBingoBoard();
+        updateBingoScoreUI();
+        resetBingoTurnUI('Giáo viên phát âm từ tiếp theo • Học sinh giơ tay giành quyền!');
+        checkBingoWinner();
+      } else {
+        // SAI: Mất lượt, quyền chuyển sang đội kia
+        playBoop();
+        bingoState.failedTeams.add(team);
+        if (confirmBar) confirmBar.classList.add('hidden');
+
+        if (bingoState.failedTeams.size === 1) {
+          const otherTeam = (team === 'blue' ? 'orange' : 'blue');
+          bingoState.activeTeam = otherTeam;
+          bingoState.pendingCell = null;
+
+          showToast(`${team === 'blue' ? 'Đội Xanh' : 'Đội Cam'} đoán sai và bị mất lượt! Cơ hội chuyển sang cho ${otherTeam === 'blue' ? 'Đội Xanh 🔵' : 'Đội Cam 🟠'}!`, 'warning');
+          updateBingoTurnUIForTeam(otherTeam);
+          renderBingoBoard();
+        } else {
+          // Cả 2 đội đều sai -> Ô bị bỏ qua
+          cell.discarded = true;
+          bingoState.scores.discarded++;
+          bingoState.pendingCell = null;
+          bingoState.activeTeam = null;
+          bingoState.failedTeams.clear();
+
+          showToast(`Cả 2 đội đều đoán sai! Ô "${cell.syl}" bị bỏ qua ✖️!`, 'info');
+          renderBingoBoard();
+          updateBingoScoreUI();
+          resetBingoTurnUI('Cả 2 đội đều sai! Giáo viên phát âm từ mới...');
+          checkBingoWinner();
+        }
+      }
+    }
+
+    function cancelBingoCellSelection() {
+      bingoState.pendingCell = null;
+      const confirmBar = document.getElementById('bingo-confirm-bar');
+      if (confirmBar) confirmBar.classList.add('hidden');
+      renderBingoBoard();
+    }
+
+    function discardSelectedOrCurrentCell() {
+      if (bingoState.pendingCell) {
+        const cell = bingoState.pendingCell;
+        cell.discarded = true;
+        bingoState.scores.discarded++;
+        bingoState.pendingCell = null;
+        bingoState.activeTeam = null;
+        bingoState.failedTeams.clear();
+
+        const confirmBar = document.getElementById('bingo-confirm-bar');
+        if (confirmBar) confirmBar.classList.add('hidden');
+
+        renderBingoBoard();
+        updateBingoScoreUI();
+        resetBingoTurnUI('Đã bỏ qua ô! Giáo viên phát âm từ mới...');
+        checkBingoWinner();
+        showToast(`Đã bỏ qua ô "${cell.syl}" ✖️!`, 'info');
+      } else {
+        showToast('Vui lòng chạm vào 1 ô trên bảng trước khi bấm "Bỏ qua"!', 'info');
+      }
+    }
+
+    function checkBingoWinner(forceEnd = false) {
+      const g = bingoState.grid;
+      const lines = [
+        [0, 1, 2], [3, 4, 5], [6, 7, 8],
+        [0, 3, 6], [1, 4, 7], [2, 5, 8],
+        [0, 4, 8], [2, 4, 6]
+      ];
+
+      for (const [a, b, c] of lines) {
+        if (g[a].owner && g[a].owner === g[b].owner && g[a].owner === g[c].owner) {
+          declareBingoWinner(g[a].owner, 'BINGO! Nối thành công 3 ô thẳng hàng!');
+          return;
+        }
+      }
+
+      const unownedCount = g.filter(c => !c.owner && !c.discarded).length;
+      if (unownedCount === 0 || forceEnd) {
+        if (bingoState.scores.blue > bingoState.scores.orange) {
+          declareBingoWinner('blue', `Thắng theo số ô chiếm được (${bingoState.scores.blue} vs ${bingoState.scores.orange})!`);
+        } else if (bingoState.scores.orange > bingoState.scores.blue) {
+          declareBingoWinner('orange', `Thắng theo số ô chiếm được (${bingoState.scores.orange} vs ${bingoState.scores.blue})!`);
+        } else {
+          declareBingoWinner('draw', 'Trận đấu hòa nhau!');
+        }
+      }
+    }
+
+    function declareBingoWinner(winner, reason) {
+      bingoState.isGameOver = true;
+      playFanfare();
+
+      const roundLabel = document.getElementById('bingo-round-label');
+      const announcement = document.getElementById('bingo-announcement');
+      const subtext = document.getElementById('bingo-subtext');
+
+      if (winner === 'blue') {
+        if (roundLabel) roundLabel.textContent = '🏆 CHIẾN THẮNG!';
+        if (announcement) announcement.innerHTML = `<span class="text-blue-300 font-black text-xl">🎉 ĐỘI XANH ĐẠT BINGO CHIẾN THẮNG!</span>`;
+        if (subtext) subtext.textContent = reason;
+        showToast('🏆 Chúc mừng ĐỘI XANH đã chiến thắng!', 'success');
+      } else if (winner === 'orange') {
+        if (roundLabel) roundLabel.textContent = '🏆 CHIẾN THẮNG!';
+        if (announcement) announcement.innerHTML = `<span class="text-orange-300 font-black text-xl">🎉 ĐỘI CAM ĐẠT BINGO CHIẾN THẮNG!</span>`;
+        if (subtext) subtext.textContent = reason;
+        showToast('🏆 Chúc mừng ĐỘI CAM đã chiến thắng!', 'success');
+      } else {
+        if (roundLabel) roundLabel.textContent = '⚖️ HÒA NHAU!';
+        if (announcement) announcement.innerHTML = `<span class="text-amber-300 font-black text-xl">KẾT QUẢ HÒA NHAU!</span>`;
+        if (subtext) subtext.textContent = 'Cả hai đội đều thi đấu rất xuất sắc!';
+      }
+    }
+
+    function resetBingoGame() {
+      bingoState = {
+        grid: JSON.parse(JSON.stringify(BINGO_CELLS_DATA)).map(c => ({ ...c, owner: null, discarded: false })),
+        scores: { blue: 0, orange: 0, discarded: 0 },
+        activeTeam: null,
+        failedTeams: new Set(),
+        pendingCell: null,
+        isGameOver: false,
+      };
+
+      const confirmBar = document.getElementById('bingo-confirm-bar');
+      if (confirmBar) confirmBar.classList.add('hidden');
+
+      renderBingoBoard();
+      updateBingoScoreUI();
+      resetBingoTurnUI();
+      showToast('Đã bắt đầu ván Bingo mới!', 'info');
+    }
+
+    // Bắt sự kiện phím tắt tiện lợi cho giáo viên
+    document.addEventListener('keydown', (e) => {
+      // Chỉ kích hoạt khi đang ở Tab 3 (Bingo)
+      if (currentMainTab !== 3) return;
+
+      // Tránh bắt phím khi đang nhập liệu input/textarea
+      const tag = document.activeElement ? document.activeElement.tagName.toLowerCase() : '';
+      if (tag === 'input' || tag === 'textarea') return;
+
+      if (e.key === 'a' || e.key === 'A') {
+        grantTurnToTeam('blue');
+      } else if (e.key === 'l' || e.key === 'L') {
+        grantTurnToTeam('orange');
+      } else if (e.key === '1') {
+        if (bingoState.pendingCell) confirmBingoCellResult(true);
+      } else if (e.key === '2') {
+        if (bingoState.pendingCell) confirmBingoCellResult(false);
+      } else if (e.key === 'Escape') {
+        cancelBingoCellSelection();
+      }
+    });
+
+    /* =====================================================================
+       5. TAB 4: THỬ THÁCH PHẢN XẠ & SỬA BÀI CHI TIẾT
+       - Tên tiếng Hàn hiển thị đầy đủ Họ + Tên
+       - Bỏ 2 nút Sao chép & In/Lưu thẻ
+       - Chỉ cấp 합격 nếu đúng từ 4/6 câu trở lên!
+       ===================================================================== */
+    const QUIZ_QUESTIONS = [
+      {
+        id: 1,
+        stage: 'Chặng 1: Nghe âm chọn chữ',
+        type: 'listen_choice',
+        targetSound: 'ㅓ',
+        audioText: 'ㅓ',
+        questionText: 'Nghe phát âm và chọn đúng chữ cái bạn vừa nghe:',
+        options: ['ㅓ', 'ㅣ', 'ㅏ', 'ㅡ'],
+        correctIndex: 0,
+        correctText: 'ㅓ',
+        explanation: 'Âm "ㅓ" phát âm mở khẩu hình rộng [o]'
+      },
+      {
+        id: 2,
+        stage: 'Chặng 1: Nghe âm chọn chữ',
+        type: 'listen_choice',
+        targetSound: '코',
+        audioText: '코',
+        questionText: 'Lắng nghe âm thanh và chọn đáp án phù hợp:',
+        options: [
+          '고',
+          '코',
+          '꼬'
+        ],
+        correctIndex: 1,
+        correctText: '코 [khô - bật hơi]',
+        explanation: 'Âm tiết "코" [khô] bắt đầu bằng phụ âm bật hơi ㅋ [khờ], phát âm đẩy luồng hơi mạnh từ cuống họng ra ngoài (đặt tay thấy mát).'
+      },
+      {
+        id: 3,
+        stage: 'Chặng 2: Ghép từ vựng bài học',
+        type: 'scramble_word',
+        targetWord: '우산',
+        meaning: 'Cái ô / cái dù ☂️',
+        audioText: '우산',
+        tiles: ['산', '우', '가', '모'],
+        correctWord: '우산',
+        correctText: '우산 (Cái ô / dù ☂️)',
+        explanation: '"우산" [u-san] có nghĩa là Cái ô (dù) ☂️ (gồm phụ âm câm ㅇ + ㅜ = 우 ghép với ㅅ + ㅏ + ㄴ = 산).'
+      },
+      {
+        id: 4,
+        stage: 'Chặng 2: Ghép từ vựng bài học',
+        type: 'scramble_word',
+        targetWord: '나무',
+        meaning: 'Cái cây 🌳',
+        audioText: '나무',
+        tiles: ['무', '나', '구', '두'],
+        correctWord: '나무',
+        correctText: '나무 (Cái cây 🌳)',
+        explanation: '"나무" [na-mu] có nghĩa là Cái cây 🌳 (gồm ㄴ + ㅏ = 나 ghép với ㅁ + ㅜ = 무).'
+      },
+      {
+        id: 5,
+        stage: 'Chặng 3: Phản xạ chào hỏi',
+        type: 'context_choice',
+        questionText: 'Tình huống 1: Buổi sáng bước vào lớp học gặp giáo viên và bạn bè lần đầu trong ngày, bạn chào:',
+        options: [
+          '안녕하세요.',
+          '안녕히 가세요.',
+          '안녕히 계세요.',
+        ],
+        correctIndex: 0,
+        correctText: '안녕하세요 (Xin chào)',
+        explanation: '"안녕하세요" là lời chào kính ngữ thông dụng và lịch sự nhất khi gặp người khác lần đầu trong ngày.'
+      },
+      {
+        id: 6,
+        stage: 'Chặng 3: Phản xạ chào hỏi',
+        type: 'context_choice',
+        questionText: 'Tình huống 2: Hết giờ học, bạn là học viên ĐI VỀ, còn thầy giáo Ở LẠI phòng học. Bạn cúi đầu chào thầy:',
+        options: [
+          '안녕히 계세요.',
+          '안녕히 가세요.',
+          '안녕하세요.',
+        ],
+        correctIndex: 0,
+        correctText: '안녕히 계세요. (Chúc thầy ở lại bình an)',
+        explanation: 'Người ĐI VỀ nói với người Ở LẠI dùng "안녕히 계세요" (계시다 = ở lại). Còn giáo viên ở lại sẽ đáp lại người về là "안녕히 가세요" (가다 = đi).'
+      }
+    ];
+
+    let quizScore = 0;
+    let currentQuizIndex = 0;
+    let assembledWord = [];
+    let learnerFullName = '';
+    let userHasAnsweredCurrent = false;
+    let quizUserAnswersHistory = [];
+
+    function startQuiz() {
+      const inputEl = document.getElementById('learner-fullname-input');
+      learnerFullName = inputEl ? inputEl.value.trim() : '';
+      if (!learnerFullName) learnerFullName = 'Học viên Hangeul';
+
+      quizScore = 0;
+      currentQuizIndex = 0;
+      quizUserAnswersHistory = [];
+
+      document.getElementById('quiz-start-screen').classList.add('hidden');
+      document.getElementById('quiz-result-screen').classList.add('hidden');
+      document.getElementById('quiz-active-screen').classList.remove('hidden');
+
+      loadQuizQuestion(0);
+    }
+
+    function loadQuizQuestion(index) {
+      if (index >= QUIZ_QUESTIONS.length) {
+        finishQuiz();
+        return;
+      }
+
+      userHasAnsweredCurrent = false;
+      currentQuizIndex = index;
+      const q = QUIZ_QUESTIONS[index];
+
+      document.getElementById('quiz-stage-badge').textContent = q.stage;
+      document.getElementById('quiz-step-counter').textContent = `Câu ${index + 1} / ${QUIZ_QUESTIONS.length} • Đúng: ${quizScore}`;
+      
+      const bodyEl = document.getElementById('quiz-dynamic-body');
+      const feedbackBox = document.getElementById('quiz-feedback-box');
+      const nextContainer = document.getElementById('quiz-next-container');
+      feedbackBox.className = 'hidden';
+      feedbackBox.innerHTML = '';
+      nextContainer.className = 'hidden flex justify-end';
+
+      if (q.type === 'listen_choice') {
+        bodyEl.innerHTML = `
+          <div class="space-y-4">
+            <h3 class="text-base sm:text-lg font-bold text-ktext">${q.questionText}</h3>
+            
+            <div class="flex items-center justify-center py-4">
+              <button onclick="speakKorean('${q.audioText}')" class="px-6 py-4 rounded-2xl bg-blue-50 hover:bg-blue-100 border-2 border-knavy text-knavy font-bold text-base flex items-center gap-3 shadow-sm active:scale-95 transition-all">
+                <span class="text-2xl animate-bounce">🔊</span>
+                <span>Bấm Nghe Lại Âm Thanh</span>
+              </button>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-${q.options.length} gap-3 pt-2">
+              ${q.options.map((opt, i) => `
+                <button onclick="handleOptionChoice(${i})" id="opt-btn-${i}" class="p-4 rounded-2xl border-2 border-slate-200 hover:border-knavy bg-white hover:bg-slate-50 font-kr font-black text-2xl text-ktext shadow-sm transition-all active:scale-95">
+                  ${opt}
+                </button>
+              `).join('')}
+            </div>
+          </div>
+        `;
+        setTimeout(() => speakKorean(q.audioText), 250);
+
+      } else if (q.type === 'scramble_word') {
+        assembledWord = [];
+        bodyEl.innerHTML = `
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <h3 class="text-base sm:text-lg font-bold text-ktext">Ghép các âm tiết tạo thành từ đúng:</h3>
+              <span class="text-xs bg-orange-50 text-korange border border-orange-200 px-3 py-1 rounded-full font-bold">${q.meaning}</span>
+            </div>
+
+            <div class="flex items-center justify-center gap-3 py-4">
+              <div id="slot-0" class="w-20 h-20 rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 flex items-center justify-center font-kr font-black text-4xl text-knavy shadow-inner">?</div>
+              <div id="slot-1" class="w-20 h-20 rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 flex items-center justify-center font-kr font-black text-4xl text-knavy shadow-inner">?</div>
+            </div>
+
+            <div class="flex items-center justify-center gap-3 pt-2">
+              ${q.tiles.map((tile, i) => `
+                <button onclick="handleTileClick('${tile}', ${i})" id="tile-btn-${i}" class="w-16 h-16 rounded-2xl border-2 border-slate-300 hover:border-knavy bg-white hover:bg-blue-50 font-kr font-black text-3xl text-ktext shadow-box3d active:translate-y-1 transition-all">
+                  ${tile}
+                </button>
+              `).join('')}
+            </div>
+
+            <div class="flex justify-center pt-2">
+              <button onclick="resetAssembledWord()" class="text-xs text-slate-500 hover:text-slate-800 font-semibold underline">
+                Xếp lại từ đầu ↺
+              </button>
+            </div>
+          </div>
+        `;
+
+      } else if (q.type === 'context_choice') {
+        bodyEl.innerHTML = `
+          <div class="space-y-4">
+            <h3 class="text-base sm:text-lg font-bold text-ktext leading-relaxed">${q.questionText}</h3>
+
+            <div class="space-y-2.5 pt-2">
+              ${q.options.map((opt, i) => `
+                <button onclick="handleOptionChoice(${i})" id="opt-btn-${i}" class="w-full text-left p-4 rounded-2xl border-2 border-slate-200 hover:border-knavy bg-white hover:bg-slate-50 font-medium text-sm sm:text-base text-ktext shadow-sm transition-all flex items-center justify-between group active:scale-[0.99]">
+                  <span>${opt}</span>
+                  <span class="text-slate-400 group-hover:text-knavy font-bold">→</span>
+                </button>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    function handleOptionChoice(selectedIdx) {
+      if (userHasAnsweredCurrent) return;
+      userHasAnsweredCurrent = true;
+
+      const q = QUIZ_QUESTIONS[currentQuizIndex];
+      const isCorrect = selectedIdx === q.correctIndex;
+      const userSelectedText = q.options[selectedIdx];
+      const feedbackBox = document.getElementById('quiz-feedback-box');
+      const nextContainer = document.getElementById('quiz-next-container');
+
+      quizUserAnswersHistory.push({
+        question: q,
+        userSelected: userSelectedText,
+        isCorrect: isCorrect
+      });
+
+      if (isCorrect) {
+        quizScore++;
+        playDing();
+        const selectedBtn = document.getElementById(`opt-btn-${selectedIdx}`);
+        if (selectedBtn) selectedBtn.className = selectedBtn.className.replace('border-slate-200', 'border-emerald-500 bg-emerald-50 text-emerald-800');
+
+        feedbackBox.className = 'p-3.5 rounded-2xl border border-emerald-300 bg-emerald-50 text-emerald-800 text-xs sm:text-sm font-medium pop-anim block';
+        feedbackBox.textContent = `✅ Chính xác! ${q.explanation}`;
+      } else {
+        playBoop();
+        const selectedBtn = document.getElementById(`opt-btn-${selectedIdx}`);
+        if (selectedBtn) selectedBtn.className = selectedBtn.className.replace('border-slate-200', 'border-rose-400 bg-rose-50 text-rose-800 shake-anim');
+
+        const correctBtn = document.getElementById(`opt-btn-${q.correctIndex}`);
+        if (correctBtn) correctBtn.className = correctBtn.className.replace('border-slate-200', 'border-emerald-500 bg-emerald-50 text-emerald-800');
+
+        feedbackBox.className = 'p-3.5 rounded-2xl border border-rose-300 bg-rose-50 text-rose-800 text-xs sm:text-sm font-medium block';
+        feedbackBox.textContent = `❌ Chưa chính xác. Đáp án đúng là: ${q.correctText}. ${q.explanation}`;
+      }
+
+      nextContainer.className = 'flex justify-end pt-3';
+    }
+
+    function handleTileClick(tile, tileIdx) {
+      if (userHasAnsweredCurrent) return;
+      if (assembledWord.length >= 2) return;
+
+      assembledWord.push(tile);
+      const slotIdx = assembledWord.length - 1;
+      const slotEl = document.getElementById(`slot-${slotIdx}`);
+      if (slotEl) {
+        slotEl.textContent = tile;
+        slotEl.className = 'w-20 h-20 rounded-2xl border-2 border-knavy bg-white flex items-center justify-center font-kr font-black text-4xl text-knavy shadow-md pop-anim';
+      }
+
+      const tileBtn = document.getElementById(`tile-btn-${tileIdx}`);
+      if (tileBtn) {
+        tileBtn.style.opacity = '0.3';
+        tileBtn.style.pointerEvents = 'none';
+      }
+
+      if (assembledWord.length === 2) {
+        userHasAnsweredCurrent = true;
+        const formed = assembledWord.join('');
+        const q = QUIZ_QUESTIONS[currentQuizIndex];
+        const isCorrect = formed === q.correctWord;
+        const feedbackBox = document.getElementById('quiz-feedback-box');
+        const nextContainer = document.getElementById('quiz-next-container');
+
+        quizUserAnswersHistory.push({
+          question: q,
+          userSelected: formed,
+          isCorrect: isCorrect
+        });
+
+        if (isCorrect) {
+          quizScore++;
+          playDing();
+          speakKorean(formed);
+          feedbackBox.className = 'p-3.5 rounded-2xl border border-emerald-300 bg-emerald-50 text-emerald-800 text-xs sm:text-sm font-medium pop-anim block';
+          feedbackBox.textContent = `✅ Chính xác! ${q.explanation}`;
+        } else {
+          playBoop();
+          feedbackBox.className = 'p-3.5 rounded-2xl border border-rose-300 bg-rose-50 text-rose-800 text-xs sm:text-sm font-medium block';
+          feedbackBox.textContent = `❌ Chưa chính xác! Bạn ghép "${formed}", đáp án đúng là "${q.correctWord}". ${q.explanation}`;
+        }
+
+        nextContainer.className = 'flex justify-end pt-3';
+      }
+    }
+
+    function resetAssembledWord() {
+      if (userHasAnsweredCurrent) return;
+      assembledWord = [];
+      const q = QUIZ_QUESTIONS[currentQuizIndex];
+      document.getElementById('slot-0').textContent = '?';
+      document.getElementById('slot-0').className = 'w-20 h-20 rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 flex items-center justify-center font-kr font-black text-4xl text-knavy shadow-inner';
+      document.getElementById('slot-1').textContent = '?';
+      document.getElementById('slot-1').className = 'w-20 h-20 rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 flex items-center justify-center font-kr font-black text-4xl text-knavy shadow-inner';
+
+      q.tiles.forEach((_, i) => {
+        const btn = document.getElementById(`tile-btn-${i}`);
+        if (btn) {
+          btn.style.opacity = '1';
+          btn.style.pointerEvents = 'auto';
+        }
+      });
+    }
+
+    function advanceToNextQuestion() {
+      if (currentQuizIndex < QUIZ_QUESTIONS.length - 1) {
+        loadQuizQuestion(currentQuizIndex + 1);
+      } else {
+        finishQuiz();
+      }
+    }
+
+    /* KẾT THÚC BÀI THỬ THÁCH & XỬ LÝ HỢP LỆ 합격 (>= 4/6) */
+    function finishQuiz() {
+      document.getElementById('quiz-active-screen').classList.add('hidden');
+      document.getElementById('quiz-result-screen').classList.remove('hidden');
+
+      const isPassed = quizScore >= 4; // Chỉ được phép 합격 nếu đúng từ 4/6 câu trở lên!
+      const nameData = transliterateVietnameseToKorean(learnerFullName);
+
+      // 1. HIỂN THỊ ĐẦY ĐỦ CẢ HỌ VÀ TÊN TIẾNG HÀN (KHÔNG BỊ MẤT HỌ)
+      const fullKoreanNameDisplay = nameData.koreanFull || '응우옌 쩌우 푹 후이';
+      document.getElementById('cert-korean-name').textContent = fullKoreanNameDisplay;
+      document.getElementById('cert-vietnamese-name').innerHTML = `Học viên: <span class="text-ktext font-bold">${learnerFullName}</span>`;
+      document.getElementById('cert-transliteration-note').textContent = `Phiên âm Hangeul: [${fullKoreanNameDisplay}]`;
+      
+      document.getElementById('cert-score').textContent = `${quizScore} / ${QUIZ_QUESTIONS.length}`;
+      document.getElementById('cert-accuracy').textContent = `${Math.round((quizScore / QUIZ_QUESTIONS.length) * 100)}%`;
+
+      const stampBox = document.getElementById('cert-stamp-box');
+      const watermarkText = document.getElementById('cert-watermark-text');
+      const cardTitle = document.getElementById('cert-card-title');
+      const cardSubtitle = document.getElementById('cert-card-subtitle');
+      const rankEl = document.getElementById('cert-rank');
+      const resultTitle = document.getElementById('quiz-result-title');
+      const resultIcon = document.getElementById('quiz-result-icon');
+      const summaryLine = document.getElementById('quiz-summary-line');
+
+      if (isPassed) {
+        // ĐẠT TIÊU CHUẨN (>= 4 câu) -> CẤP CON DẤU 합격
+        playFanfare();
+        resultIcon.textContent = '🎉';
+        resultTitle.textContent = 'Chúc Mừng Bạn Đã Đạt Chuẩn Hangeul!';
+        summaryLine.textContent = `Bạn đã xuất sắc vượt qua bài đánh giá với ${quizScore}/${QUIZ_QUESTIONS.length} câu đúng!`;
+
+        cardTitle.textContent = 'CHỨNG NHẬN NHẬP MÔN HANGEUL';
+        cardSubtitle.textContent = '한글 첫걸음 수료증 • Khóa Học Tiếng Hàn Sơ Cấp';
+        watermarkText.textContent = '합격';
+        watermarkText.className = 'font-kr font-black text-6xl text-rose-300/30';
+
+        stampBox.innerHTML = `
+          <div class="w-14 h-14 border-2 border-rose-600 text-rose-600 rounded-lg flex flex-col items-center justify-center font-kr text-[11px] font-black leading-tight rotate-3 shadow-xs">
+            <span>한국어</span>
+            <span>합격</span>
+          </div>
+        `;
+
+        if (quizScore === 6) {
+          rankEl.textContent = 'Xuất Sắc (합격) 🌟';
+          rankEl.className = 'font-black text-base sm:text-lg text-emerald-600';
+        } else {
+          rankEl.textContent = 'Giỏi (합격) 🥈';
+          rankEl.className = 'font-black text-base sm:text-lg text-blue-600';
+        }
+      } else {
+        // CHƯA ĐẠT (< 4 câu) -> KHÔNG ĐƯỢC PHÉP 합격
+        playBoop();
+        resultIcon.textContent = '💪';
+        resultTitle.textContent = 'Kết Quả: Cần Cố Gắng Thêm!';
+        summaryLine.innerHTML = `<span class="text-rose-600 font-bold">Chưa đạt chuẩn hoàn thành (Yêu cầu đúng từ 4/6 câu trở lên).</span> Hãy xem bảng chữa bài và bấm Làm lại bài nhé!`;
+
+        cardTitle.textContent = 'KẾT QUẢ ĐÁNH GIÁ HANGEUL';
+        cardSubtitle.textContent = '한글 평가 결과 • Yêu cầu tối thiểu 4/6 câu để cấp chứng nhận';
+        watermarkText.textContent = '재도전';
+        watermarkText.className = 'font-kr font-black text-5xl text-amber-300/30';
+
+        // Con dấu CẦN ÔN TẬP / 재도전 (KHÔNG CÓ DẤU 합격)
+        stampBox.innerHTML = `
+          <div class="w-14 h-14 border-2 border-amber-600 bg-amber-50 text-amber-700 rounded-lg flex flex-col items-center justify-center font-kr text-[10px] font-bold leading-tight rotate-1 shadow-xs">
+            <span>재도전</span>
+            <span>미달</span>
+          </div>
+        `;
+
+        rankEl.textContent = 'Chưa Đạt ❌ (Cần ôn lại)';
+        rankEl.className = 'font-black text-base sm:text-lg text-rose-600';
+      }
+
+      const today = new Date();
+      const dateStr = `${today.getDate().toString().padStart(2, '0')}/${(today.getMonth() + 1).toString().padStart(2, '0')}/${today.getFullYear()}`;
+      document.getElementById('cert-date').textContent = dateStr;
+      document.getElementById('cert-code').textContent = `HG-${today.getFullYear()}-${Math.floor(100 + Math.random() * 900)}`;
+
+      // BẢNG LỊCH SỬ CHỮA BÀI CHI TIẾT
+      renderQuizReviewHistory();
+
+      setTimeout(() => {
+        speakKorean(fullKoreanNameDisplay);
+      }, 600);
+    }
+
+    function renderQuizReviewHistory() {
+      const container = document.getElementById('quiz-review-history-container');
+      container.innerHTML = quizUserAnswersHistory.map((item, idx) => {
+        const q = item.question;
+        const isOk = item.isCorrect;
+        const borderCls = isOk ? 'border-emerald-200 bg-emerald-50/40' : 'border-rose-200 bg-rose-50/40';
+        const statusBadge = isOk 
+          ? '<span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">Đúng ✓</span>'
+          : '<span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-100 text-rose-800">Cần sửa ✗</span>';
+
+        return `
+          <div class="p-4 rounded-2xl border-2 ${borderCls} space-y-2 text-left">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Câu ${idx + 1}: ${q.stage}</span>
+              ${statusBadge}
+            </div>
+
+            <div class="font-bold text-sm text-ktext">${q.questionText}</div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 text-xs">
+              <div class="p-2 rounded-xl bg-white border ${isOk ? 'border-emerald-300 text-emerald-800' : 'border-rose-300 text-rose-800'}">
+                <span class="font-bold block text-[11px] opacity-75">Lựa chọn của bạn:</span>
+                <span class="font-semibold text-sm">${item.userSelected}</span>
+              </div>
+              <div class="p-2 rounded-xl bg-white border border-slate-200 text-slate-700">
+                <span class="font-bold block text-[11px] text-slate-400">Đáp án chuẩn:</span>
+                <span class="font-bold text-sm text-knavy">${q.correctText}</span>
+              </div>
+            </div>
+
+            <div class="text-xs text-slate-600 bg-white/80 p-2.5 rounded-xl border border-slate-100 mt-1 leading-relaxed">
+              <strong class="text-slate-800">💡 Ghi chú từ giáo viên:</strong> ${q.explanation}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function speakKoreanName() {
+      const nameEl = document.getElementById('cert-korean-name');
+      if (nameEl) speakKorean(nameEl.textContent.trim());
+    }
+
+
+    /* =====================================================================
+       6. TRANSLITERATION DICTIONARY ĐẦY ĐỦ (BẢO TOÀN CẢ HỌ VÀ TÊN)
+       ===================================================================== */
+    const VN_NAME_DICT = {
+      'nguyen': '응우옌', 'nguyễn': '응우옌',
+      'tran': '쩐', 'trần': '쩐',
+      'le': '레', 'lê': '레',
+      'pham': '팜', 'phạm': '팜',
+      'hoang': '황', 'hoàng': '황',
+      'huynh': '후인', 'huỳnh': '후인',
+      'phan': '판',
+      'vu': '부', 'vũ': '부',
+      'vo': '보', 'võ': '보',
+      'dang': '당', 'đặng': '당',
+      'bui': '부이', 'bùi': '부이',
+      'do': '도', 'đỗ': '도',
+      'ho': '호', 'hồ': '호',
+      'ngo': '응오', 'ngô': '응오',
+      'duong': '뜨엉', 'dương': '뜨엉',
+      'ly': '리', 'lý': '리',
+      'dinh': '딘', 'đinh': '딘',
+      'doan': '도안', 'đoàn': '도안',
+      'lam': '람', 'lâm': '람',
+      'trinh': '찐', 'trịnh': '찐',
+      'mai': '마이',
+      'dao': '다오', 'đào': '다오',
+      'cao': '까오',
+      'ha': '하', 'hà': '하',
+      'luong': '루엉', 'lương': '루엉',
+      'truong': '쯔엉', 'trương': '쯔엉',
+      'chau': '쩌우', 'châu': '쩌우',
+      'phuc': '푹', 'phúc': '푹',
+      'huy': '후이',
+      'minh': '민',
+      'anh': '아',
+      'an': '안',
+      'nam': '남',
+      'lan': '란',
+      'linh': '린',
+      'hoa': '화',
+      'trang': '짱',
+      'thao': '타오', 'thảo': '타오',
+      'hung': '훙', 'hùng': '훙',
+      'tuan': '뚜언', 'tuấn': '뚜언',
+      'duc': '득', 'đức': '득',
+      'hai': '하이', 'hải': '하이',
+      'khanh': '칸', 'khánh': '칸',
+      'quan': '꾸안', 'quân': '꾸안',
+      'quang': '꾸앙',
+      'long': '롱',
+      'phuong': '푸엉', 'phương': '푸엉',
+      'quynh': '꾸인', 'quỳnh': '꾸인',
+      'ngan': '응안', 'ngân': '응안',
+      'ngoc': '응옥', 'ngọc': '응옥',
+      'dung': '융', 'dũng': '융',
+      'duyen': '뚜이엔', 'duyên': '뚜이엔',
+      'tien': '띠엔', 'tiến': '띠엔',
+      'kien': '끼엔', 'kiên': '끼엔',
+      'son': '선', 'sơn': '선',
+      'thang': '탕', 'thắng': '탕',
+      'thi': '티', 'thị': '티',
+      'van': '반', 'văn': '반',
+      'bao': '바오', 'bảo': '바오',
+      'binh': '빈', 'bình': '빈',
+      'giang': '지앙',
+      'hieu': '히에우', 'hiếu': '히에우',
+      'huong': '흐엉', 'hương': '흐엉',
+      'hanh': '한', 'hạnh': '한',
+      'my': '미', 'mỹ': '미',
+      'nga': '응아',
+      'nhung': '늉',
+      'nhu': '느', 'như': '느',
+      'phat': '팟', 'phát': '팟',
+      'phong': '퐁',
+      'phu': '푸', 'phú': '푸',
+      'quoc': '꾸옥', 'quốc': '꾸옥',
+      'tam': '떰', 'tâm': '떰',
+      'thanh': '탄', 'thành': '탄',
+      'thu': '투',
+      'thuy': '투이', 'thủy': '투이', 'thúy': '투이',
+      'toan': '또안', 'toàn': '또안',
+      'tri': '찌', 'trí': '찌',
+      'trung': '쭝',
+      'tu': '따', 'tú': '따',
+      'tung': '뚱', 'tùng': '뚱',
+      'tuyet': '뚜옛', 'tuyết': '뚜옛',
+      'uyen': '우이엔', 'uyên': '우이엔',
+      'viet': '비엣', 'việt': '비엣',
+      'vinh': '빈',
+      'vy': '비',
+      'xuan': '쑤언', 'xuân': '쑤언',
+      'yen': '이엔', 'yến': '이엔',
+    };
+
+    function transliterateVietnameseToKorean(fullName) {
+      if (!fullName || !fullName.trim()) return { koreanFull: '응우옌 쩌우 푹 후이', phoneticGuide: '[Nguyễn Châu Phúc Huy]' };
+      
+      const cleanName = fullName.trim().toLowerCase();
+      const tokens = cleanName.split(/\s+/);
+      
+      const translatedTokens = tokens.map((word, index) => {
+        if (word === 'anh' && index > 0 && index === tokens.length - 1) return '아';
+        if (VN_NAME_DICT[word]) return VN_NAME_DICT[word];
+        const noTone = removeVietnameseTones(word);
+        if (VN_NAME_DICT[noTone]) return VN_NAME_DICT[noTone];
+        return fallbackSyllableKorean(noTone);
+      });
+
+      // GIỮ ĐẦY ĐỦ CẢ HỌ VÀ TÊN TIẾNG HÀN
+      const koreanFull = translatedTokens.join(' ');
+      
+      return {
+        koreanFull: koreanFull,
+        phoneticGuide: `[${tokens.map(capitalizeFirst).join(' ')}]`
+      };
+    }
+
+    function removeVietnameseTones(str) {
+      return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/đ/g, "d").replace(/Đ/g, "D");
+    }
+
+    function capitalizeFirst(string) {
+      return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+
+    function fallbackSyllableKorean(word) {
+      if (!word) return '아';
+      if (word.startsWith('ng')) return '응' + word.slice(2);
+      if (word.startsWith('th')) return '타';
+      if (word.startsWith('ch') || word.startsWith('tr')) return '짜';
+      if (word.startsWith('kh')) return '카';
+      if (word.startsWith('ph')) return '파';
+      if (word.startsWith('h')) return '하';
+      if (word.startsWith('m')) return '마';
+      if (word.startsWith('n')) return '나';
+      if (word.startsWith('l')) return '라';
+      return '인';
+    }
+
+
+    /* =====================================================================
+       7. NAVIGATION & UTILITIES
+       ===================================================================== */
+    let currentMainTab = 1;
+
+    function switchMainTab(tabNumber) {
+      currentMainTab = tabNumber;
+      [1, 2, 3, 4].forEach(i => {
+        const sec = document.getElementById(`tab-content-${i}`);
+        const nav = document.getElementById(`nav-tab-${i}`);
+        if (i === tabNumber) {
+          sec.classList.remove('hidden');
+          nav.className = 'tab-btn flex-1 min-w-[78px] sm:min-w-[110px] py-2 sm:py-2.5 px-1 sm:px-3 text-center border-b-2 border-knavy text-knavy font-bold text-[11px] sm:text-sm flex items-center justify-center gap-1 transition-all';
+        } else {
+          sec.classList.add('hidden');
+          nav.className = 'tab-btn flex-1 min-w-[78px] sm:min-w-[110px] py-2 sm:py-2.5 px-1 sm:px-3 text-center border-b-2 border-transparent text-slate-500 hover:text-ktext font-medium text-[11px] sm:text-sm flex items-center justify-center gap-1 transition-all';
+        }
+      });
+
+      if (tabNumber === 2) {
+        setTimeout(updatePracticeWordUI, 50);
+      } else if (tabNumber === 3) {
+        setTimeout(renderBingoBoard, 50);
+      }
+    }
+
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      
+      let bg = 'bg-slate-800 text-white';
+      if (type === 'success') bg = 'bg-emerald-600 text-white';
+      if (type === 'warning') bg = 'bg-amber-600 text-white';
+      
+      toast.className = `${bg} px-4 py-2.5 rounded-xl shadow-lg text-xs font-semibold flex items-center gap-2 pop-anim pointer-events-auto`;
+      toast.innerHTML = `<span>🔔</span><span>${message}</span>`;
+      
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transition = 'opacity 0.3s ease';
+        setTimeout(() => toast.remove(), 300);
+      }, 2500);
+    }
+
+
+    /* =====================================================================
+       8. INITIALIZATION ON WINDOW LOAD
+       ===================================================================== */
+    window.addEventListener('DOMContentLoaded', () => {
+      initSpeechSynthesis();
+      renderTab1Alphabet();
+      renderVocabPills();
+      updatePracticeWordUI();
+      initBingoBoard();
+      checkUrlForSharedWord();
+    });
+
+    // Tự động căn chỉnh kích thước Canvas khi học viên xoay ngang / xoay dọc điện thoại
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        if (currentMainTab === 2) {
+          updatePracticeWordUI();
+        }
+      }, 200);
+    });
+  </script>
 </body>
-
 </html>
