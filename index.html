@@ -924,13 +924,37 @@
       } catch (e) {}
     }
 
-    /* Web Speech API (Đọc Họ và Tên tiếng Hàn đầy đủ) */
+    /* =====================================================================
+       HỆ THỐNG ÂM THANH KÉP (SPEECHSYNTHESIS + NATIVE ONLINE AUDIO FALLBACK)
+       - Khắc phục 100% lỗi câm tiếng trên điện thoại/máy tính chưa cài gói tiếng Hàn
+       - Tự động mở khóa Autoplay Policy trên iOS Safari & Android Chrome
+       ===================================================================== */
     let koreanVoice = null;
+    let hasCheckedVoices = false;
+    let activeAudioPlayer = null;
+
+    // Tự động mở khóa Web Audio API & Media ngay khi người dùng chạm vào màn hình lần đầu
+    function unlockAudioContext() {
+      try {
+        const ctx = getAudioCtx();
+        if (ctx && ctx.state === 'suspended') {
+          ctx.resume();
+        }
+      } catch (e) {}
+    }
+    document.addEventListener('click', unlockAudioContext, { once: true });
+    document.addEventListener('touchstart', unlockAudioContext, { once: true });
+
     function initSpeechSynthesis() {
       if (!('speechSynthesis' in window)) return;
       function pickVoice() {
-        const voices = window.speechSynthesis.getVoices();
-        koreanVoice = voices.find(v => v.lang === 'ko-KR' || v.lang === 'ko_KR' || v.lang.startsWith('ko')) || null;
+        try {
+          const voices = window.speechSynthesis.getVoices();
+          if (voices && voices.length > 0) {
+            koreanVoice = voices.find(v => v.lang === 'ko-KR' || v.lang === 'ko_KR' || v.lang.startsWith('ko')) || null;
+            hasCheckedVoices = true;
+          }
+        } catch (e) {}
       }
       pickVoice();
       if (window.speechSynthesis.onvoiceschanged !== undefined) {
@@ -938,16 +962,82 @@
       }
     }
 
-    function speakKorean(text, rate = 0.85) {
-      if (!('speechSynthesis' in window)) return;
+    // Phát âm thanh tiếng Hàn bản xứ qua Google Native Audio (Fallback chuẩn 100% mọi thiết bị)
+    function playOnlineKoreanAudio(text) {
+      if (!text) return;
       try {
-        window.speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = 'ko-KR';
-        utterance.rate = rate;
-        if (koreanVoice) utterance.voice = koreanVoice;
-        window.speechSynthesis.speak(utterance);
-      } catch (err) {}
+        if (activeAudioPlayer) {
+          activeAudioPlayer.pause();
+          activeAudioPlayer.currentTime = 0;
+        }
+        const encoded = encodeURIComponent(text.trim());
+        const audioUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=ko&client=tw-ob&q=${encoded}`;
+        activeAudioPlayer = new Audio(audioUrl);
+        
+        // Bắt lỗi phát âm thanh
+        const playPromise = activeAudioPlayer.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(err => {
+            console.warn('Lỗi phát audio fallback:', err);
+            showToast('Không thể phát âm thanh. Vui lòng kiểm tra kết nối mạng!', 'warning');
+          });
+        }
+      } catch (err) {
+        console.warn('Audio fallback error:', err);
+      }
+    }
+
+    // Hàm phát âm tiếng Hàn thông minh
+    function speakKorean(text, rate = 0.85) {
+      if (!text) return;
+      unlockAudioContext();
+
+      // Kiểm tra nếu thiết bị có sẵn giọng đọc tiếng Hàn cục bộ
+      if ('speechSynthesis' in window) {
+        try {
+          if (!hasCheckedVoices) {
+            const voices = window.speechSynthesis.getVoices();
+            if (voices && voices.length > 0) {
+              koreanVoice = voices.find(v => v.lang === 'ko-KR' || v.lang === 'ko_KR' || v.lang.startsWith('ko')) || null;
+              hasCheckedVoices = true;
+            }
+          }
+
+          // Nếu có giọng đọc ko-KR cục bộ, sử dụng Web Speech API
+          if (koreanVoice) {
+            if (window.speechSynthesis.speaking) {
+              window.speechSynthesis.cancel();
+            }
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.voice = koreanVoice;
+            utterance.lang = 'ko-KR';
+            utterance.rate = rate;
+
+            let audioHasStarted = false;
+            utterance.onstart = () => { audioHasStarted = true; };
+            utterance.onerror = (e) => {
+              console.warn('SpeechSynthesis báo lỗi, chuyển sang Online Audio:', e);
+              playOnlineKoreanAudio(text);
+            };
+
+            window.speechSynthesis.speak(utterance);
+
+            // Phòng trường hợp trình duyệt không báo lỗi nhưng bị đơ/im lặng ngầm
+            setTimeout(() => {
+              if (!audioHasStarted && !window.speechSynthesis.speaking) {
+                playOnlineKoreanAudio(text);
+              }
+            }, 350);
+
+            return;
+          }
+        } catch (err) {
+          console.warn('Lỗi khởi chạy SpeechSynthesis:', err);
+        }
+      }
+
+      // Nếu thiết bị KHÔNG có gói giọng Hàn (hầu hết điện thoại/PC tại VN) -> Phát ngay qua Online Audio chuẩn bản xứ!
+      playOnlineKoreanAudio(text);
     }
 
 
